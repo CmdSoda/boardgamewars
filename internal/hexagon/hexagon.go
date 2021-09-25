@@ -1,6 +1,9 @@
 package hexagon
 
-import "github.com/CmdSoda/boardgamewars/internal/math"
+import (
+	"github.com/CmdSoda/boardgamewars/internal/math"
+	"github.com/CmdSoda/boardgamewars/internal/segment"
+)
 
 type hexagon struct {
 	column int
@@ -20,4 +23,12 @@ func GetCenterCoordinates(h hexagon) math.Vector2 {
 	}
 
 	return center
+}
+
+func (h hexagon) GetSegments() [6]segment.Segment {
+	segments := [6]segment.Segment{}
+	for i := 0; i < len(segments); i++ {
+		segments[i] = segment.NewSegment(segment.Direction(i), GetCenterCoordinates(h))
+	}
+	return segments
 }
