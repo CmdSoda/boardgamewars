@@ -27,26 +27,26 @@ func TestNewSegment(t *testing.T) {
 					X: 0,
 					Y: -1,
 				},
-				End:   math.Vector2{
-					X: 0.8660254037844386,
+				End: math.Vector2{
+					X: math.Hr,
 					Y: -0.5,
 				},
 			},
 		},
 		{
-			name: "NE",
+			name: "E",
 			args: args{
-				direction: NE,
+				direction: E,
 				center:    math.Vector2{},
 			},
 			want: Segment{
 				Start: math.Vector2{
-					X: 0,
-					Y: -1,
-				},
-				End:   math.Vector2{
-					X: 0.8660254037844386,
+					X: math.Hr,
 					Y: -0.5,
+				},
+				End: math.Vector2{
+					X: math.Hr,
+					Y: 0.5,
 				},
 			},
 		},
