@@ -1,4 +1,4 @@
 package math
 
-const Pi = 3.14159265359
+// Hr ist der Hex-Radius
 const Hr = 0.8660254037844386
