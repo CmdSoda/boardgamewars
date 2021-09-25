@@ -34,8 +34,8 @@ func NewSegment(direction Direction, center math.Vector2) Segment {
 		}
 	case E:
 		return Segment{
-			Start: math.Vector2{X: center.X, Y: center.Y - 0.5},
-			End:   math.Vector2{X: center.X, Y: center.Y + 0.5},
+			Start: math.Vector2{X: center.X + math.Hr, Y: center.Y - 0.5},
+			End:   math.Vector2{X: center.X + math.Hr, Y: center.Y + 0.5},
 		}
 	case SE:
 		return Segment{
@@ -49,8 +49,8 @@ func NewSegment(direction Direction, center math.Vector2) Segment {
 		}
 	case W:
 		return Segment{
-			Start: math.Vector2{X: center.X, Y: center.Y + 0.5},
-			End:   math.Vector2{X: center.X + math.Hr, Y: center.Y - 0.5},
+			Start: math.Vector2{X: center.X - math.Hr, Y: center.Y + 0.5},
+			End:   math.Vector2{X: center.X - math.Hr, Y: center.Y - 0.5},
 		}
 	}
 	return Segment{}
