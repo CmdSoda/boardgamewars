@@ -32,3 +32,73 @@ func (h hexagon) GetSegments() [6]segment.Segment {
 	}
 	return segments
 }
+
+func (h hexagon) GetAdjacent(direction segment.Direction) hexagon {
+	switch direction {
+	case segment.NW:
+		if h.row%2 == 0 {
+			return hexagon{
+				column: h.column - 1,
+				row:    h.row - 1,
+			}
+		} else {
+			return hexagon{
+				column: h.column,
+				row:    h.row - 1,
+			}
+		}
+	case segment.NE:
+		if h.row%2 == 0 {
+			return hexagon{
+				column: h.column,
+				row:    h.row - 1,
+			}
+		} else {
+			return hexagon{
+				column: h.column + 1,
+				row:    h.row - 1,
+			}
+		}
+	case segment.E:
+		if h.row%2 == 0 {
+			return hexagon{
+				column: h.column + 1,
+				row:    h.row,
+			}
+		}
+	case segment.SE:
+		if h.row%2 == 0 {
+			return hexagon{
+				column: h.column,
+				row:    h.row + 1,
+			}
+		} else {
+			return hexagon{
+				column: h.column + 1,
+				row:    h.row + 1,
+			}
+		}
+	case segment.SW:
+		if h.row%2 == 0 {
+			return hexagon{
+				column: h.column - 1,
+				row:    h.row + 1,
+			}
+		} else {
+			return hexagon{
+				column: h.column,
+				row:    h.row + 1,
+			}
+		}
+	case segment.W:
+		if h.row%2 == 0 {
+			return hexagon{
+				column: h.column - 1,
+				row:    h.row,
+			}
+		}
+	default:
+		return hexagon{}
+	}
+	return hexagon{}
+}
