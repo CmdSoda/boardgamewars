@@ -40,7 +40,7 @@ func NewSegment(direction Direction, center math.Vector2) Segment {
 	case SE:
 		return Segment{
 			Start: math.Vector2{X: center.X + math.Hr, Y: center.Y + 0.5},
-			End:   math.Vector2{X: center.X + math.Hr, Y: center.Y + 1},
+			End:   math.Vector2{X: center.X, Y: center.Y + 1},
 		}
 	case SW:
 		return Segment{
