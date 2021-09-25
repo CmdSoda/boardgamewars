@@ -50,6 +50,74 @@ func TestNewSegment(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "SE",
+			args: args{
+				direction: SE,
+				center:    math.Vector2{},
+			},
+			want: Segment{
+				Start: math.Vector2{
+					X: math.Hr,
+					Y: 0.5,
+				},
+				End: math.Vector2{
+					X: 0,
+					Y: 1,
+				},
+			},
+		},
+		{
+			name: "SW",
+			args: args{
+				direction: SW,
+				center:    math.Vector2{},
+			},
+			want: Segment{
+				Start: math.Vector2{
+					X: 0,
+					Y: 1,
+				},
+				End: math.Vector2{
+					X: -math.Hr,
+					Y: 0.5,
+				},
+			},
+		},
+		{
+			name: "W",
+			args: args{
+				direction: W,
+				center:    math.Vector2{},
+			},
+			want: Segment{
+				Start: math.Vector2{
+					X: -math.Hr,
+					Y: 0.5,
+				},
+				End: math.Vector2{
+					X: -math.Hr,
+					Y: -0.5,
+				},
+			},
+		},
+		{
+			name: "NW",
+			args: args{
+				direction: NW,
+				center:    math.Vector2{},
+			},
+			want: Segment{
+				Start: math.Vector2{
+					X: -math.Hr,
+					Y: -0.5,
+				},
+				End: math.Vector2{
+					X: 0,
+					Y: -1,
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
