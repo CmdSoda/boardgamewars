@@ -3,12 +3,11 @@ package path
 import (
 	"github.com/CmdSoda/boardgamewars/internal/hexagon"
 	"github.com/CmdSoda/boardgamewars/internal/segment"
-	"reflect"
 )
 
 func contains(hexagonList []hexagon.Hexagon, hex hexagon.Hexagon) bool {
 	for _, h := range hexagonList {
-		if reflect.DeepEqual(h, hex) {
+		if h.Equal(hex) {
 			return true
 		}
 	}
