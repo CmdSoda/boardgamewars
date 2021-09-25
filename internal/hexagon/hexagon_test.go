@@ -18,7 +18,7 @@ func TestGetCenterCoordinates(t *testing.T) {
 		{"0", args{h: hexagon{
 			column: 0,
 			row:    0,
-		}}, math.Vector2{0.8660254037844386, 1}},
+		}}, math.Vector2{X: 0.8660254037844386, Y: 1}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
