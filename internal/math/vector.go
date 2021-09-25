@@ -1,4 +1,4 @@
-package hexagon
+package math
 
 type Vector2 struct {
 	X float64

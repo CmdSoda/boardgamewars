@@ -1,6 +1,7 @@
 package hexagon
 
 import (
+	"github.com/CmdSoda/boardgamewars/internal/math"
 	"reflect"
 	"testing"
 )
@@ -12,12 +13,12 @@ func TestGetCenterCoordinates(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want Vector2
+		want math.Vector2
 	}{
 		{"0", args{h: hexagon{
 			column: 0,
 			row:    0,
-		}}, Vector2{0.8660254037844386, 1}},
+		}}, math.Vector2{0.8660254037844386, 1}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
