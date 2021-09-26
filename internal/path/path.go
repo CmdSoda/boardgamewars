@@ -40,10 +40,12 @@ func CalculatePath(startHex hexagon.Hexagon, endHex hexagon.Hexagon) []hexagon.H
 					path = append(path, *neighbor)
 					return path
 				}
-				dist := hexagon.CalculateDistancePointLine(neighbor.GetCenterCoordinates(true), startHex.GetCenterCoordinates(true), endHex.GetCenterCoordinates(true))
+				dist := hexagon.CalculateDistancePointLine(neighbor.GetCenterCoordinates(true),
+					startHex.GetCenterCoordinates(true), endHex.GetCenterCoordinates(true))
 				intersectionCount := neighbor.CalculateIntersectionCount(startHex, endHex)
 
-				if !contains(path, *neighbor) && !contains(ignore, *neighbor) && intersectionCount > 0 && (dist < minDist || minDist == 0) && neighbor.Column != 0 && neighbor.Row != 0 {
+				if !contains(path, *neighbor) && !contains(ignore, *neighbor) && intersectionCount > 0 &&
+					(dist < minDist || minDist == 0) && neighbor.Column != 0 && neighbor.Row != 0 {
 					minDist = dist
 					next = *neighbor
 				}
@@ -55,9 +57,11 @@ func CalculatePath(startHex hexagon.Hexagon, endHex hexagon.Hexagon) []hexagon.H
 		for nb := segment.NW; nb <= segment.W; nb++ {
 			neighbor := current.GetAdjacent(nb)
 
-			if neighbor.Equal(next) == false {
-				if contains(ignore, *neighbor) == false {
-					ignore = append(ignore, *neighbor)
+			if neighbor != nil {
+				if neighbor.Equal(next) == false {
+					if contains(ignore, *neighbor) == false {
+						ignore = append(ignore, *neighbor)
+					}
 				}
 			}
 		}

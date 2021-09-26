@@ -1,6 +1,7 @@
 package hexagon
 
 import (
+	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/math"
 	"github.com/CmdSoda/boardgamewars/internal/segment"
 )
@@ -17,11 +18,16 @@ func NewHexagon(c int, r int) Hexagon {
 	}
 }
 
+func (h Hexagon) String() string {
+	return fmt.Sprintf("(%d, %d)", h.Column, h.Row)
+}
+
 // GetCenterCoordinates ermittelt den Mittelpunkt eines hexagons.
-func (h Hexagon) GetCenterCoordinates(useoffset bool) math.Vector2 {
+func (h Hexagon) GetCenterCoordinates(useOffset bool) math.Vector2 {
 	center := math.Vector2{}
-	var offsetValue float64 = 0
-	if useoffset {
+
+	var offsetValue = 0.0
+	if useOffset {
 		offsetValue = 0.1
 	}
 
@@ -39,7 +45,7 @@ func (h Hexagon) GetCenterCoordinates(useoffset bool) math.Vector2 {
 func (h Hexagon) GetSegments() [6]segment.Segment {
 	segments := [6]segment.Segment{}
 	for i := 0; i < len(segments); i++ {
-		segments[i] = segment.NewSegment(segment.Direction(i), h.GetCenterCoordinates(true))
+		segments[i] = segment.NewSegment(segment.Direction(i), h.GetCenterCoordinates(false))
 	}
 	return segments
 }
@@ -107,7 +113,7 @@ func (h Hexagon) GetAdjacent(direction segment.Direction) *Hexagon {
 		}
 	}
 
-	if &retHex == nil || retHex.Column < 0 || retHex.Row < 0 {
+	if &retHex == nil || retHex.Column <= 0 || retHex.Row <= 0 {
 		return nil
 	}
 
@@ -122,9 +128,12 @@ func (h Hexagon) CalculateIntersectionCount(startHex Hexagon, endHex Hexagon) in
 	segments := h.GetSegments()
 	count := 0
 	for _, s := range segments {
-		k1 := CalculateIntersectionScalar(startHex.GetCenterCoordinates(true), endHex.GetCenterCoordinates(true).Minus(startHex.GetCenterCoordinates(true)), s.Start, s.End.Minus(s.Start))
-		k2 := CalculateIntersectionScalar(s.Start, s.End.Minus(s.Start), startHex.GetCenterCoordinates(true), endHex.GetCenterCoordinates(true).Minus(startHex.GetCenterCoordinates(true)))
-		if k1 >= 0 && k2 >= 0 && k1 <= 1 && k2 <= 1 {
+		k1 := CalculateIntersectionScalar(startHex.GetCenterCoordinates(true),
+			endHex.GetCenterCoordinates(true).Minus(startHex.GetCenterCoordinates(true)),
+			s.Start, s.End.Minus(s.Start))
+		k2 := CalculateIntersectionScalar(s.Start, s.End.Minus(s.Start), startHex.GetCenterCoordinates(true),
+			endHex.GetCenterCoordinates(true).Minus(startHex.GetCenterCoordinates(true)))
+		if k1 >= 0 && k1 <= 1 && k2 >= 0 && k2 <= 1 {
 			count = count + 1
 		}
 	}
@@ -132,7 +141,8 @@ func (h Hexagon) CalculateIntersectionCount(startHex Hexagon, endHex Hexagon) in
 }
 
 func CalculateIntersectionScalar(start1 math.Vector2, direction1 math.Vector2, start2 math.Vector2, direction2 math.Vector2) float64 {
-	return (direction1.Y*start1.X - direction1.X*start1.Y - direction1.Y*start2.X + direction1.X*start2.Y) / (direction1.Y*direction2.X - direction1.X*direction2.Y)
+	return (direction1.Y*start1.X - direction1.X*start1.Y - direction1.Y*start2.X + direction1.X*start2.Y) /
+		(direction1.Y*direction2.X - direction1.X*direction2.Y)
 }
 
 func CalculateDistancePointLine(point math.Vector2, lineStart math.Vector2, lineEnd math.Vector2) float64 {
