@@ -1,6 +1,6 @@
-package hexagon
+package bgw
 
-func contains(hexagonList []Hexagon, hex Hexagon) bool {
+func contains(hexagonList []Position, hex Position) bool {
 	for _, h := range hexagonList {
 		if h.Equal(hex) {
 			return true
@@ -10,11 +10,11 @@ func contains(hexagonList []Hexagon, hex Hexagon) bool {
 }
 
 // CalculatePath berechnet die direkten Pfad (LOS) zwischen zwei Hexagons.
-func CalculatePath(startHex Hexagon, endHex Hexagon) []Hexagon {
-	var path = make([]Hexagon, 0)
-	var ignore = make([]Hexagon, 0)
+func CalculatePath(startHex Position, endHex Position) []Position {
+	var path = make([]Position, 0)
+	var ignore = make([]Position, 0)
 	var current = startHex
-	var next = Hexagon{}
+	var next = Position{}
 
 	path = append(path, current)
 

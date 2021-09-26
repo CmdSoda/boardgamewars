@@ -1,4 +1,4 @@
-package hexagon
+package bgw
 
 import (
 	"github.com/CmdSoda/boardgamewars/internal/vector"

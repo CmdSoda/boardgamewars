@@ -1,4 +1,4 @@
-package hexagon
+package bgw
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -8,13 +8,13 @@ import (
 
 func TestCalculatePath(t *testing.T) {
 	type args struct {
-		startHex Hexagon
-		endHex   Hexagon
+		startHex Position
+		endHex   Position
 	}
 	tests := []struct {
 		name string
 		args args
-		want []Hexagon
+		want []Position
 	}{
 		{
 			name: "11->13",
@@ -22,7 +22,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(1, 1),
 				endHex:   NewHexagon(1, 3),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 1, Row: 1},
 				{Column: 1, Row: 2},
 				{Column: 1, Row: 3}},
@@ -33,7 +33,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(1, 2),
 				endHex:   NewHexagon(7, 3),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 1, Row: 2},
 				{Column: 2, Row: 2},
 				{Column: 3, Row: 2},
@@ -49,7 +49,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(1, 1),
 				endHex:   NewHexagon(7, 3),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 1, Row: 1},
 				{Column: 2, Row: 1},
 				{Column: 2, Row: 2},
@@ -66,7 +66,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(2, 3),
 				endHex:   NewHexagon(2, 1),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 2, Row: 3},
 				{Column: 2, Row: 2},
 				{Column: 2, Row: 1},
@@ -78,7 +78,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(1, 3),
 				endHex:   NewHexagon(3, 1),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 1, Row: 3},
 				{Column: 1, Row: 2},
 				{Column: 2, Row: 2},
@@ -91,7 +91,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(2, 4),
 				endHex:   NewHexagon(1, 1),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 2, Row: 4},
 				{Column: 2, Row: 3},
 				{Column: 1, Row: 2},
@@ -104,7 +104,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(1, 1),
 				endHex:   NewHexagon(5, 1),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 1, Row: 1},
 				{Column: 2, Row: 1},
 				{Column: 3, Row: 1},
@@ -118,7 +118,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(1, 2),
 				endHex:   NewHexagon(5, 2),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 1, Row: 2},
 				{Column: 2, Row: 2},
 				{Column: 3, Row: 2},
@@ -132,7 +132,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(7, 3),
 				endHex:   NewHexagon(1, 2),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 7, Row: 3},
 				{Column: 6, Row: 3},
 				{Column: 5, Row: 3},
@@ -148,7 +148,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(4, 1),
 				endHex:   NewHexagon(1, 3),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 4, Row: 1},
 				{Column: 3, Row: 2},
 				{Column: 2, Row: 2},
@@ -162,7 +162,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(1, 1),
 				endHex:   NewHexagon(5, 4),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 1, Row: 1},
 				{Column: 1, Row: 2},
 				{Column: 2, Row: 2},
@@ -178,7 +178,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(8, 2),
 				endHex:   NewHexagon(8, 4),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 8, Row: 2},
 				{Column: 9, Row: 3},
 				{Column: 8, Row: 4},
@@ -190,7 +190,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(4, 1),
 				endHex:   NewHexagon(5, 2),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 4, Row: 1},
 				{Column: 4, Row: 2},
 				{Column: 5, Row: 2},
@@ -202,7 +202,7 @@ func TestCalculatePath(t *testing.T) {
 				startHex: NewHexagon(4, 1),
 				endHex:   NewHexagon(7, 3),
 			},
-			want: []Hexagon{
+			want: []Position{
 				{Column: 4, Row: 1},
 				{Column: 4, Row: 2},
 				{Column: 5, Row: 2},
@@ -220,7 +220,7 @@ func TestCalculatePath(t *testing.T) {
 	}
 }
 
-const combinationMax int = 20
+const combinationMax int = 10
 
 func TestCombination(t *testing.T) {
 	for rowStart := 1; rowStart < combinationMax; rowStart++ {

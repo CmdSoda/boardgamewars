@@ -1,4 +1,4 @@
-package world
+package bgw
 
 type HillType uint
 

@@ -1,4 +1,4 @@
-package hexagon
+package bgw
 
 import (
 	"reflect"
@@ -17,7 +17,7 @@ func TestGetAdjacent(t *testing.T) {
 		name   string
 		fields fields
 		args   args
-		want   *Hexagon
+		want   *Position
 	}{
 		{
 			name: "NE",
@@ -26,7 +26,7 @@ func TestGetAdjacent(t *testing.T) {
 				Row:    2,
 			},
 			args: args{direction: NE},
-			want: &Hexagon{
+			want: &Position{
 				Column: 3,
 				Row:    3,
 			},
@@ -38,7 +38,7 @@ func TestGetAdjacent(t *testing.T) {
 				Row:    2,
 			},
 			args: args{direction: E},
-			want: &Hexagon{
+			want: &Position{
 				Column: 3,
 				Row:    2,
 			},
@@ -50,7 +50,7 @@ func TestGetAdjacent(t *testing.T) {
 				Row:    2,
 			},
 			args: args{direction: SE},
-			want: &Hexagon{
+			want: &Position{
 				Column: 3,
 				Row:    1,
 			},
@@ -62,7 +62,7 @@ func TestGetAdjacent(t *testing.T) {
 				Row:    2,
 			},
 			args: args{direction: SW},
-			want: &Hexagon{
+			want: &Position{
 				Column: 2,
 				Row:    1,
 			},
@@ -74,7 +74,7 @@ func TestGetAdjacent(t *testing.T) {
 				Row:    2,
 			},
 			args: args{direction: W},
-			want: &Hexagon{
+			want: &Position{
 				Column: 1,
 				Row:    2,
 			},
@@ -86,7 +86,7 @@ func TestGetAdjacent(t *testing.T) {
 				Row:    2,
 			},
 			args: args{direction: NW},
-			want: &Hexagon{
+			want: &Position{
 				Column: 2,
 				Row:    3,
 			},
@@ -103,7 +103,7 @@ func TestGetAdjacent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			h := Hexagon{
+			h := Position{
 				Column: tt.fields.Column,
 				Row:    tt.fields.Row,
 			}
