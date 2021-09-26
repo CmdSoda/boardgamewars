@@ -1,7 +1,6 @@
 package hexagon
 
 import (
-	"github.com/CmdSoda/boardgamewars/internal/segment"
 	"reflect"
 	"testing"
 )
@@ -12,7 +11,7 @@ func TestGetAdjacent(t *testing.T) {
 		Row    int
 	}
 	type args struct {
-		direction segment.Direction
+		direction Direction
 	}
 	tests := []struct {
 		name   string
@@ -26,7 +25,7 @@ func TestGetAdjacent(t *testing.T) {
 				Column: 2,
 				Row:    2,
 			},
-			args: args{direction: segment.NE},
+			args: args{direction: NE},
 			want: &Hexagon{
 				Column: 3,
 				Row:    3,
@@ -38,7 +37,7 @@ func TestGetAdjacent(t *testing.T) {
 				Column: 2,
 				Row:    2,
 			},
-			args: args{direction: segment.E},
+			args: args{direction: E},
 			want: &Hexagon{
 				Column: 3,
 				Row:    2,
@@ -50,7 +49,7 @@ func TestGetAdjacent(t *testing.T) {
 				Column: 2,
 				Row:    2,
 			},
-			args: args{direction: segment.SE},
+			args: args{direction: SE},
 			want: &Hexagon{
 				Column: 3,
 				Row:    1,
@@ -62,7 +61,7 @@ func TestGetAdjacent(t *testing.T) {
 				Column: 2,
 				Row:    2,
 			},
-			args: args{direction: segment.SW},
+			args: args{direction: SW},
 			want: &Hexagon{
 				Column: 2,
 				Row:    1,
@@ -74,7 +73,7 @@ func TestGetAdjacent(t *testing.T) {
 				Column: 2,
 				Row:    2,
 			},
-			args: args{direction: segment.W},
+			args: args{direction: W},
 			want: &Hexagon{
 				Column: 1,
 				Row:    2,
@@ -86,7 +85,7 @@ func TestGetAdjacent(t *testing.T) {
 				Column: 2,
 				Row:    2,
 			},
-			args: args{direction: segment.NW},
+			args: args{direction: NW},
 			want: &Hexagon{
 				Column: 2,
 				Row:    3,
@@ -98,7 +97,7 @@ func TestGetAdjacent(t *testing.T) {
 				Column: 1,
 				Row:    1,
 			},
-			args: args{direction: segment.NW},
+			args: args{direction: NW},
 			want: nil,
 		},
 	}

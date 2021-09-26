@@ -1,30 +1,6 @@
-package math
+package vector3
 
 import "math"
-
-//
-// Vector 2
-//
-
-type Vector2 struct {
-	X float64
-	Y float64
-}
-
-//goland:noinspection ALL
-func NewVector2(x float64, y float64) Vector2 {
-	return Vector2{
-		X: x,
-		Y: y,
-	}
-}
-
-func (v Vector2) Minus(v2 Vector2) Vector2 {
-	return Vector2{
-		X: v.X - v2.X,
-		Y: v.Y - v2.Y,
-	}
-}
 
 //
 // Vector 3
@@ -36,7 +12,7 @@ type Vector3 struct {
 	Z float64
 }
 
-func NewVector3(x float64, y float64, z float64) Vector3 {
+func NewVector(x float64, y float64, z float64) Vector3 {
 	return Vector3{
 		X: x,
 		Y: y,
@@ -65,3 +41,4 @@ func (v Vector3) Distance(ov Vector3) float64 { return v.Sub(ov).Norm() }
 func (v Vector3) Norm() float64 { return math.Sqrt(v.Dot(v)) }
 
 func (v Vector3) Dot(ov Vector3) float64 { return v.X*ov.X + v.Y*ov.Y + v.Z*ov.Z }
+

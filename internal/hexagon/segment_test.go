@@ -1,7 +1,7 @@
-package segment
+package hexagon
 
 import (
-	"github.com/CmdSoda/boardgamewars/internal/math"
+	"github.com/CmdSoda/boardgamewars/internal/vector"
 	"reflect"
 	"testing"
 )
@@ -9,7 +9,7 @@ import (
 func TestNewSegment(t *testing.T) {
 	type args struct {
 		direction Direction
-		center    math.Vector2
+		center    vector.Vector
 	}
 	tests := []struct {
 		name string
@@ -20,15 +20,15 @@ func TestNewSegment(t *testing.T) {
 			name: "NE",
 			args: args{
 				direction: NE,
-				center:    math.Vector2{},
+				center:    vector.Vector{},
 			},
 			want: Segment{
-				Start: math.Vector2{
+				Start: vector.Vector{
 					X: 0,
 					Y: -1,
 				},
-				End: math.Vector2{
-					X: math.Hr,
+				End: vector.Vector{
+					X: HexHalfWidth,
 					Y: -0.5,
 				},
 			},
@@ -37,15 +37,15 @@ func TestNewSegment(t *testing.T) {
 			name: "E",
 			args: args{
 				direction: E,
-				center:    math.Vector2{},
+				center:    vector.Vector{},
 			},
 			want: Segment{
-				Start: math.Vector2{
-					X: math.Hr,
+				Start: vector.Vector{
+					X: HexHalfWidth,
 					Y: -0.5,
 				},
-				End: math.Vector2{
-					X: math.Hr,
+				End: vector.Vector{
+					X: HexHalfWidth,
 					Y: 0.5,
 				},
 			},
@@ -54,14 +54,14 @@ func TestNewSegment(t *testing.T) {
 			name: "SE",
 			args: args{
 				direction: SE,
-				center:    math.Vector2{},
+				center:    vector.Vector{},
 			},
 			want: Segment{
-				Start: math.Vector2{
-					X: math.Hr,
+				Start: vector.Vector{
+					X: HexHalfWidth,
 					Y: 0.5,
 				},
-				End: math.Vector2{
+				End: vector.Vector{
 					X: 0,
 					Y: 1,
 				},
@@ -71,15 +71,15 @@ func TestNewSegment(t *testing.T) {
 			name: "SW",
 			args: args{
 				direction: SW,
-				center:    math.Vector2{},
+				center:    vector.Vector{},
 			},
 			want: Segment{
-				Start: math.Vector2{
+				Start: vector.Vector{
 					X: 0,
 					Y: 1,
 				},
-				End: math.Vector2{
-					X: -math.Hr,
+				End: vector.Vector{
+					X: -HexHalfWidth,
 					Y: 0.5,
 				},
 			},
@@ -88,15 +88,15 @@ func TestNewSegment(t *testing.T) {
 			name: "W",
 			args: args{
 				direction: W,
-				center:    math.Vector2{},
+				center:    vector.Vector{},
 			},
 			want: Segment{
-				Start: math.Vector2{
-					X: -math.Hr,
+				Start: vector.Vector{
+					X: -HexHalfWidth,
 					Y: 0.5,
 				},
-				End: math.Vector2{
-					X: -math.Hr,
+				End: vector.Vector{
+					X: -HexHalfWidth,
 					Y: -0.5,
 				},
 			},
@@ -105,14 +105,14 @@ func TestNewSegment(t *testing.T) {
 			name: "NW",
 			args: args{
 				direction: NW,
-				center:    math.Vector2{},
+				center:    vector.Vector{},
 			},
 			want: Segment{
-				Start: math.Vector2{
-					X: -math.Hr,
+				Start: vector.Vector{
+					X: -HexHalfWidth,
 					Y: -0.5,
 				},
-				End: math.Vector2{
+				End: vector.Vector{
 					X: 0,
 					Y: -1,
 				},

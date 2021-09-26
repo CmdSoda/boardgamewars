@@ -2,9 +2,16 @@ package hexagon
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/math"
-	"github.com/CmdSoda/boardgamewars/internal/segment"
+	"github.com/CmdSoda/boardgamewars/internal/vector"
+	"github.com/CmdSoda/boardgamewars/internal/vector3"
+	"math"
 )
+
+// HexWidth breite eines Hexagon.
+var HexWidth = math.Sqrt(3)
+
+// HexHalfWidth halbe breite eines Hexagon.
+var HexHalfWidth = HexWidth / 2
 
 type Hexagon struct {
 	Column int
@@ -23,8 +30,8 @@ func (h Hexagon) String() string {
 }
 
 // GetCenterCoordinates ermittelt den Mittelpunkt eines hexagons.
-func (h Hexagon) GetCenterCoordinates(useOffset bool) math.Vector2 {
-	center := math.Vector2{}
+func (h Hexagon) GetCenterCoordinates(useOffset bool) vector.Vector {
+	center := vector.Vector{}
 
 	var offsetValue = 0.0
 	if useOffset {
@@ -32,28 +39,28 @@ func (h Hexagon) GetCenterCoordinates(useOffset bool) math.Vector2 {
 	}
 
 	if h.Row%2 == 0 {
-		center.X = 2*math.Hr + 2*math.Hr*float64(h.Column) + offsetValue
+		center.X = 2*HexHalfWidth + 2*HexHalfWidth*float64(h.Column) + offsetValue
 		center.Y = 2.5 + float64(h.Row-1)*1.5 + offsetValue
 	} else {
-		center.X = math.Hr + float64(h.Column)*2*math.Hr + offsetValue
+		center.X = HexHalfWidth + float64(h.Column)*2*HexHalfWidth + offsetValue
 		center.Y = 1 + 1.5*float64(h.Row) + offsetValue
 	}
 
 	return center
 }
 
-func (h Hexagon) GetSegments() [6]segment.Segment {
-	segments := [6]segment.Segment{}
+func (h Hexagon) GetSegments() [6]Segment {
+	segments := [6]Segment{}
 	for i := 0; i < len(segments); i++ {
-		segments[i] = segment.NewSegment(segment.Direction(i), h.GetCenterCoordinates(false))
+		segments[i] = NewSegment(Direction(i), h.GetCenterCoordinates(false))
 	}
 	return segments
 }
 
-func (h Hexagon) GetAdjacent(direction segment.Direction) *Hexagon {
+func (h Hexagon) GetAdjacent(direction Direction) *Hexagon {
 	retHex := Hexagon{}
 	switch direction {
-	case segment.NW:
+	case NW:
 		if h.Row%2 == 0 {
 			retHex = Hexagon{
 				Column: h.Column,
@@ -65,7 +72,7 @@ func (h Hexagon) GetAdjacent(direction segment.Direction) *Hexagon {
 				Row:    h.Row + 1,
 			}
 		}
-	case segment.NE:
+	case NE:
 		if h.Row%2 == 0 {
 			retHex = Hexagon{
 				Column: h.Column + 1,
@@ -77,12 +84,12 @@ func (h Hexagon) GetAdjacent(direction segment.Direction) *Hexagon {
 				Row:    h.Row + 1,
 			}
 		}
-	case segment.E:
+	case E:
 		retHex = Hexagon{
 			Column: h.Column + 1,
 			Row:    h.Row,
 		}
-	case segment.SE:
+	case SE:
 		if h.Row%2 == 0 {
 			retHex = Hexagon{
 				Column: h.Column + 1,
@@ -94,7 +101,7 @@ func (h Hexagon) GetAdjacent(direction segment.Direction) *Hexagon {
 				Row:    h.Row - 1,
 			}
 		}
-	case segment.SW:
+	case SW:
 		if h.Row%2 == 0 {
 			retHex = Hexagon{
 				Column: h.Column,
@@ -106,7 +113,7 @@ func (h Hexagon) GetAdjacent(direction segment.Direction) *Hexagon {
 				Row:    h.Row - 1,
 			}
 		}
-	case segment.W:
+	case W:
 		retHex = Hexagon{
 			Column: h.Column - 1,
 			Row:    h.Row,
@@ -140,15 +147,15 @@ func (h Hexagon) CalculateIntersectionCount(startHex Hexagon, endHex Hexagon) in
 	return count
 }
 
-func CalculateIntersectionScalar(start1 math.Vector2, direction1 math.Vector2, start2 math.Vector2, direction2 math.Vector2) float64 {
+func CalculateIntersectionScalar(start1 vector.Vector, direction1 vector.Vector, start2 vector.Vector, direction2 vector.Vector) float64 {
 	return (direction1.Y*start1.X - direction1.X*start1.Y - direction1.Y*start2.X + direction1.X*start2.Y) /
 		(direction1.Y*direction2.X - direction1.X*direction2.Y)
 }
 
-func CalculateDistancePointLine(point math.Vector2, lineStart math.Vector2, lineEnd math.Vector2) float64 {
-	p3 := math.NewVector3(point.X, point.Y, 0)
-	start3 := math.NewVector3(lineStart.X, lineStart.Y, 0)
-	end3 := math.NewVector3(lineEnd.X, lineEnd.Y, 0)
+func CalculateDistancePointLine(point vector.Vector, lineStart vector.Vector, lineEnd vector.Vector) float64 {
+	p3 := vector3.NewVector(point.X, point.Y, 0)
+	start3 := vector3.NewVector(lineStart.X, lineStart.Y, 0)
+	end3 := vector3.NewVector(lineEnd.X, lineEnd.Y, 0)
 	b := end3.Sub(start3)
 	return b.Cross(p3.Sub(start3)).Norm() / b.Norm()
 }

@@ -1,11 +1,6 @@
-package path
+package hexagon
 
-import (
-	"github.com/CmdSoda/boardgamewars/internal/hexagon"
-	"github.com/CmdSoda/boardgamewars/internal/segment"
-)
-
-func contains(hexagonList []hexagon.Hexagon, hex hexagon.Hexagon) bool {
+func contains(hexagonList []Hexagon, hex Hexagon) bool {
 	for _, h := range hexagonList {
 		if h.Equal(hex) {
 			return true
@@ -14,11 +9,11 @@ func contains(hexagonList []hexagon.Hexagon, hex hexagon.Hexagon) bool {
 	return false
 }
 
-func CalculatePath(startHex hexagon.Hexagon, endHex hexagon.Hexagon) []hexagon.Hexagon {
-	var path = make([]hexagon.Hexagon, 0)
-	var ignore = make([]hexagon.Hexagon, 0)
+func CalculatePath(startHex Hexagon, endHex Hexagon) []Hexagon {
+	var path = make([]Hexagon, 0)
+	var ignore = make([]Hexagon, 0)
 	var current = startHex
-	var next = hexagon.Hexagon{}
+	var next = Hexagon{}
 
 	path = append(path, current)
 
@@ -32,7 +27,7 @@ func CalculatePath(startHex hexagon.Hexagon, endHex hexagon.Hexagon) []hexagon.H
 
 	for true {
 		var minDist float64 = 0
-		for nb := segment.NW; nb <= segment.W; nb++ {
+		for nb := NW; nb <= W; nb++ {
 			neighbor := current.GetAdjacent(nb)
 
 			if neighbor != nil {
@@ -40,7 +35,7 @@ func CalculatePath(startHex hexagon.Hexagon, endHex hexagon.Hexagon) []hexagon.H
 					path = append(path, *neighbor)
 					return path
 				}
-				dist := hexagon.CalculateDistancePointLine(neighbor.GetCenterCoordinates(true),
+				dist := CalculateDistancePointLine(neighbor.GetCenterCoordinates(true),
 					startHex.GetCenterCoordinates(true), endHex.GetCenterCoordinates(true))
 				intersectionCount := neighbor.CalculateIntersectionCount(startHex, endHex)
 
@@ -54,7 +49,7 @@ func CalculatePath(startHex hexagon.Hexagon, endHex hexagon.Hexagon) []hexagon.H
 
 		path = append(path, next)
 
-		for nb := segment.NW; nb <= segment.W; nb++ {
+		for nb := NW; nb <= W; nb++ {
 			neighbor := current.GetAdjacent(nb)
 
 			if neighbor != nil {
