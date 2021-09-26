@@ -4,9 +4,14 @@ type HillType uint
 
 //goland:noinspection ALL
 const (
+	// Very plain, like a dream.
 	HillPlain HillType = iota
+	// It goes up and down just a little.
 	HillRough
+	// Very high Slope.
 	HillSteep
+	// Like a wall.
+	HillFace
 )
 
 type GroundType uint
@@ -18,5 +23,6 @@ const (
 	GroundMud
 	GroundWood
 	GroundUrban
-	GroundWater
+	GroundWaterShallow
+	GroundWaterDeep
 )
