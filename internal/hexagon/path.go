@@ -9,6 +9,7 @@ func contains(hexagonList []Hexagon, hex Hexagon) bool {
 	return false
 }
 
+// CalculatePath berechnet die direkten Pfad (LOS) zwischen zwei Hexagons.
 func CalculatePath(startHex Hexagon, endHex Hexagon) []Hexagon {
 	var path = make([]Hexagon, 0)
 	var ignore = make([]Hexagon, 0)
