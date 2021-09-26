@@ -1,4 +1,6 @@
 package math
 
+import "math"
+
 // Hr ist der Hex-Radius
-const Hr = 0.8660254037844386
+var Hr = math.Sqrt(3) / 2
