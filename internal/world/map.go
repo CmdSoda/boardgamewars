@@ -1,14 +1,15 @@
 package world
 
 type Map struct {
-	Width int
+	Width  int
 	Height int
-	Tiles []Tile
+	Tiles  []Tile
 }
 
 //goland:noinspection ALL
+// NewMap erzeugt eine Map und initialisiert alle Felder mit Default-Werten.
 func NewMap(width int, height int) Map {
-	m := make([]Tile, width * height, width * height)
+	m := make([]Tile, width*height, width*height)
 	return Map{
 		Width:  width,
 		Height: height,
@@ -17,9 +18,9 @@ func NewMap(width int, height int) Map {
 }
 
 func (m Map) GetTileAt(x int, y int) Tile {
-	return m.Tiles[y * m.Width + x]
+	return m.Tiles[x-1+(m.Height-y)*m.Width]
 }
 
 func (m *Map) SetTileAt(x int, y int, t Tile) {
-	m.Tiles[y * m.Width + x] = t
+	m.Tiles[x-1+(m.Height-y)*m.Width] = t
 }
