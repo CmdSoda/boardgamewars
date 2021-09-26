@@ -92,6 +92,15 @@ func TestGetAdjacent(t *testing.T) {
 				Row:    3,
 			},
 		},
+		{
+			name: "nil-1",
+			fields: fields{
+				Column: 1,
+				Row:    1,
+			},
+			args: args{direction: segment.NW},
+			want: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
