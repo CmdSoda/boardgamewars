@@ -6,9 +6,11 @@ import (
 )
 
 func TestNewMap(t *testing.T) {
-	m := NewMap(3, 3)
-	assert.Equal(t, 9, len(m.Tiles))
-	assert.Equal(t, 9, cap(m.Tiles))
+	m := NewMap(3, 4)
+	assert.Equal(t, 12, len(m.Tiles))
+	assert.Equal(t, 12, cap(m.Tiles))
+	assert.Equal(t, 3, m.Width)
+	assert.Equal(t, 4, m.Height)
 }
 
 func TestGetTileAt(t *testing.T) {
@@ -24,10 +26,9 @@ func TestGetTileAt(t *testing.T) {
 	assert.Equal(t, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundMud,
-	}, m.Tiles[4])
+	}, m.Tiles[6])
 	assert.Equal(t, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundStreet,
 	}, m.GetTileAt(0, 0))
 }
-
