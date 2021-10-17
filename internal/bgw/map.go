@@ -66,4 +66,3 @@ func (m Map) Search(start Position, end Position, sp *SearchParameter) PositionL
 	return currentpath
 }
 
-
