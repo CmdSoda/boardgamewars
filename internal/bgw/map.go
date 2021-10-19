@@ -61,20 +61,12 @@ func (m Map) recursiveDeep(path PositionList, end Position, results *SolutionLis
 func (m Map) evolveFromHere(s Solution, solutions *SolutionList, added *SolutionList) {
 	for nb := NW; nb <= W; nb++ {
 		neighbor := s.Path.LastElement().GetAdjacent(nb)
-		newposlist := make(PositionList, len(s.Path))
-		copy(newposlist, s.Path)
-		newposlist = append(newposlist, *neighbor)
-		ns := Solution{Path: newposlist}
-		*added = append(*added, ns)
-	}
-}
-
-func (m Map) recursiveWide(step int, end Position, solutions *SolutionList) {
-	added := make(SolutionList, 0)
-	for _, solution := range *solutions {
-		if len(solution.Path) < step {
-			m.evolveFromHere(solution, solutions, &added)
-
+		if neighbor != nil && s.Path.Contains(*neighbor) == false {
+			newposlist := make(PositionList, len(s.Path))
+			copy(newposlist, s.Path)
+			newposlist = append(newposlist, *neighbor)
+			ns := Solution{Path: newposlist}
+			*added = append(*added, ns)
 		}
 	}
 }
@@ -94,7 +86,14 @@ func (m Map) SearchWide(start Position, end Position, sp *SearchParameter) Posit
 	starts := Solution{Path: currentPath}
 	results = append(results, starts)
 
-	m.recursiveWide(1, end, &results)
+	for i := 1; i <= 6; i++ {
+		added := make(SolutionList, 0)
+		for _, solution := range results {
+			m.evolveFromHere(solution, &results, &added)
+			//fmt.Println(added)
+		}
+		results = added
+	}
 
 	return currentPath
 }

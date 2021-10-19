@@ -175,6 +175,11 @@ func (poslist PositionList) LastElement() Position {
 	return poslist[len(poslist)-1]
 }
 
+// Steps liefert die Schritte vom Start bis zum Ende der Liste
+func (poslist PositionList) Steps() int {
+	return len(poslist) - 1
+}
+
 func (poslist PositionList) String() string {
 	ret := fmt.Sprintf("[%d]", len(poslist))
 	for _, p := range poslist {
