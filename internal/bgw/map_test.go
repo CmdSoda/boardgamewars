@@ -35,7 +35,7 @@ func TestGetTileAt(t *testing.T) {
 
 func TestSearch(t *testing.T) {
 	m := NewMap(3, 3)
-	m.Search(Position{
+	m.SearchDeep(Position{
 		Column: 1,
 		Row:    1,
 	}, Position{
@@ -58,7 +58,7 @@ func Test_searchWide(t *testing.T) {
 	currentpath := make(PositionList, 0, 0)
 	currentpath = append(currentpath, start)
 	results := make(ResultList, 0, 0)
-	m.searchWide(currentpath, end, &results)
+	m.recursiveDeep(currentpath, end, &results)
 
 	for _, r := range results {
 		assert.Equal(t, end, r.Path.Last())

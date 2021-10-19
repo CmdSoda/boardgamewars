@@ -36,7 +36,7 @@ type SearchParameter struct {
 	Handlers []SearchHandler
 }
 
-func (m Map) searchWide(path PositionList, end Position, results *ResultList) {
+func (m Map) recursiveDeep(path PositionList, end Position, results *ResultList) {
 	if path.Last().Equal(end) {
 		co := make(PositionList, len(path))
 		copy(co, path)
@@ -53,16 +53,26 @@ func (m Map) searchWide(path PositionList, end Position, results *ResultList) {
 		adj := path.Last().GetAdjacent(d)
 		if adj != nil && m.InsideMap(*adj) && !path.Contains(*adj){
 			path2 := append(path, *adj)
-			m.searchWide(path2, end, results)
+			m.recursiveDeep(path2, end, results)
 		}
 	}
 }
 
-func (m Map) Search(start Position, end Position, sp *SearchParameter) PositionList {
-	currentpath := make(PositionList, 0, 0)
-	currentpath = append(currentpath, start)
-	results := make(ResultList, 0, 0)
-	m.searchWide(currentpath, end, &results)
-	return currentpath
+func (m Map) recursiveWide(path PositionList, end Position, results *ResultList) {
+
 }
 
+func (m Map) SearchDeep(start Position, end Position, sp *SearchParameter) PositionList {
+	currentPath := make(PositionList, 0, 0)
+	currentPath = append(currentPath, start)
+	results := make(ResultList, 0, 0)
+	m.recursiveDeep(currentPath, end, &results)
+	return currentPath
+}
+
+func (m Map) SearchWide(start Position, end Position, sp *SearchParameter) PositionList {
+	currentPath := make(PositionList, 0, 0)
+	results := make(ResultList, 0, 0)
+	m.recursiveWide(currentPath, end, &results)
+	return currentPath
+}
