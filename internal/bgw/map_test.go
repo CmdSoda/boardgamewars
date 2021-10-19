@@ -57,10 +57,52 @@ func Test_searchWide(t *testing.T) {
 	}
 	currentpath := make(PositionList, 0, 0)
 	currentpath = append(currentpath, start)
-	results := make(ResultList, 0, 0)
+	results := make(SolutionList, 0, 0)
 	m.recursiveDeep(currentpath, end, &results)
 
 	for _, r := range results {
-		assert.Equal(t, end, r.Path.Last())
+		assert.Equal(t, end, r.Path.LastElement())
 	}
+}
+
+func Test_arrayCopy(t *testing.T) {
+	a1 := make([]int, 0) // { }
+	a1 = append(a1, 1) // { 1 }
+	a1 = append(a1, 2) // { 1, 2 }
+	a1 = append(a1, 3) // { 1, 2, 3 }
+
+	a2 := make([]int, len(a1)) // { 0, 0, 0 }
+	copy(a2, a1) // { 1, 2, 3 }
+
+	a2 = append(a2, 4)
+	a2[0] = 5
+
+	if len(a1) != 3 {
+		t.Log("len not 3")
+		t.FailNow()
+	}
+	if a1[0] != 1 {
+		t.Log("value not 1")
+		t.FailNow()
+	}
+
+	if len(a2) != 4 {
+		t.Log("len not 4")
+		t.FailNow()
+	}
+	if a2[0] != 5 {
+		t.Log("value not 5")
+		t.FailNow()
+	}
+}
+
+func Test_evolveSolution(t *testing.T) {
+	m := NewMap(5, 5)
+	m.SearchWide(Position{
+		Column: 1,
+		Row:    1,
+	}, Position{
+		Column: 3,
+		Row:    3,
+	}, nil)
 }

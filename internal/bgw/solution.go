@@ -1,10 +1,10 @@
 package bgw
 
-type Result struct {
+type Solution struct {
 	Path PositionList
 }
 
-type ResultList []Result
+type SolutionList []Solution
 
 
 

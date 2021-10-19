@@ -162,7 +162,7 @@ func CalculateDistancePointLine(point vector.Vector, lineStart vector.Vector, li
 
 type PositionList []Position
 
-func (poslist PositionList)Contains(p Position) bool {
+func (poslist PositionList) Contains(p Position) bool {
 	for _, p2 := range poslist {
 		if p2.Equal(p) {
 			return true
@@ -171,8 +171,8 @@ func (poslist PositionList)Contains(p Position) bool {
 	return false
 }
 
-func (poslist PositionList)Last() Position {
-	return poslist[len(poslist) - 1]
+func (poslist PositionList) LastElement() Position {
+	return poslist[len(poslist)-1]
 }
 
 func (poslist PositionList) String() string {
@@ -182,4 +182,3 @@ func (poslist PositionList) String() string {
 	}
 	return ret
 }
-

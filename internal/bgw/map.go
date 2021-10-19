@@ -36,11 +36,11 @@ type SearchParameter struct {
 	Handlers []SearchHandler
 }
 
-func (m Map) recursiveDeep(path PositionList, end Position, results *ResultList) {
-	if path.Last().Equal(end) {
+func (m Map) recursiveDeep(path PositionList, end Position, results *SolutionList) {
+	if path.LastElement().Equal(end) {
 		co := make(PositionList, len(path))
 		copy(co, path)
-		*results = append(*results, Result{Path: co})
+		*results = append(*results, Solution{Path: co})
 		return
 	}
 
@@ -50,7 +50,7 @@ func (m Map) recursiveDeep(path PositionList, end Position, results *ResultList)
 	}
 
 	for d := NW; d <= W; d++ {
-		adj := path.Last().GetAdjacent(d)
+		adj := path.LastElement().GetAdjacent(d)
 		if adj != nil && m.InsideMap(*adj) && !path.Contains(*adj){
 			path2 := append(path, *adj)
 			m.recursiveDeep(path2, end, results)
@@ -58,21 +58,43 @@ func (m Map) recursiveDeep(path PositionList, end Position, results *ResultList)
 	}
 }
 
-func (m Map) recursiveWide(path PositionList, end Position, results *ResultList) {
+func (m Map) evolveFromHere(s Solution, solutions *SolutionList, added *SolutionList) {
+	for nb := NW; nb <= W; nb++ {
+		neighbor := s.Path.LastElement().GetAdjacent(nb)
+		newposlist := make(PositionList, len(s.Path))
+		copy(newposlist, s.Path)
+		newposlist = append(newposlist, *neighbor)
+		ns := Solution{Path: newposlist}
+		*added = append(*added, ns)
+	}
+}
 
+func (m Map) recursiveWide(step int, end Position, solutions *SolutionList) {
+	added := make(SolutionList, 0)
+	for _, solution := range *solutions {
+		if len(solution.Path) < step {
+			m.evolveFromHere(solution, solutions, &added)
+
+		}
+	}
 }
 
 func (m Map) SearchDeep(start Position, end Position, sp *SearchParameter) PositionList {
 	currentPath := make(PositionList, 0, 0)
 	currentPath = append(currentPath, start)
-	results := make(ResultList, 0, 0)
+	results := make(SolutionList, 0, 0)
 	m.recursiveDeep(currentPath, end, &results)
 	return currentPath
 }
 
 func (m Map) SearchWide(start Position, end Position, sp *SearchParameter) PositionList {
 	currentPath := make(PositionList, 0, 0)
-	results := make(ResultList, 0, 0)
-	m.recursiveWide(currentPath, end, &results)
+	results := make(SolutionList, 0, 0)
+	currentPath = append(currentPath, start)
+	starts := Solution{Path: currentPath}
+	results = append(results, starts)
+
+	m.recursiveWide(1, end, &results)
+
 	return currentPath
 }
