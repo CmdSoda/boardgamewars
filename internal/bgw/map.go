@@ -32,7 +32,7 @@ func (m *Map) InsideMap(p Position) bool {
 type SearchHandler func(t Tile, object *interface{}) float32
 
 type SearchParameter struct {
-	Object interface{}
+	Object   interface{}
 	Handlers []SearchHandler
 }
 
@@ -45,13 +45,13 @@ func (m Map) recursiveDeep(path PositionList, end Position, results *SolutionLis
 	}
 
 	// Terminierung, falls zu lang
-	if len(path) > m.Width + m.Height {
+	if len(path) > m.Width+m.Height {
 		return
 	}
 
 	for d := NW; d <= W; d++ {
 		adj := path.LastElement().GetAdjacent(d)
-		if adj != nil && m.InsideMap(*adj) && !path.Contains(*adj){
+		if adj != nil && m.InsideMap(*adj) && !path.Contains(*adj) {
 			path2 := append(path, *adj)
 			m.recursiveDeep(path2, end, results)
 		}
@@ -84,13 +84,13 @@ func (m Map) SearchWide(start Position, end Position, sp *SearchParameter) Posit
 	results := make(SolutionList, 0, 0)
 	currentPath = append(currentPath, start)
 	starts := Solution{Path: currentPath}
+
 	results = append(results, starts)
 
 	for i := 1; i <= 6; i++ {
 		added := make(SolutionList, 0)
 		for _, solution := range results {
 			m.evolveFromHere(solution, &results, &added)
-			//fmt.Println(added)
 		}
 		results = added
 	}

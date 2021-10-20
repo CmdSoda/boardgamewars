@@ -41,4 +41,3 @@ func (v Vector3) Distance(ov Vector3) float64 { return v.Sub(ov).Norm() }
 func (v Vector3) Norm() float64 { return math.Sqrt(v.Dot(v)) }
 
 func (v Vector3) Dot(ov Vector3) float64 { return v.X*ov.X + v.Y*ov.Y + v.Z*ov.Z }
-

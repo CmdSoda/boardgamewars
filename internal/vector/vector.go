@@ -23,4 +23,3 @@ func (v Vector) Minus(v2 Vector) Vector {
 		Y: v.Y - v2.Y,
 	}
 }
-

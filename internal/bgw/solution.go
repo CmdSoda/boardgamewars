@@ -5,7 +5,3 @@ type Solution struct {
 }
 
 type SolutionList []Solution
-
-
-
-

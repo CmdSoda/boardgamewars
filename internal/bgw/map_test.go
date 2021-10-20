@@ -67,12 +67,12 @@ func Test_searchWide(t *testing.T) {
 
 func Test_arrayCopy(t *testing.T) {
 	a1 := make([]int, 0) // { }
-	a1 = append(a1, 1) // { 1 }
-	a1 = append(a1, 2) // { 1, 2 }
-	a1 = append(a1, 3) // { 1, 2, 3 }
+	a1 = append(a1, 1)   // { 1 }
+	a1 = append(a1, 2)   // { 1, 2 }
+	a1 = append(a1, 3)   // { 1, 2, 3 }
 
 	a2 := make([]int, len(a1)) // { 0, 0, 0 }
-	copy(a2, a1) // { 1, 2, 3 }
+	copy(a2, a1)               // { 1, 2, 3 }
 
 	a2 = append(a2, 4)
 	a2[0] = 5
