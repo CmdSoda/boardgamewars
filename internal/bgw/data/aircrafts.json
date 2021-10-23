@@ -1,0 +1,86 @@
+[
+  {
+    "Type": 0,
+    "Name": "F-14",
+    "Nickname": "Tomcat",
+    "FirstFlight": 1970,
+    "Introduction": 1974,
+    "CombatSpeed": 10,
+    "CruiseSpeed": 4,
+    "CombatFuelConsumption": 4,
+    "CruiseFuelConsumption": 0,
+    "Fuel": 20,
+    "MaxAltitude": 5,
+    "Dogfighting": 7,
+    "Configurations": [
+      [
+        0,
+        0
+      ]
+    ],
+    "MaintenanceTime": 5
+  },
+  {
+    "Type": 1,
+    "Name": "Mig-23",
+    "Nickname": "Flogger",
+    "FirstFlight": 1967,
+    "Introduction": 1970,
+    "CombatSpeed": 10,
+    "CruiseSpeed": 4,
+    "CombatFuelConsumption": 4,
+    "CruiseFuelConsumption": 0,
+    "Fuel": 20,
+    "MaxAltitude": 5,
+    "Dogfighting": 7,
+    "Configurations": [
+      [
+        0,
+        0
+      ]
+    ],
+    "MaintenanceTime": 5
+  },
+  {
+    "Type": 2,
+    "Name": "Mig-27",
+    "Nickname": "Flogger-D/J",
+    "FirstFlight": 1967,
+    "Introduction": 1970,
+    "CombatSpeed": 10,
+    "CruiseSpeed": 4,
+    "CombatFuelConsumption": 4,
+    "CruiseFuelConsumption": 0,
+    "Fuel": 20,
+    "MaxAltitude": 5,
+    "Dogfighting": 7,
+    "Configurations": [
+      [
+        0,
+        0
+      ]
+    ],
+    "MaintenanceTime": 5
+  },
+  {
+    "Type": 3,
+    "Name": "Su-17",
+    "Nickname": "Fitter",
+    "FirstFlight": 1967,
+    "Introduction": 1970,
+    "CombatSpeed": 10,
+    "CruiseSpeed": 4,
+    "CombatFuelConsumption": 4,
+    "CruiseFuelConsumption": 0,
+    "Fuel": 20,
+    "MaxAltitude": 5,
+    "Dogfighting": 7,
+    "Configurations": [
+      [
+        0,
+        0
+      ]
+    ],
+    "MaintenanceTime": 5
+  }
+]
