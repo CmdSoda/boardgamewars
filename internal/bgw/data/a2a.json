@@ -6,7 +6,7 @@
     "BVR": 0,
     "Speed": 9,
     "Range": 10,
-    "Damage": 5,
+    "Damage": 500,
     "OrdenanceWeight": 4
   }
 ]

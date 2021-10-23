@@ -1,13 +1,15 @@
 package bgw
 
-type DogfightPosition uint
+import "fmt"
+
+type DogfightPosition int
 
 const (
-	DogfightPositionBehindEnemiesTailOptimal DogfightPosition = -2
-	DogfightPositionBehindEnemiesTail        DogfightPosition = -1
+	DogfightPositionBehindEnemiesTailOptimal DogfightPosition = 2
+	DogfightPositionBehindEnemiesTail        DogfightPosition = 1
 	DogfightPositionTossup                   DogfightPosition = 0
-	DogfightPositionEnemyAtMySix             DogfightPosition = 1
-	DogfightPositionEnemyAtMySixOptimal      DogfightPosition = 2
+	DogfightPositionEnemyAtMySix             DogfightPosition = -1
+	DogfightPositionEnemyAtMySixOptimal      DogfightPosition = -2
 )
 
 func GroupDogfight(side1 []Aircraft, side2 []Aircraft) {
@@ -44,6 +46,7 @@ func Dogfight(aircraft1 *Aircraft, aircraft2 *Aircraft) {
 	// Flugzeuge mit grösseren Dogfighting-Rating haben höhere Chance.
 	// 1) Kampf um die Position => Endet in einer Position
 	dfa1Pos := DogfightPerformance(ap1.Dogfighting, ap2.Dogfighting)
+	fmt.Printf("aircraft1 is in %d\n", dfa1Pos)
 
 	// SRMs (Short-Range-Missles) gegeneinander einsetzen
 	// 2) Abschuss der SRM
@@ -53,7 +56,21 @@ func Dogfight(aircraft1 *Aircraft, aircraft2 *Aircraft) {
 		if bestws != nil {
 			aircraft1.DepleteWeapon(*bestws)
 			if bestws.Hit(*aircraft2, dfa1Pos) {
-				aircraft2.DoDamageWith(*bestws)
+				dt := aircraft2.DoDamageWith(*bestws)
+				fmt.Printf("aircraft2 damaged: %d\n", dt)
+			} else {
+				fmt.Println("aircraft1 misses")
+			}
+		}
+	} else if -dfa1Pos > 0 {
+		bestws := aircraft2.GetBestDogfightingWeapon()
+		if bestws != nil {
+			aircraft2.DepleteWeapon(*bestws)
+			if bestws.Hit(*aircraft1, -dfa1Pos) {
+				dt := aircraft1.DoDamageWith(*bestws)
+				fmt.Printf("aircraft1 damaged: %d\n", dt)
+			} else {
+				fmt.Println("aircraft2 misses")
 			}
 		}
 	}

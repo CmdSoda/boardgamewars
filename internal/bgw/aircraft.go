@@ -15,7 +15,8 @@ type Aircraft struct {
 	CurrentPosition    Position
 	NextTargetLocation Position // Das ist die Position, die das Flugzeug jetzt ansteuert.
 	WeaponSystems      []WeaponSystem
-	Hitpoints
+	Damage             []DamageType // Eine Liste von Schäden
+	Destroyed          bool
 }
 
 func NewAircraftById(id AircraftId, configurationName string) *Aircraft {
@@ -24,6 +25,7 @@ func NewAircraftById(id AircraftId, configurationName string) *Aircraft {
 	for i := 0; i < len(ac.WeaponSystems); i++ {
 		ac.WeaponSystems[i].InitWeaponSystem()
 	}
+	ac.Damage = make([]DamageType, 0)
 	return &ac
 }
 
@@ -61,6 +63,7 @@ type AircraftParameters struct {
 	MaintenanceTime       Rating
 	StructuralDefense     Rating
 	MaxHitpoints          Hitpoints
+	MaxDamagePoints       int
 }
 
 type AircraftLibrary []AircraftParameters
@@ -117,8 +120,28 @@ func (a Aircraft) GetBestDogfightingWeapon() *WeaponSystem {
 	return bestws
 }
 
-func (a *Aircraft) DoDamageWith(ws WeaponSystem) {
+func (a *Aircraft) AddLightDamage(dt DamageType) {
+	a.Damage = append(a.Damage, dt)
+}
 
+func (a *Aircraft) DoDamageAssessment() {
+	if len(a.Damage) > a.GetParameters().MaxDamagePoints {
+		a.Destroyed = true
+	}
+
+	// Falls die Kanzel getroffen wurde => Pilot tot?
+}
+
+func (a *Aircraft) DoDamageWith(ws WeaponSystem) DamageType {
+	if ws.Air2AirWeaponParameters != nil {
+		dhp := ws.Air2AirWeaponParameters.DoRandomDamage()
+		if dhp <= a.GetParameters().MaxHitpoints {
+			rd := RollRandomDamage()
+			a.AddLightDamage(rd)
+			return rd
+		}
+	}
+	return DamageTypeNothing
 }
 
 func (a *Aircraft) DepleteWeapon(ws WeaponSystem) {

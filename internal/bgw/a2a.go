@@ -13,7 +13,7 @@ type Air2AirWeaponParameters struct {
 	BVR             Rating // Wie gut verhält sich die Waffe im BVR
 	Speed           Rating // Wie schnell ist die Waffe
 	Range           Rating // Wie weit fliegt die Waffe
-	Damage          Rating
+	Damage          Hitpoints
 	OrdenanceWeight Rating
 }
 
@@ -56,4 +56,19 @@ func (awp Air2AirWeaponParameters) Hit(target Aircraft, dfp DogfightPosition) bo
 	}
 	dfpw := DogfightPerformance(wep, target.GetParameters().Dogfighting)
 	return dfpw > 0
+}
+
+func (awp Air2AirWeaponParameters) DoRandomDamage() Hitpoints {
+	dr := Roll1D10()
+	if dr >= 9 {
+		return awp.Damage
+	} else if dr >=7 {
+		return Hitpoints(float32(awp.Damage) * 0.50)
+	} else if dr >=5 {
+		return Hitpoints(float32(awp.Damage) * 0.25)
+	} else if dr >=3 {
+		return Hitpoints(float32(awp.Damage) * 0.10)
+	} else {
+		return 0
+	}
 }
