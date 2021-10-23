@@ -7,14 +7,45 @@ import (
 	"os"
 )
 
-type AircraftId uint
+type AircraftId int
 
 type Aircraft struct {
 	AircraftId
 	Altitude           AltitudeBand // Aktuelle Höhe.
 	CurrentPosition    Position
 	NextTargetLocation Position // Das ist die Position, die das Flugzeug jetzt ansteuert.
+	WeaponSystems      []WeaponSystem
 	Hitpoints
+}
+
+func NewAircraftById(id AircraftId, configurationName string) *Aircraft {
+	ac := Aircraft{AircraftId: id}
+	ac.WeaponSystems = ac.GetParameters().Configurations.GetFromName(configurationName).WeaponSystems
+	for i := 0; i < len(ac.WeaponSystems); i++ {
+		switch GetWeaponSystemCategoryFromString(ac.WeaponSystems[i].Category) {
+		case WeaponSystemCategoryA2A:
+			ac.WeaponSystems[i].Air2AirWeaponParameters = GetAir2AirWeaponParametersFromName(ac.WeaponSystems[i].WeaponSystemName)
+			fmt.Println(ac.WeaponSystems[i].Air2AirWeaponParameters)
+		}
+	}
+	return &ac
+}
+
+func NewAircraftByName(name string, configurationName string) *Aircraft {
+	id := GetAircraftIdByName(name)
+	if id >= 0 {
+		return NewAircraftById(id, configurationName)
+	}
+	return nil
+}
+
+func GetAircraftIdByName(name string) AircraftId {
+	for _, parameters := range AirLib {
+		if parameters.Name == name {
+			return parameters.AircraftId
+		}
+	}
+	return -1
 }
 
 type AircraftParameters struct {
@@ -30,7 +61,7 @@ type AircraftParameters struct {
 	Fuel                  Rating
 	MaxAltitude           AltitudeBand
 	Dogfighting           Rating
-	Configurations        []WeaponSystemConfiguration
+	Configurations        WeaponSystemConfigurationList
 	MaintenanceTime       Rating
 	StructuralDefense     Rating
 	MaxHitpoints          Hitpoints
@@ -67,14 +98,11 @@ func LoadAircrafts() (*AircraftLibrary, error) {
 	return &al, nil
 }
 
-func (a Aircraft) GetParameters() (*AircraftParameters, error) {
-	if AirLib == nil {
-		return nil, nil
-	}
+func (a Aircraft) GetParameters() *AircraftParameters {
 	for _, parameters := range AirLib {
 		if parameters.AircraftId == a.AircraftId {
-			return &parameters, nil
+			return &parameters
 		}
 	}
-	return nil, &AircraftParametersNotFound{Type: a.AircraftId}
+	return nil
 }

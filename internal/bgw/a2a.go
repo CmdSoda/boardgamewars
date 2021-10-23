@@ -21,7 +21,7 @@ var Air2AirLib Air2AirWeaponLibrary
 
 func LoadAir2AirWeapons() (*Air2AirWeaponLibrary, error) {
 	var err error
-	file, err := os.Open("data/aircrafts.json")
+	file, err := os.Open("data/a2a.json")
 	if err != nil {
 		return nil, err
 	}
@@ -36,4 +36,13 @@ func LoadAir2AirWeapons() (*Air2AirWeaponLibrary, error) {
 	}
 	Air2AirLib = a2al
 	return &a2al, nil
+}
+
+func GetAir2AirWeaponParametersFromName(name string) *Air2AirWeaponParameters {
+	for _, parameters := range Air2AirLib {
+		if parameters.Name == name {
+			return &parameters
+		}
+	}
+	return nil
 }

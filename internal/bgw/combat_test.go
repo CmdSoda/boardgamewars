@@ -3,11 +3,12 @@ package bgw
 import "testing"
 
 func TestDogfight(t *testing.T) {
-	fighter1 := Aircraft{
-		AircraftId: 0,
-	}
-	fighter2 := Aircraft{
-		AircraftId: 0,
-	}
+	RandInit()
+	LoadAircrafts()
+	LoadAir2AirWeapons()
+
+	fighter1 := NewAircraftByName("F14", "Default")
+	fighter2 := NewAircraftByName("F14", "Default")
+
 	Dogfight(fighter1, fighter2)
 }
