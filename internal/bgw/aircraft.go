@@ -20,13 +20,9 @@ type Aircraft struct {
 
 func NewAircraftById(id AircraftId, configurationName string) *Aircraft {
 	ac := Aircraft{AircraftId: id}
-	ac.WeaponSystems = ac.GetParameters().Configurations.GetFromName(configurationName).WeaponSystems
+	ac.WeaponSystems = NewWeaponSystems(id, configurationName)
 	for i := 0; i < len(ac.WeaponSystems); i++ {
-		switch GetWeaponSystemCategoryFromString(ac.WeaponSystems[i].Category) {
-		case WeaponSystemCategoryA2A:
-			ac.WeaponSystems[i].Air2AirWeaponParameters = GetAir2AirWeaponParametersFromName(ac.WeaponSystems[i].WeaponSystemName)
-			fmt.Println(ac.WeaponSystems[i].Air2AirWeaponParameters)
-		}
+		ac.WeaponSystems[i].InitWeaponSystem()
 	}
 	return &ac
 }
@@ -105,4 +101,18 @@ func (a Aircraft) GetParameters() *AircraftParameters {
 		}
 	}
 	return nil
+}
+
+func (a Aircraft) GetBestDogfightingWeapon() *WeaponSystem {
+	var bestws *WeaponSystem = nil
+	var max int = 0
+	for _, system := range a.WeaponSystems {
+		if system.Air2AirWeaponParameters != nil {
+			if int(system.Air2AirWeaponParameters.Dogfighting) > max {
+				bestws = &system
+				max = int(system.Dogfighting)
+			}
+		}
+	}
+	return bestws
 }

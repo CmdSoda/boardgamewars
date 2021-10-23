@@ -16,6 +16,28 @@ type WeaponSystem struct {
 	*Air2AirWeaponParameters
 }
 
+type WeaponSystemList []WeaponSystem
+
+func NewWeaponSystems(acId AircraftId, configname string) WeaponSystemList {
+	for _, parameters := range AirLib {
+		if parameters.AircraftId == acId {
+			for _, configuration := range parameters.Configurations {
+				if configuration.ConfigurationName == configname {
+					return configuration.WeaponSystems
+				}
+			}
+		}
+	}
+	return nil
+}
+
+func (ws *WeaponSystem) InitWeaponSystem() {
+	switch GetWeaponSystemCategoryFromString(ws.Category) {
+	case WeaponSystemCategoryA2A:
+		ws.Air2AirWeaponParameters = GetAir2AirWeaponParametersFromName(ws.WeaponSystemName)
+	}
+}
+
 func GetWeaponSystemCategoryFromString(name string) WeaponSystemCategory {
 	switch name {
 	case "Gun":
@@ -32,7 +54,7 @@ func GetWeaponSystemCategoryFromString(name string) WeaponSystemCategory {
 
 type WeaponSystemConfiguration struct {
 	ConfigurationName string // Name of the configuration
-	WeaponSystems     []WeaponSystem
+	WeaponSystems     WeaponSystemList
 }
 
 type WeaponSystemConfigurationList []WeaponSystemConfiguration

@@ -46,6 +46,8 @@ func Dogfight(aircraft1 *Aircraft, aircraft2 *Aircraft) {
 
 	// SRMs (Short-Range-Missles) gegeneinander einsetzen
 	// 2) Abschuss der SRM
+	bestws := aircraft1.GetBestDogfightingWeapon()
+	fmt.Println(bestws)
 
 	// Gun einsetzen
 	// Falls keine SRM => Einsatz der Gun
