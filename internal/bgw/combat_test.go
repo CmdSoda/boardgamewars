@@ -4,10 +4,10 @@ import "testing"
 
 func TestDogfight(t *testing.T) {
 	fighter1 := Aircraft{
-		Type: F14,
+		AircraftId: 0,
 	}
 	fighter2 := Aircraft{
-		Type: Mig23,
+		AircraftId: 0,
 	}
-	Dogfight([]Aircraft{fighter1}, []Aircraft{fighter2})
+	Dogfight(fighter1, fighter2)
 }

@@ -1,19 +1,20 @@
 package bgw
 
-type WeaponSystemType uint
+type WeaponSystemCategory uint
 
 const (
-	FuelTank WeaponSystemType = 0
-	Aim54                     = 1
-	Aim9                      = 2
-	Aim7                      = 3
-	Gun                       = 4
+	DropTank WeaponSystemCategory = 0
+	A2A                           = 1
+	Gun                           = 2
+	A2G                           = 3
 )
 
 type WeaponSystem struct {
-	Name            string
-	Type            WeaponSystemType
-	OrdenanceWeight Rating
+	EquipmentId
+	Category WeaponSystemCategory
 }
 
-type WeaponSystemConfiguration []WeaponSystemType
+type WeaponSystemConfiguration struct {
+	ConfigurationName string // Name of the configuration
+	WeaponSystems     []WeaponSystem
+}

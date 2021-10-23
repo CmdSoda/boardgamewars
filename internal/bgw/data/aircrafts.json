@@ -1,7 +1,7 @@
 [
   {
-    "Type": 0,
-    "Name": "F-14",
+    "AircraftId": 0,
+    "Name": "F14",
     "Nickname": "Tomcat",
     "FirstFlight": 1970,
     "Introduction": 1974,
@@ -13,36 +13,18 @@
     "MaxAltitude": 5,
     "Dogfighting": 7,
     "Configurations": [
-      [
-        0,
-        0
-      ]
+      {
+        "ConfigurationName": "Default",
+        "WeaponSystems": [
+          {
+            "EquipmentId": 0,
+            "Category": 0
+          }
+        ]
+      }
     ],
     "MaintenanceTime": 5,
-    "StructuralDefense": 5,
-    "MaxHitpoints": 500
-  },
-  {
-    "Type": 1,
-    "Name": "Mig-23",
-    "Nickname": "Flogger",
-    "FirstFlight": 1967,
-    "Introduction": 1970,
-    "CombatSpeed": 10,
-    "CruiseSpeed": 4,
-    "CombatFuelConsumption": 4,
-    "CruiseFuelConsumption": 0,
-    "Fuel": 20,
-    "MaxAltitude": 5,
-    "Dogfighting": 7,
-    "Configurations": [
-      [
-        0,
-        0
-      ]
-    ],
-    "MaintenanceTime": 5,
-    "StructuralDefense": 5,
-    "MaxHitpoints": 500
+    "StructuralDefense": 0,
+    "MaxHitpoints": 0
   }
 ]

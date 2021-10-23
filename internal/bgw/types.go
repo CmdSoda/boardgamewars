@@ -15,3 +15,8 @@ type Weight uint
 type AltitudeBand uint
 
 type Hitpoints uint
+type EquipmentId uint
+
+const (
+
+)

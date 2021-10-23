@@ -7,17 +7,10 @@ import (
 	"os"
 )
 
-type AircraftType uint
-
-const (
-	F14   AircraftType = 0
-	Mig23              = 1
-	Mig27              = 2
-	Su17               = 3
-)
+type AircraftId uint
 
 type Aircraft struct {
-	Type               AircraftType
+	AircraftId
 	Altitude           AltitudeBand // Aktuelle Höhe.
 	CurrentPosition    Position
 	NextTargetLocation Position // Das ist die Position, die das Flugzeug jetzt ansteuert.
@@ -25,7 +18,7 @@ type Aircraft struct {
 }
 
 type AircraftParameters struct {
-	Type                  AircraftType
+	AircraftId
 	Name                  string
 	Nickname              string
 	FirstFlight           Year
@@ -48,7 +41,7 @@ type AircraftLibrary []AircraftParameters
 var AirLib AircraftLibrary
 
 type AircraftParametersNotFound struct {
-	Type AircraftType
+	Type AircraftId
 }
 
 func (p *AircraftParametersNotFound) Error() string {
@@ -79,10 +72,9 @@ func (a Aircraft) GetParameters() (*AircraftParameters, error) {
 		return nil, nil
 	}
 	for _, parameters := range AirLib {
-		if parameters.Type == a.Type {
+		if parameters.AircraftId == a.AircraftId {
 			return &parameters, nil
 		}
 	}
-	return nil, &AircraftParametersNotFound{Type: a.Type}
+	return nil, &AircraftParametersNotFound{Type: a.AircraftId}
 }
-

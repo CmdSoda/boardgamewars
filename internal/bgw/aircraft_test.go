@@ -8,10 +8,11 @@ import (
 	"testing"
 )
 
-func CreateAircraftLibrary() {
+func TestCreateAircraftLibrary(t *testing.T) {
 	ap := AircraftParameters{}
-	ap.Type = F14
+	ap.AircraftId = 0
 	ap.Name = "F14"
+	ap.Nickname = "Tomcat"
 	ap.FirstFlight = 1970
 	ap.Introduction = 1974
 	ap.CombatSpeed = 10
@@ -21,7 +22,13 @@ func CreateAircraftLibrary() {
 	ap.Fuel = 20
 	ap.MaxAltitude = 5
 	ap.Dogfighting = 7
-	wsc := WeaponSystemConfiguration{FuelTank, FuelTank}
+	wsc := WeaponSystemConfiguration{
+		ConfigurationName: "Default",
+		WeaponSystems: []WeaponSystem{{
+			EquipmentId: 0,
+			Category:    DropTank,
+		}},
+	}
 	ap.Configurations = []WeaponSystemConfiguration{wsc}
 	ap.MaintenanceTime = 5
 	al := AircraftLibrary{ap}
