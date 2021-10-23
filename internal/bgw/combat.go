@@ -1,59 +1,60 @@
 package bgw
 
-import (
-	"fmt"
-	"math"
-)
-
 type DogfightPosition uint
 
 const (
-	DogfightPositionTossup DogfightPosition = 0
-	DogfightPositionEnemyAtMySix = 1
-	DogfightPositionBehindEnemiesTail = 2
+	DogfightPositionBehindEnemiesTailOptimal DogfightPosition = -2
+	DogfightPositionBehindEnemiesTail        DogfightPosition = -1
+	DogfightPositionTossup                   DogfightPosition = 0
+	DogfightPositionEnemyAtMySix             DogfightPosition = 1
+	DogfightPositionEnemyAtMySixOptimal      DogfightPosition = 2
 )
 
 func GroupDogfight(side1 []Aircraft, side2 []Aircraft) {
 
 }
 
+func DogfightPerformance(rating1 Rating, rating2 Rating) DogfightPosition {
+	dfr1 := Roll1D10() + int(rating1)
+	dfr2 := Roll1D10() + int(rating2)
+	dfdelta := dfr1 - dfr2
+
+	if dfdelta > 0 {
+		if dfdelta >= 7 {
+			return DogfightPositionBehindEnemiesTailOptimal
+		} else if dfdelta >= 3 {
+			return DogfightPositionBehindEnemiesTail
+		}
+	} else {
+		if -dfdelta >= 7 {
+			return DogfightPositionEnemyAtMySixOptimal
+		}
+		if -dfdelta >= 3 {
+			return DogfightPositionEnemyAtMySix
+		}
+	}
+	return DogfightPositionTossup
+}
+
 func Dogfight(aircraft1 *Aircraft, aircraft2 *Aircraft) {
-	var veryGoodPosition bool = false
 	ap1 := aircraft1.GetParameters()
 	ap2 := aircraft2.GetParameters()
 
 	// In Position setzen
 	// Flugzeuge mit grösseren Dogfighting-Rating haben höhere Chance.
 	// 1) Kampf um die Position => Endet in einer Position
-	dfa1Pos := DogfightPositionTossup
-	dfa2Pos := DogfightPositionTossup
-	dfr1 := Roll1D10() + int(ap1.Dogfighting)
-	dfr2 := Roll1D10() + int(ap2.Dogfighting)
-	dfdelta := dfr1 - dfr2
-	if dfdelta > 0 {
-		if dfdelta >= 3 {
-			dfa1Pos = DogfightPositionBehindEnemiesTail
-			dfa2Pos = DogfightPositionEnemyAtMySix
-		}
-	} else {
-		if -dfdelta >= 3 {
-			dfa1Pos = DogfightPositionEnemyAtMySix
-			dfa2Pos = DogfightPositionBehindEnemiesTail
-		}
-	}
-	if math.Abs(float64(dfdelta)) >= 6 {
-		veryGoodPosition = true
-	}
-
-	fmt.Println(dfa1Pos)
-	fmt.Println(dfa2Pos)
+	dfa1Pos := DogfightPerformance(ap1.Dogfighting, ap2.Dogfighting)
 
 	// SRMs (Short-Range-Missles) gegeneinander einsetzen
 	// 2) Abschuss der SRM
 	// Falls keine SRM => Einsatz der Gun
-	bestws := aircraft1.GetBestDogfightingWeapon()
-	if bestws.Hit(veryGoodPosition) {
-		aircraft2.DoDamageWith(*bestws)
+	if dfa1Pos > 0 {
+		bestws := aircraft1.GetBestDogfightingWeapon()
+		if bestws != nil {
+			aircraft1.DepleteWeapon(*bestws)
+			if bestws.Hit(*aircraft2, dfa1Pos) {
+				aircraft2.DoDamageWith(*bestws)
+			}
+		}
 	}
-
 }

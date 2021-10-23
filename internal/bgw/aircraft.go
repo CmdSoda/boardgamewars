@@ -107,7 +107,7 @@ func (a Aircraft) GetBestDogfightingWeapon() *WeaponSystem {
 	var bestws *WeaponSystem = nil
 	var max = 0
 	for _, system := range a.WeaponSystems {
-		if system.Air2AirWeaponParameters != nil {
+		if system.Depleted == false && system.Air2AirWeaponParameters != nil {
 			if int(system.Air2AirWeaponParameters.Dogfighting) > max {
 				bestws = &system
 				max = int(system.Dogfighting)
@@ -119,4 +119,16 @@ func (a Aircraft) GetBestDogfightingWeapon() *WeaponSystem {
 
 func (a *Aircraft) DoDamageWith(ws WeaponSystem) {
 
+}
+
+func (a *Aircraft) DepleteWeapon(ws WeaponSystem) {
+	if ws.Air2AirWeaponParameters != nil {
+		for i, system := range a.WeaponSystems {
+			if system.Depleted == false && system.Air2AirWeaponParameters != nil &&
+				ws.Air2AirWeaponParameters.EquipmentId == system.Air2AirWeaponParameters.EquipmentId {
+				a.WeaponSystems[i].Depleted = true
+				return
+			}
+		}
+	}
 }

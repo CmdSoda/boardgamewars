@@ -13,6 +13,7 @@ const (
 type WeaponSystem struct {
 	WeaponSystemName string
 	Category         string
+	Depleted         bool
 	*Air2AirWeaponParameters
 }
 
