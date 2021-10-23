@@ -13,3 +13,5 @@ type Weight uint
 // 1 = 100ft - 2000ft (Deck)
 // 2 = 2000ft - 5000ft
 type AltitudeBand uint
+
+type Hitpoints uint
