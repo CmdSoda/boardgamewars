@@ -13,10 +13,12 @@ type Air2AirWeaponParameters struct {
 	BVR             Rating // Wie gut verhält sich die Waffe im BVR
 	Speed           Rating // Wie schnell ist die Waffe
 	Range           Rating // Wie weit fliegt die Waffe
+	Damage          Rating
 	OrdenanceWeight Rating
 }
 
 type Air2AirWeaponLibrary []Air2AirWeaponParameters
+
 var Air2AirLib Air2AirWeaponLibrary
 
 func LoadAir2AirWeapons() (*Air2AirWeaponLibrary, error) {
@@ -45,4 +47,8 @@ func GetAir2AirWeaponParametersFromName(name string) *Air2AirWeaponParameters {
 		}
 	}
 	return nil
+}
+
+func (awp Air2AirWeaponParameters) Hit(veryGoodPosition bool) bool {
+	return true
 }

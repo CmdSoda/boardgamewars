@@ -105,7 +105,7 @@ func (a Aircraft) GetParameters() *AircraftParameters {
 
 func (a Aircraft) GetBestDogfightingWeapon() *WeaponSystem {
 	var bestws *WeaponSystem = nil
-	var max int = 0
+	var max = 0
 	for _, system := range a.WeaponSystems {
 		if system.Air2AirWeaponParameters != nil {
 			if int(system.Air2AirWeaponParameters.Dogfighting) > max {
@@ -115,4 +115,8 @@ func (a Aircraft) GetBestDogfightingWeapon() *WeaponSystem {
 		}
 	}
 	return bestws
+}
+
+func (a *Aircraft) DoDamageWith(ws WeaponSystem) {
+
 }

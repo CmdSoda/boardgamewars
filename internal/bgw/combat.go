@@ -2,6 +2,7 @@ package bgw
 
 import (
 	"fmt"
+	"math"
 )
 
 type DogfightPosition uint
@@ -17,7 +18,7 @@ func GroupDogfight(side1 []Aircraft, side2 []Aircraft) {
 }
 
 func Dogfight(aircraft1 *Aircraft, aircraft2 *Aircraft) {
-
+	var veryGoodPosition bool = false
 	ap1 := aircraft1.GetParameters()
 	ap2 := aircraft2.GetParameters()
 
@@ -40,16 +41,19 @@ func Dogfight(aircraft1 *Aircraft, aircraft2 *Aircraft) {
 			dfa2Pos = DogfightPositionBehindEnemiesTail
 		}
 	}
+	if math.Abs(float64(dfdelta)) >= 6 {
+		veryGoodPosition = true
+	}
 
 	fmt.Println(dfa1Pos)
 	fmt.Println(dfa2Pos)
 
 	// SRMs (Short-Range-Missles) gegeneinander einsetzen
 	// 2) Abschuss der SRM
-	bestws := aircraft1.GetBestDogfightingWeapon()
-	fmt.Println(bestws)
-
-	// Gun einsetzen
 	// Falls keine SRM => Einsatz der Gun
+	bestws := aircraft1.GetBestDogfightingWeapon()
+	if bestws.Hit(veryGoodPosition) {
+		aircraft2.DoDamageWith(*bestws)
+	}
 
 }
