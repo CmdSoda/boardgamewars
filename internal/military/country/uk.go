@@ -1,36 +1,36 @@
 package country
 
-import "github.com/CmdSoda/boardgamewars/internal/rankgenerator"
+import "github.com/CmdSoda/boardgamewars/internal/military"
 
-var PilotRanksUK = []rankgenerator.MilitaryFlightRank{
+var PilotRanksUK = []military.FlightRank{
 	{
 		Name:           "Pilot Officer",
 		Short:          "Plt Off",
-		NatoFlightCode: rankgenerator.NatoFlightCodeOF1,
+		NatoFlightCode: military.NatoFlightCodeOF1,
 	},
 	{
 		Name:           "Flying Officer",
 		Short:          "Fg Off",
-		NatoFlightCode: rankgenerator.NatoFlightCodeOF1,
+		NatoFlightCode: military.NatoFlightCodeOF1,
 	},
 	{
 		Name:           "Flight Lieutenant",
 		Short:          "Flt Lt",
-		NatoFlightCode: rankgenerator.NatoFlightCodeOF2,
+		NatoFlightCode: military.NatoFlightCodeOF2,
 	},
 	{
 		Name:           "Squadron Leader",
 		Short:          "Sqn Ldr",
-		NatoFlightCode: rankgenerator.NatoFlightCodeOF3,
+		NatoFlightCode: military.NatoFlightCodeOF3,
 	},
 	{
 		Name:           "Wing Commander",
 		Short:          "Wg Cdr",
-		NatoFlightCode: rankgenerator.NatoFlightCodeOF4,
+		NatoFlightCode: military.NatoFlightCodeOF4,
 	},
 	{
 		Name:           "Group Captain",
 		Short:          "Gp Cpt",
-		NatoFlightCode: rankgenerator.NatoFlightCodeOF5,
+		NatoFlightCode: military.NatoFlightCodeOF5,
 	},
 }

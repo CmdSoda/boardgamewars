@@ -1,4 +1,4 @@
-package rankgenerator
+package military
 
 type NatoFlightCode int
 
@@ -11,7 +11,7 @@ const (
 	NatoFlightCodeOF6 NatoFlightCode = 6
 )
 
-type MilitaryFlightRank struct {
+type FlightRank struct {
 	Name string
 	Short string
 	NatoFlightCode
