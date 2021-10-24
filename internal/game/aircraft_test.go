@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/CmdSoda/boardgamewars/internal/military"
-	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -61,10 +60,7 @@ func TestLoadAircraftLibrary(t *testing.T) {
 }
 
 func TestAircraftPilots(t *testing.T) {
-	NewPilotRoster()
-	randomizer.Init()
-	LoadAircrafts()
-	LoadAir2AirWeapons()
+	InitGame()
 	ac := NewAircraftByName("F14", "Default", countrycodes.UK, military.NatoOfficerCodeOF2)
 	fmt.Println(ac)
 	ac = NewAircraftByName("F14", "Default", countrycodes.Germany, military.NatoOfficerCodeOF2)
