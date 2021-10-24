@@ -2,6 +2,7 @@ package namegenerator
 
 import (
 	"fmt"
+	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/CmdSoda/boardgamewars/internal/namegenerator/country"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"github.com/stretchr/testify/assert"
@@ -10,16 +11,16 @@ import (
 
 func TestCreateSurname(t *testing.T) {
 	randomizer.Init()
-	sn := CreateSurname(UK)
+	sn := CreateSurname(countrycodes.UK)
 	fmt.Println(sn)
-	assert.NotEqual(t, InvalidParameter, sn)
+	assert.NotEqual(t, countrycodes.InvalidParameter, sn)
 }
 
 func TestFullname(t *testing.T) {
 	randomizer.Init()
-	fn := CreateMaleFullName(UK)
+	fn := CreateMaleFullName(countrycodes.UK)
 	fmt.Println(fn)
-	fn = CreateFemaleFullName(UK)
+	fn = CreateFemaleFullName(countrycodes.UK)
 	fmt.Println(fn)
 }
 

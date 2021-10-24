@@ -38,6 +38,7 @@
     "MaintenanceTime": 5,
     "StructuralDefense": 0,
     "MaxHitpoints": 500,
-    "MaxDamagePoints": 2
+    "MaxDamagePoints": 2,
+    "Seats": 2
   }
 ]

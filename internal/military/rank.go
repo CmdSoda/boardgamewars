@@ -5,17 +5,6 @@ import (
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 )
 
-type NatoOfficerCode int
-
-const (
-	NatoOfficerCodeOF1 NatoOfficerCode = 1
-	NatoOfficerCodeOF2 NatoOfficerCode = 2
-	NatoOfficerCodeOF3 NatoOfficerCode = 3
-	NatoOfficerCodeOF4 NatoOfficerCode = 4
-	NatoOfficerCodeOF5 NatoOfficerCode = 5
-	NatoOfficerCodeOF6 NatoOfficerCode = 6
-)
-
 type FlightRank struct {
 	Name  string
 	Short string
@@ -24,7 +13,7 @@ type FlightRank struct {
 
 func (f FlightRank) String() string {
 	if f.Short != "" {
-		return fmt.Sprintf("%s(%s)", f.Name, f.Short)
+		return fmt.Sprintf("%s", f.Short)
 	} else {
 		return f.Name
 	}

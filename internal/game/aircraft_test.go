@@ -3,6 +3,9 @@ package game
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
+	"github.com/CmdSoda/boardgamewars/internal/military"
+	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -55,4 +58,12 @@ func TestLoadAircraftLibrary(t *testing.T) {
 	if len(al) == 0 {
 		t.FailNow()
 	}
+}
+
+func TestAircraftPilots(t *testing.T) {
+	randomizer.Init()
+	LoadAircrafts()
+	LoadAir2AirWeapons()
+	ac := NewAircraftByName("F14", "Default", countrycodes.UK, military.NatoOfficerCodeOF2)
+	fmt.Println(ac)
 }

@@ -3,37 +3,68 @@ package game
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/hexagon"
+	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
+	"github.com/CmdSoda/boardgamewars/internal/military"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 type AircraftId int
 
 type Aircraft struct {
 	AircraftId
+	countrycodes.Code
 	Altitude           AltitudeBand // Aktuelle Höhe.
-	CurrentPosition    hexagon.Position
-	NextTargetLocation hexagon.Position // Das ist die Position, die das Flugzeug jetzt ansteuert.
+	CurrentPosition    Position
+	NextTargetLocation Position // Das ist die Position, die das Flugzeug jetzt ansteuert.
 	WeaponSystems      []WeaponSystem
 	Damage             []DamageType // Eine Liste von Schäden
 	Destroyed          bool
+	Pilots             []Pilot
 }
 
-func NewAircraftById(id AircraftId, configurationName string) *Aircraft {
+func (a Aircraft) String() string {
+	var b strings.Builder
+	fmt.Fprintf(&b, "%s\n", a.GetParameters().Name)
+	for _, pilot := range a.Pilots {
+		fmt.Fprintf(&b, pilot.String() + "\n")
+	}
+	return b.String()
+}
+
+func (a *Aircraft) AddPilot(p Pilot) {
+	a.Pilots = append(a.Pilots, p)
+}
+
+func (a *Aircraft) FillUpSeats(oc military.NatoOfficerCode) {
+	a.Pilots = make([]Pilot, 0)
+	currentoc := oc
+	for i := 0; i < a.GetParameters().Seats; i++ {
+		a.AddPilot(NewPilot(a.Code, currentoc))
+		if currentoc > 1 {
+			currentoc = currentoc - 1
+		}
+	}
+}
+
+func NewAircraftById(id AircraftId, configurationName string, cc countrycodes.Code, oc military.NatoOfficerCode) *Aircraft {
 	ac := Aircraft{AircraftId: id}
+	ac.Code = cc
 	ac.WeaponSystems = NewWeaponSystems(id, configurationName)
 	for i := 0; i < len(ac.WeaponSystems); i++ {
 		ac.WeaponSystems[i].InitWeaponSystem()
 	}
 	ac.Damage = make([]DamageType, 0)
+	ac.Pilots = make([]Pilot, 0)
+	ac.FillUpSeats(oc)
 	return &ac
 }
 
-func NewAircraftByName(name string, configurationName string) *Aircraft {
+func NewAircraftByName(name string, configurationName string, cc countrycodes.Code, oc military.NatoOfficerCode) *Aircraft {
 	id := GetAircraftIdByName(name)
 	if id >= 0 {
-		return NewAircraftById(id, configurationName)
+		return NewAircraftById(id, configurationName, cc, oc)
 	}
 	return nil
 }
@@ -65,6 +96,7 @@ type AircraftParameters struct {
 	StructuralDefense     Rating
 	MaxHitpoints          Hitpoints
 	MaxDamagePoints       int
+	Seats                 int
 }
 
 type AircraftLibrary []AircraftParameters
