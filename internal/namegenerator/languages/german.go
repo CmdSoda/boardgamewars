@@ -1,6 +1,6 @@
-package namegenerator
+package languages
 
-var germanSurnames = []string{
+var GermanSurnames = []string{
 	"Müller",
 	"Schmidt",
 	"Schneider",
@@ -102,3 +102,13 @@ var germanSurnames = []string{
 	"Wolff",
 	"Pfeiffer",
 }
+
+var GermanMaleFirstNames = []string{
+
+}
+
+var GermanFemaleFirstNames = []string{
+
+}
+
+
