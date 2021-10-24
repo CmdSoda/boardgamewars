@@ -2,6 +2,7 @@ package bgw
 
 import (
 	"encoding/json"
+	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"io/ioutil"
 	"os"
 )
@@ -59,7 +60,7 @@ func (awp Air2AirWeaponParameters) Hit(target Aircraft, dfp DogfightPosition) bo
 }
 
 func (awp Air2AirWeaponParameters) DoRandomDamage() Hitpoints {
-	dr := Roll1D10()
+	dr := randomizer.Roll1D10()
 	if dr >= 9 {
 		return awp.Damage
 	} else if dr >=7 {

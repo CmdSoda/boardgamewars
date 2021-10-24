@@ -1,5 +1,7 @@
 package bgw
 
+import "github.com/CmdSoda/boardgamewars/internal/randomizer"
+
 type DamageType int
 
 const (
@@ -13,7 +15,7 @@ const (
 )
 
 func RollRandomDamage() DamageType {
-	r := Roll1D10()
+	r := randomizer.Roll1D10()
 	switch r {
 	case 1:
 		return DamageTypeFuselage

@@ -1,9 +1,12 @@
 package bgw
 
-import "testing"
+import (
+	"github.com/CmdSoda/boardgamewars/internal/randomizer"
+	"testing"
+)
 
 func TestDogfight(t *testing.T) {
-	RandInit()
+	randomizer.Init()
 	LoadAircrafts()
 	LoadAir2AirWeapons()
 

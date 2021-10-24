@@ -1,6 +1,9 @@
 package bgw
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/CmdSoda/boardgamewars/internal/randomizer"
+)
 
 type DogfightPosition int
 
@@ -17,8 +20,8 @@ func GroupDogfight(side1 []Aircraft, side2 []Aircraft) {
 }
 
 func DogfightPerformance(rating1 Rating, rating2 Rating) DogfightPosition {
-	dfr1 := Roll1D10() + int(rating1)
-	dfr2 := Roll1D10() + int(rating2)
+	dfr1 := randomizer.Roll1D10() + int(rating1)
+	dfr2 := randomizer.Roll1D10() + int(rating2)
 	dfdelta := dfr1 - dfr2
 
 	if dfdelta > 0 {
