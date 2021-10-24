@@ -26,12 +26,12 @@ func (g Gender) String() string {
 type Pilot struct {
 	Name string
 	Gender
-	Country string
+	countrycodes.Code
 	military.FlightRank
 }
 
 func (p Pilot) String() string {
-	return fmt.Sprintf("%s(%s) (%s) [%s]", p.Name, p.Gender, p.FlightRank, p.Country)
+	return fmt.Sprintf("%s(%s) (%s) [%s]", p.Name, p.Gender, p.FlightRank, p.Code.String())
 }
 
 func NewPilot(cc countrycodes.Code, ofc military.NatoOfficerCode) Pilot {
@@ -41,6 +41,8 @@ func NewPilot(cc countrycodes.Code, ofc military.NatoOfficerCode) Pilot {
 		af = military.AirForceRAF
 	case countrycodes.Germany:
 		af = military.AirForceGAF
+	case countrycodes.USA:
+		af = military.AirForceUSAF
 	}
 
 	var g Gender
@@ -61,7 +63,7 @@ func NewPilot(cc countrycodes.Code, ofc military.NatoOfficerCode) Pilot {
 	return Pilot{
 		Name:       fn(cc),
 		Gender:     g,
-		Country:    cc.String(),
+		Code:       cc,
 		FlightRank: military.NewRank(af, ofc),
 	}
 }

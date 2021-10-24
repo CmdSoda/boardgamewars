@@ -47,6 +47,8 @@ func NewRank(af AirForce, noc NatoOfficerCode) FlightRank {
 		return GetFlightRank(PilotRanksRAF, noc)
 	case AirForceGAF:
 		return GetFlightRank(PilotRanksGAF, noc)
+	case AirForceUSAF:
+		return GetFlightRank(PilotRanksUSAF, noc)
 	}
 	return FlightRank{}
 }

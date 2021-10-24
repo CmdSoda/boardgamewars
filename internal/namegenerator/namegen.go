@@ -56,6 +56,12 @@ func CreateMaleFullName(cc countrycodes.Code) string {
 		r = randomizer.Roll1DN(len(country.SurnamesGermany))
 		surname := country.SurnamesGermany[r-1]
 		return firstname + " " + surname
+	case countrycodes.USA:
+		r := randomizer.Roll1DN(len(country.MaleFirstNamesUK))
+		firstname := country.MaleFirstNamesUK[r-1]
+		r = randomizer.Roll1DN(len(country.SurnamesUK))
+		surname := country.SurnamesUK[r-1]
+		return firstname + " " + surname
 	}
 	return countrycodes.InvalidParameter
 }

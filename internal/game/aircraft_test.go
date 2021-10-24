@@ -68,4 +68,6 @@ func TestAircraftPilots(t *testing.T) {
 	fmt.Println(ac)
 	ac = NewAircraftByName("F14", "Default", countrycodes.Germany, military.NatoOfficerCodeOF2)
 	fmt.Println(ac)
+	ac = NewAircraftByName("F14", "Default", countrycodes.USA, military.NatoOfficerCodeOF2)
+	fmt.Println(ac)
 }
