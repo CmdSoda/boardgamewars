@@ -5,16 +5,8 @@ import (
 	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/CmdSoda/boardgamewars/internal/namegenerator/country"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
-	"github.com/stretchr/testify/assert"
 	"testing"
 )
-
-func TestCreateSurname(t *testing.T) {
-	randomizer.Init()
-	sn := CreateSurname(countrycodes.UK)
-	fmt.Println(sn)
-	assert.NotEqual(t, countrycodes.InvalidParameter, sn)
-}
 
 func TestFullname(t *testing.T) {
 	randomizer.Init()
@@ -98,4 +90,31 @@ func TestFindDuplicates(t *testing.T) {
 		t.FailNow()
 	}
 
+	//
+	// Russia
+	//
+
+	dup, found = findDuplicates(country.SurnamesRussia)
+	if found {
+		t.Log("duplicate found: SurnamesRussia: " + dup)
+		t.FailNow()
+	}
+
+	dup, found = findDuplicates(country.MaleFirstNamesRussia)
+	if found {
+		t.Log("duplicate found: MaleFirstNamesRussia: " + dup)
+		t.FailNow()
+	}
+
+	dup, found = findDuplicates(country.FemaleFirstNamesRussia)
+	if found {
+		t.Log("duplicate found: FemaleFirstNamesRussia: " + dup)
+		t.FailNow()
+	}
+
+}
+
+func TestIgnoreBraces(t *testing.T) {
+	is := IgnoreBraces("bla (uschi)")
+	fmt.Println(is)
 }

@@ -62,6 +62,8 @@ func NewPilot(cc countrycodes.Code, ofc military.NatoOfficerCode) Pilot {
 		af = military.AirForceGAF
 	case countrycodes.USA:
 		af = military.AirForceUSAF
+	case countrycodes.Russia:
+		af = military.AirForceRFAF
 	}
 
 	var g Gender

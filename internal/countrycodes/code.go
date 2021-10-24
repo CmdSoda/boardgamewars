@@ -6,6 +6,7 @@ const (
 	UK               Code   = 0
 	Germany          Code   = 1
 	USA              Code   = 2
+	Russia           Code   = 3
 	InvalidParameter string = "InvalidParameter"
 )
 
@@ -17,6 +18,8 @@ func (c Code) String() string {
 		return "Germany"
 	case USA:
 		return "USA"
+	case Russia:
+		return "Russia"
 	}
 	return ""
 }
