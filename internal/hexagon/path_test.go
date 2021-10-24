@@ -1,4 +1,4 @@
-package bgw
+package hexagon
 
 import (
 	"github.com/stretchr/testify/assert"

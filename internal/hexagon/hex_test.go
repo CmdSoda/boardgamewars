@@ -1,4 +1,4 @@
-package bgw
+package hexagon
 
 import (
 	"reflect"

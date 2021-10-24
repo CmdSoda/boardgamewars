@@ -1,4 +1,4 @@
-package bgw
+package game
 
 type Speed uint
 type Time uint

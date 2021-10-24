@@ -1,6 +1,7 @@
-package bgw
+package game
 
 import (
+	"github.com/CmdSoda/boardgamewars/internal/hexagon"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -15,14 +16,14 @@ func TestNewMap(t *testing.T) {
 
 func TestGetTileAt(t *testing.T) {
 	m := NewMap(3, 3)
-	m.SetTileAt(Position{1, 1}, Tile{
+	m.SetTileAt(hexagon.Position{1, 1}, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundMud,
 	})
 	assert.Equal(t, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundMud,
-	}, m.GetTileAt(Position{1, 1}))
+	}, m.GetTileAt(hexagon.Position{1, 1}))
 	assert.Equal(t, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundMud,
@@ -30,15 +31,15 @@ func TestGetTileAt(t *testing.T) {
 	assert.Equal(t, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundStreet,
-	}, m.GetTileAt(Position{0, 0}))
+	}, m.GetTileAt(hexagon.Position{0, 0}))
 }
 
 func TestSearch(t *testing.T) {
 	m := NewMap(3, 3)
-	m.SearchDeep(Position{
+	m.SearchDeep(hexagon.Position{
 		Column: 1,
 		Row:    1,
-	}, Position{
+	}, hexagon.Position{
 		Column: 3,
 		Row:    3,
 	}, nil)
@@ -47,15 +48,15 @@ func TestSearch(t *testing.T) {
 
 func Test_searchWide(t *testing.T) {
 	m := NewMap(10, 10)
-	start := Position{
+	start := hexagon.Position{
 		Column: 1,
 		Row:    1,
 	}
-	end := Position{
+	end := hexagon.Position{
 		Column: 10,
 		Row:    10,
 	}
-	currentpath := make(PositionList, 0, 0)
+	currentpath := make(hexagon.PositionList, 0, 0)
 	currentpath = append(currentpath, start)
 	results := make(SolutionList, 0, 0)
 	m.recursiveDeep(currentpath, end, &results)
@@ -98,10 +99,10 @@ func Test_arrayCopy(t *testing.T) {
 
 func Test_evolveSolution(t *testing.T) {
 	m := NewMap(5, 5)
-	m.SearchWide(Position{
+	m.SearchWide(hexagon.Position{
 		Column: 1,
 		Row:    1,
-	}, Position{
+	}, hexagon.Position{
 		Column: 3,
 		Row:    3,
 	}, nil)

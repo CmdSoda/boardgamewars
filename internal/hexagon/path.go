@@ -1,4 +1,4 @@
-package bgw
+package hexagon
 
 func contains(hexagonList []Position, hex Position) bool {
 	for _, h := range hexagonList {

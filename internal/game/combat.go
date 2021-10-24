@@ -1,4 +1,4 @@
-package bgw
+package game
 
 import (
 	"fmt"

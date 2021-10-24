@@ -1,8 +1,9 @@
-package bgw
+package game
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/CmdSoda/boardgamewars/internal/hexagon"
 	"io/ioutil"
 	"os"
 )
@@ -12,8 +13,8 @@ type AircraftId int
 type Aircraft struct {
 	AircraftId
 	Altitude           AltitudeBand // Aktuelle Höhe.
-	CurrentPosition    Position
-	NextTargetLocation Position // Das ist die Position, die das Flugzeug jetzt ansteuert.
+	CurrentPosition    hexagon.Position
+	NextTargetLocation hexagon.Position // Das ist die Position, die das Flugzeug jetzt ansteuert.
 	WeaponSystems      []WeaponSystem
 	Damage             []DamageType // Eine Liste von Schäden
 	Destroyed          bool

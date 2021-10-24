@@ -1,4 +1,4 @@
-package bgw
+package game
 
 import "github.com/CmdSoda/boardgamewars/internal/randomizer"
 

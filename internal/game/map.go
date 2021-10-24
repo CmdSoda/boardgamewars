@@ -1,4 +1,6 @@
-package bgw
+package game
+
+import "github.com/CmdSoda/boardgamewars/internal/hexagon"
 
 type Map struct {
 	Width  int
@@ -17,15 +19,15 @@ func NewMap(width int, height int) Map {
 	}
 }
 
-func (m Map) GetTileAt(p Position) Tile {
+func (m Map) GetTileAt(p hexagon.Position) Tile {
 	return m.Tiles[p.Column-1+(m.Height-p.Row)*m.Width]
 }
 
-func (m *Map) SetTileAt(p Position, t Tile) {
+func (m *Map) SetTileAt(p hexagon.Position, t Tile) {
 	m.Tiles[p.Column-1+(m.Height-p.Row)*m.Width] = t
 }
 
-func (m *Map) InsideMap(p Position) bool {
+func (m *Map) InsideMap(p hexagon.Position) bool {
 	return p.Column >= 1 && p.Column <= m.Width && p.Row >= 1 && p.Row <= m.Height
 }
 
@@ -36,9 +38,9 @@ type SearchParameter struct {
 	Handlers []SearchHandler
 }
 
-func (m Map) recursiveDeep(path PositionList, end Position, results *SolutionList) {
+func (m Map) recursiveDeep(path hexagon.PositionList, end hexagon.Position, results *SolutionList) {
 	if path.LastElement().Equal(end) {
-		co := make(PositionList, len(path))
+		co := make(hexagon.PositionList, len(path))
 		copy(co, path)
 		*results = append(*results, Solution{Path: co})
 		return
@@ -49,7 +51,7 @@ func (m Map) recursiveDeep(path PositionList, end Position, results *SolutionLis
 		return
 	}
 
-	for d := NW; d <= W; d++ {
+	for d := hexagon.NW; d <= hexagon.W; d++ {
 		adj := path.LastElement().GetAdjacent(d)
 		if adj != nil && m.InsideMap(*adj) && !path.Contains(*adj) {
 			path2 := append(path, *adj)
@@ -59,10 +61,10 @@ func (m Map) recursiveDeep(path PositionList, end Position, results *SolutionLis
 }
 
 func (m Map) evolveFromHere(s Solution, solutions *SolutionList, added *SolutionList) {
-	for nb := NW; nb <= W; nb++ {
+	for nb := hexagon.NW; nb <= hexagon.W; nb++ {
 		neighbor := s.Path.LastElement().GetAdjacent(nb)
 		if neighbor != nil && s.Path.Contains(*neighbor) == false {
-			newposlist := make(PositionList, len(s.Path))
+			newposlist := make(hexagon.PositionList, len(s.Path))
 			copy(newposlist, s.Path)
 			newposlist = append(newposlist, *neighbor)
 			ns := Solution{Path: newposlist}
@@ -71,16 +73,16 @@ func (m Map) evolveFromHere(s Solution, solutions *SolutionList, added *Solution
 	}
 }
 
-func (m Map) SearchDeep(start Position, end Position, sp *SearchParameter) PositionList {
-	currentPath := make(PositionList, 0, 0)
+func (m Map) SearchDeep(start hexagon.Position, end hexagon.Position, sp *SearchParameter) hexagon.PositionList {
+	currentPath := make(hexagon.PositionList, 0, 0)
 	currentPath = append(currentPath, start)
 	results := make(SolutionList, 0, 0)
 	m.recursiveDeep(currentPath, end, &results)
 	return currentPath
 }
 
-func (m Map) SearchWide(start Position, end Position, sp *SearchParameter) PositionList {
-	currentPath := make(PositionList, 0, 0)
+func (m Map) SearchWide(start hexagon.Position, end hexagon.Position, sp *SearchParameter) hexagon.PositionList {
+	currentPath := make(hexagon.PositionList, 0, 0)
 	results := make(SolutionList, 0, 0)
 	currentPath = append(currentPath, start)
 	starts := Solution{Path: currentPath}

@@ -1,4 +1,4 @@
-package bgw
+package game
 
 type WeaponSystemCategory int
 
@@ -55,7 +55,7 @@ func GetWeaponSystemCategoryFromString(name string) WeaponSystemCategory {
 
 type WeaponSystemConfiguration struct {
 	ConfigurationName string // Name of the configuration
-	WeaponSystems     WeaponSystemList
+	WeaponSystems WeaponSystemList
 }
 
 type WeaponSystemConfigurationList []WeaponSystemConfiguration
