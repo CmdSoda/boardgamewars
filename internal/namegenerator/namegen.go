@@ -1,67 +1,85 @@
 package namegenerator
 
 import (
-	"github.com/CmdSoda/boardgamewars/internal/namegenerator/languages"
+	"github.com/CmdSoda/boardgamewars/internal/namegenerator/country"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 )
 
-type LanguageCode int
+type CountryCode int
 
 const (
-	EnglishAndUS     LanguageCode = 0
-	German           LanguageCode = 1
-	InvalidParameter string       = "InvalidParameter"
+	UK     CountryCode = 0
+	German CountryCode = 1
+	InvalidParameter string      = "InvalidParameter"
 )
 
-func CreateSurname(cc LanguageCode) string {
+func CreateSurname(cc CountryCode) string {
 	switch cc {
-	case EnglishAndUS:
-		r := randomizer.Roll1DN(len(languages.EnglishSurnames))
-		return languages.EnglishSurnames[r-1]
+	case UK:
+		r := randomizer.Roll1DN(len(country.SurnamesUK))
+		return country.SurnamesUK[r-1]
 	case German:
-		r := randomizer.Roll1DN(len(languages.GermanSurnames))
-		return languages.GermanSurnames[r-1]
+		r := randomizer.Roll1DN(len(country.SurnamesGermany))
+		return country.SurnamesGermany[r-1]
 	}
 	return InvalidParameter
 }
 
-func CreateMaleFirstname(cc LanguageCode) string {
+func CreateMaleFirstname(cc CountryCode) string {
 	switch cc {
-	case EnglishAndUS:
-		r := randomizer.Roll1DN(len(languages.EnglishMaleFirstNames))
-		return languages.EnglishMaleFirstNames[r-1]
+	case UK:
+		r := randomizer.Roll1DN(len(country.MaleFirstNamesUK))
+		return country.MaleFirstNamesUK[r-1]
 	case German:
-		r := randomizer.Roll1DN(len(languages.GermanMaleFirstNames))
-		return languages.GermanMaleFirstNames[r-1]
+		r := randomizer.Roll1DN(len(country.MaleFirstNamesGermany))
+		return country.MaleFirstNamesGermany[r-1]
 	}
 	return InvalidParameter
 }
 
-func CreateFemaleFirstname(cc LanguageCode) string {
+func CreateFemaleFirstname(cc CountryCode) string {
 	switch cc {
-	case EnglishAndUS:
-		r := randomizer.Roll1DN(len(languages.EnglishFemaleFirstNames))
-		return languages.EnglishFemaleFirstNames[r-1]
+	case UK:
+		r := randomizer.Roll1DN(len(country.FemaleFirstNamesUK))
+		return country.FemaleFirstNamesUK[r-1]
 	case German:
-		r := randomizer.Roll1DN(len(languages.GermanFemaleFirstNames))
-		return languages.GermanFemaleFirstNames[r-1]
+		r := randomizer.Roll1DN(len(country.FemaleFirstNamesGermany))
+		return country.FemaleFirstNamesGermany[r-1]
 	}
 	return InvalidParameter
 }
 
-func CreateMaleFullName(cc LanguageCode) string {
+func CreateMaleFullName(cc CountryCode) string {
 	switch cc {
-	case EnglishAndUS:
-		r := randomizer.Roll1DN(len(languages.EnglishMaleFirstNames))
-		firstname := languages.EnglishMaleFirstNames[r-1]
-		r = randomizer.Roll1DN(len(languages.EnglishSurnames))
-		surname := languages.EnglishSurnames[r-1]
+	case UK:
+		r := randomizer.Roll1DN(len(country.MaleFirstNamesUK))
+		firstname := country.MaleFirstNamesUK[r-1]
+		r = randomizer.Roll1DN(len(country.SurnamesUK))
+		surname := country.SurnamesUK[r-1]
 		return firstname + " " + surname
 	case German:
-		r := randomizer.Roll1DN(len(languages.GermanMaleFirstNames))
-		firstname := languages.GermanMaleFirstNames[r-1]
-		r = randomizer.Roll1DN(len(languages.GermanSurnames))
-		surname := languages.GermanSurnames[r-1]
+		r := randomizer.Roll1DN(len(country.MaleFirstNamesGermany))
+		firstname := country.MaleFirstNamesGermany[r-1]
+		r = randomizer.Roll1DN(len(country.SurnamesGermany))
+		surname := country.SurnamesGermany[r-1]
+		return firstname + " " + surname
+	}
+	return InvalidParameter
+}
+
+func CreateFemaleFullName(cc CountryCode) string {
+	switch cc {
+	case UK:
+		r := randomizer.Roll1DN(len(country.FemaleFirstNamesUK))
+		firstname := country.FemaleFirstNamesUK[r-1]
+		r = randomizer.Roll1DN(len(country.SurnamesUK))
+		surname := country.SurnamesUK[r-1]
+		return firstname + " " + surname
+	case German:
+		r := randomizer.Roll1DN(len(country.FemaleFirstNamesGermany))
+		firstname := country.FemaleFirstNamesGermany[r-1]
+		r = randomizer.Roll1DN(len(country.SurnamesGermany))
+		surname := country.SurnamesGermany[r-1]
 		return firstname + " " + surname
 	}
 	return InvalidParameter

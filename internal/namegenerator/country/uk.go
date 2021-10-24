@@ -1,6 +1,6 @@
-package languages
+package country
 
-var EnglishSurnames = []string{
+var SurnamesUK = []string{
 	"Smith",
 	"Williams",
 	"Brown",
@@ -666,7 +666,7 @@ var EnglishSurnames = []string{
 	"Yorke",
 }
 
-var EnglishMaleFirstNames = []string{
+var MaleFirstNamesUK = []string{
 	"Liam",
 	"Noah",
 	"Oliver",
@@ -1669,7 +1669,7 @@ var EnglishMaleFirstNames = []string{
 	"Ephraim",
 }
 
-var EnglishFemaleFirstNames = []string{
+var FemaleFirstNamesUK = []string{
 	"Olivia",
 	"Emma",
 	"Ava",
@@ -2671,3 +2671,4 @@ var EnglishFemaleFirstNames = []string{
 	"Belle",
 	"Kadence",
 }
+

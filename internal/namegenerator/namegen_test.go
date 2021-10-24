@@ -2,7 +2,7 @@ package namegenerator
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/namegenerator/languages"
+	"github.com/CmdSoda/boardgamewars/internal/namegenerator/country"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -10,14 +10,16 @@ import (
 
 func TestCreateSurname(t *testing.T) {
 	randomizer.Init()
-	sn := CreateSurname(EnglishAndUS)
+	sn := CreateSurname(UK)
 	fmt.Println(sn)
 	assert.NotEqual(t, InvalidParameter, sn)
 }
 
 func TestFullname(t *testing.T) {
 	randomizer.Init()
-	fn := CreateMaleFullName(EnglishAndUS)
+	fn := CreateMaleFullName(UK)
+	fmt.Println(fn)
+	fn = CreateFemaleFullName(UK)
 	fmt.Println(fn)
 }
 
@@ -37,21 +39,21 @@ func findDuplicates(a []string) (string, bool) {
 }
 
 func TestFindDuplicates(t *testing.T) {
-	dup, found := findDuplicates(languages.EnglishSurnames)
+	dup, found := findDuplicates(country.SurnamesUK)
 	if found {
-		t.Log("duplicate found: EnglishSurnames: " + dup)
+		t.Log("duplicate found: SurnamesUK: " + dup)
 		t.FailNow()
 	}
 
-	dup, found = findDuplicates(languages.EnglishMaleFirstNames)
+	dup, found = findDuplicates(country.MaleFirstNamesUK)
 	if found {
-		t.Log("duplicate found: EnglishMaleFirstNames: " + dup)
+		t.Log("duplicate found: MaleFirstNamesUK: " + dup)
 		t.FailNow()
 	}
 
-	dup, found = findDuplicates(languages.EnglishFemaleFirstNames)
+	dup, found = findDuplicates(country.FemaleFirstNamesUK)
 	if found {
-		t.Log("duplicate found: EnglishFemaleFirstNames: " + dup)
+		t.Log("duplicate found: FemaleFirstNamesUK: " + dup)
 		t.FailNow()
 	}
 

@@ -1,6 +1,6 @@
-package languages
+package country
 
-var GermanSurnames = []string{
+var SurnamesGermany = []string{
 	"Müller",
 	"Schmidt",
 	"Schneider",
@@ -103,11 +103,11 @@ var GermanSurnames = []string{
 	"Pfeiffer",
 }
 
-var GermanMaleFirstNames = []string{
+var MaleFirstNamesGermany = []string{
 
 }
 
-var GermanFemaleFirstNames = []string{
+var FemaleFirstNamesGermany = []string{
 
 }
 
