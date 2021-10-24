@@ -11,7 +11,7 @@ func CreateSurname(cc countrycodes.Code) string {
 	case countrycodes.UK:
 		r := randomizer.Roll1DN(len(country.SurnamesUK))
 		return country.SurnamesUK[r-1]
-	case countrycodes.German:
+	case countrycodes.Germany:
 		r := randomizer.Roll1DN(len(country.SurnamesGermany))
 		return country.SurnamesGermany[r-1]
 	}
@@ -23,7 +23,7 @@ func CreateMaleFirstname(cc countrycodes.Code) string {
 	case countrycodes.UK:
 		r := randomizer.Roll1DN(len(country.MaleFirstNamesUK))
 		return country.MaleFirstNamesUK[r-1]
-	case countrycodes.German:
+	case countrycodes.Germany:
 		r := randomizer.Roll1DN(len(country.MaleFirstNamesGermany))
 		return country.MaleFirstNamesGermany[r-1]
 	}
@@ -35,7 +35,7 @@ func CreateFemaleFirstname(cc countrycodes.Code) string {
 	case countrycodes.UK:
 		r := randomizer.Roll1DN(len(country.FemaleFirstNamesUK))
 		return country.FemaleFirstNamesUK[r-1]
-	case countrycodes.German:
+	case countrycodes.Germany:
 		r := randomizer.Roll1DN(len(country.FemaleFirstNamesGermany))
 		return country.FemaleFirstNamesGermany[r-1]
 	}
@@ -50,7 +50,7 @@ func CreateMaleFullName(cc countrycodes.Code) string {
 		r = randomizer.Roll1DN(len(country.SurnamesUK))
 		surname := country.SurnamesUK[r-1]
 		return firstname + " " + surname
-	case countrycodes.German:
+	case countrycodes.Germany:
 		r := randomizer.Roll1DN(len(country.MaleFirstNamesGermany))
 		firstname := country.MaleFirstNamesGermany[r-1]
 		r = randomizer.Roll1DN(len(country.SurnamesGermany))
@@ -68,7 +68,7 @@ func CreateFemaleFullName(cc countrycodes.Code) string {
 		r = randomizer.Roll1DN(len(country.SurnamesUK))
 		surname := country.SurnamesUK[r-1]
 		return firstname + " " + surname
-	case countrycodes.German:
+	case countrycodes.Germany:
 		r := randomizer.Roll1DN(len(country.FemaleFirstNamesGermany))
 		firstname := country.FemaleFirstNamesGermany[r-1]
 		r = randomizer.Roll1DN(len(country.SurnamesGermany))

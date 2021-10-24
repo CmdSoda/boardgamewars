@@ -14,6 +14,24 @@ const (
 	DamageTypeFlaps    DamageType = 5
 )
 
+func (dt DamageType) String() string {
+	switch dt {
+	case DamageTypeFuselage:
+		return "Fuselage"
+	case DamageTypeWing:
+		return "Wing"
+	case DamageTypeCockpit:
+		return "Cockpit"
+	case DamageTypeTurbine:
+		return "Turbine"
+	case DamageTypeRudder:
+		return "Rudder"
+	case DamageTypeFlaps:
+		return "Flaps"
+	}
+	return "Nothing"
+}
+
 func RollRandomDamage() DamageType {
 	r := randomizer.Roll1D10()
 	switch r {

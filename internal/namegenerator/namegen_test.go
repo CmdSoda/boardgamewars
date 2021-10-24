@@ -58,4 +58,22 @@ func TestFindDuplicates(t *testing.T) {
 		t.FailNow()
 	}
 
+	dup, found = findDuplicates(country.SurnamesGermany)
+	if found {
+		t.Log("duplicate found: SurnamesUK: " + dup)
+		t.FailNow()
+	}
+
+	dup, found = findDuplicates(country.MaleFirstNamesGermany)
+	if found {
+		t.Log("duplicate found: MaleFirstNamesGermany: " + dup)
+		t.FailNow()
+	}
+
+	dup, found = findDuplicates(country.FemaleFirstNamesGermany)
+	if found {
+		t.Log("duplicate found: FemaleFirstNamesGermany: " + dup)
+		t.FailNow()
+	}
+
 }

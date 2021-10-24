@@ -26,9 +26,13 @@ type Aircraft struct {
 
 func (a Aircraft) String() string {
 	var b strings.Builder
-	fmt.Fprintf(&b, "%s\n", a.GetParameters().Name)
+	fmt.Fprintf(&b, "%s\nPilots: ", a.GetParameters().Name)
 	for _, pilot := range a.Pilots {
-		fmt.Fprintf(&b, pilot.String() + "\n")
+		fmt.Fprintf(&b, pilot.String() + " ")
+	}
+	fmt.Fprint(&b, "\nDamage: ")
+	for _, d := range a.Damage {
+		fmt.Fprintf(&b, d.String() + " ")
 	}
 	return b.String()
 }

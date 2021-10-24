@@ -66,4 +66,6 @@ func TestAircraftPilots(t *testing.T) {
 	LoadAir2AirWeapons()
 	ac := NewAircraftByName("F14", "Default", countrycodes.UK, military.NatoOfficerCodeOF2)
 	fmt.Println(ac)
+	ac = NewAircraftByName("F14", "Default", countrycodes.Germany, military.NatoOfficerCodeOF2)
+	fmt.Println(ac)
 }
