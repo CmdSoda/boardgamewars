@@ -61,6 +61,7 @@ func TestLoadAircraftLibrary(t *testing.T) {
 }
 
 func TestAircraftPilots(t *testing.T) {
+	NewPilotRoster()
 	randomizer.Init()
 	LoadAircrafts()
 	LoadAir2AirWeapons()
@@ -70,4 +71,5 @@ func TestAircraftPilots(t *testing.T) {
 	fmt.Println(ac)
 	ac = NewAircraftByName("F14", "Default", countrycodes.USA, military.NatoOfficerCodeOF2)
 	fmt.Println(ac)
+	fmt.Println(TheRoster)
 }

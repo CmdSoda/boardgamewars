@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/CmdSoda/boardgamewars/internal/military"
+	"github.com/google/uuid"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -21,14 +22,14 @@ type Aircraft struct {
 	WeaponSystems      []WeaponSystem
 	Damage             []DamageType // Eine Liste von Schäden
 	Destroyed          bool
-	Pilots             []Pilot
+	Pilots             []uuid.UUID
 }
 
 func (a Aircraft) String() string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "%s\nPilots: ", a.GetParameters().Name)
 	for _, pilot := range a.Pilots {
-		fmt.Fprintf(&b, pilot.String() + " ")
+		fmt.Fprintf(&b, TheRoster.GetPilot(pilot).String() + " ")
 	}
 	fmt.Fprint(&b, "\nDamage: ")
 	for _, d := range a.Damage {
@@ -38,11 +39,12 @@ func (a Aircraft) String() string {
 }
 
 func (a *Aircraft) AddPilot(p Pilot) {
-	a.Pilots = append(a.Pilots, p)
+	a.Pilots = append(a.Pilots, p.UUID)
+	TheRoster.Add(p)
 }
 
 func (a *Aircraft) FillUpSeats(oc military.NatoOfficerCode) {
-	a.Pilots = make([]Pilot, 0)
+	a.Pilots = make([]uuid.UUID, 0)
 	currentoc := oc
 	for i := 0; i < a.GetParameters().Seats; i++ {
 		a.AddPilot(NewPilot(a.Code, currentoc))
@@ -60,7 +62,6 @@ func NewAircraftById(id AircraftId, configurationName string, cc countrycodes.Co
 		ac.WeaponSystems[i].InitWeaponSystem()
 	}
 	ac.Damage = make([]DamageType, 0)
-	ac.Pilots = make([]Pilot, 0)
 	ac.FillUpSeats(oc)
 	return &ac
 }

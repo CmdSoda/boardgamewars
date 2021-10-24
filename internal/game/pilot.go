@@ -6,6 +6,7 @@ import (
 	"github.com/CmdSoda/boardgamewars/internal/military"
 	"github.com/CmdSoda/boardgamewars/internal/namegenerator"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
+	"github.com/google/uuid"
 )
 
 type Gender int
@@ -24,14 +25,32 @@ func (g Gender) String() string {
 }
 
 type Pilot struct {
+	uuid.UUID
 	Name string
 	Gender
-	countrycodes.Code
+	Country countrycodes.Code
 	military.FlightRank
+	PilotStats
+}
+
+type PilotStats struct {
+	Sorties int
+	Hits    int
+	Kills   int
+	Kia     bool
+	Mia     bool
+	XP      int
 }
 
 func (p Pilot) String() string {
-	return fmt.Sprintf("%s(%s) (%s) [%s]", p.Name, p.Gender, p.FlightRank, p.Code.String())
+	return fmt.Sprintf("%s(%s) (%s) [%s] (%d-%d-%d)",
+		p.Name,
+		p.Gender,
+		p.FlightRank,
+		p.Country.String(),
+		p.PilotStats.Sorties,
+		p.PilotStats.Hits,
+		p.PilotStats.Kills)
 }
 
 func NewPilot(cc countrycodes.Code, ofc military.NatoOfficerCode) Pilot {
@@ -62,8 +81,9 @@ func NewPilot(cc countrycodes.Code, ofc military.NatoOfficerCode) Pilot {
 
 	return Pilot{
 		Name:       fn(cc),
+		UUID:       uuid.New(),
 		Gender:     g,
-		Code:       cc,
+		Country:    cc,
 		FlightRank: military.NewRank(af, ofc),
 	}
 }
