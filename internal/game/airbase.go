@@ -10,23 +10,41 @@ import (
 // An airbase can be at land and on the carrier
 
 type Airbase struct {
-	Id           uuid.UUID
-	Name         string
-	BelongsTo    countrycodes.Code
-	AcceptAllies bool
-	Aircrafts    []Aircraft
+	Id                uuid.UUID
+	Name              string
+	BelongsTo         countrycodes.Code
+	AcceptAllies      bool
+	AircraftsInHangar []Aircraft
+	StationedPilots   []Pilot
 	Position
 }
 
-func (a Airbase) String() string {
+type AirbaseList map[uuid.UUID]Airbase
+
+var AllAirbases AirbaseList
+
+func NewAirbaseList() {
+	AllAirbases = map[uuid.UUID]Airbase{}
+}
+
+func (al AirbaseList) String() string {
 	var sb strings.Builder
-	fmt.Fprintf(&sb, "Airbase: %s [%s]\n", a.Name, a.BelongsTo.String())
-	fmt.Fprint(&sb, "Aircrafts: ")
-	for _, aircraft := range a.Aircrafts {
+	fmt.Fprint(&sb, "Airbases:\n")
+	for _, airbase := range al {
+		fmt.Fprintf(&sb, "%s\n", airbase.Name)
+	}
+	return sb.String()
+}
+
+func (ab Airbase) String() string {
+	var sb strings.Builder
+	fmt.Fprintf(&sb, "Airbase: %s [%s]\n", ab.Name, ab.BelongsTo.String())
+	fmt.Fprint(&sb, "AircraftsInHangar: ")
+	for _, aircraft := range ab.AircraftsInHangar {
 		fmt.Fprintf(&sb, "%s, ", aircraft.GetParameters().Name)
 	}
 	fmt.Fprint(&sb, "\n")
-	fmt.Fprintf(&sb, "Location: %s\n", a.Position)
+	fmt.Fprintf(&sb, "Location: %s\n", ab.Position)
 
 	return sb.String()
 }
@@ -37,14 +55,22 @@ func NewAirbase(name string, cc countrycodes.Code, pos Position) Airbase {
 	ab.Name = name
 	ab.BelongsTo = cc
 	ab.Position = pos
+	AllAirbases[ab.Id] = ab
+	ab.AircraftsInHangar = []Aircraft{}
+	ab.StationedPilots = []Pilot{}
 	return ab
 }
 
-func (a *Airbase) CreateAircrafts(aircraftName string, configurationName string, cc countrycodes.Code, count int) {
+func (ab *Airbase) AddToHangar(ac Aircraft) {
+	ab.AircraftsInHangar = append(ab.AircraftsInHangar, ac)
+}
+
+func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, cc countrycodes.Code, count int) {
 	for i := 0; i < count; i++ {
 		ac := NewAircraft(aircraftName, configurationName, cc)
+		ac.StationedAt = ab.Id
 		if ac != nil {
-			a.Aircrafts = append(a.Aircrafts, *ac)
+			ab.AircraftsInHangar = append(ab.AircraftsInHangar, *ac)
 		}
 	}
 }

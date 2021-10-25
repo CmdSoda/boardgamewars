@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -69,4 +71,13 @@ func TestAircraftPilots(t *testing.T) {
 	ac = NewAircraftManned("F14", "Default", countrycodes.Russia, nato.OF2)
 	fmt.Println(ac)
 	fmt.Println(TheRoster)
+}
+
+func TestAssign(t *testing.T) {
+	InitGame()
+	wrongid := uuid.New()
+	ac := NewAircraft("F14", "Default", countrycodes.UK)
+	assert.Equal(t, false, ac.AssignToAB(wrongid))
+	nellis := NewAirbase("Nellis AB", countrycodes.USA, Position{6, 9})
+	assert.Equal(t, true, ac.AssignToAB(nellis.Id))
 }

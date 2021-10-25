@@ -24,6 +24,7 @@ type Aircraft struct {
 	Damage             []DamageType // Eine Liste von Schäden
 	Destroyed          bool
 	Pilots             []uuid.UUID
+	StationedAt        uuid.UUID
 }
 
 func (a Aircraft) String() string {
@@ -53,6 +54,15 @@ func (a *Aircraft) FillUpSeats(oc nato.Code) {
 			currentoc = currentoc - 1
 		}
 	}
+}
+
+func (a *Aircraft) AssignToAB(id uuid.UUID) bool {
+	_, exist := AllAirbases[id]
+	if exist {
+		a.StationedAt = id
+		return true
+	}
+	return false
 }
 
 func NewAircraftManned(name string, configurationName string, cc countrycodes.Code, oc nato.Code) *Aircraft {
