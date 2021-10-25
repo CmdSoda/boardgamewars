@@ -15,19 +15,11 @@ func TestDogfight(t *testing.T) {
 
 	var dr1 DogfightResult
 	var dr2 DogfightResult
-	dfp1 := &DogfightParameters{
-		Aircraft:             *fighter1,
-		DogfightResult:       dr1,
-		LastDogfightPosition: 0,
-	}
-	dfp2 := &DogfightParameters{
-		Aircraft:             *fighter2,
-		DogfightResult:       dr2,
-		LastDogfightPosition: 0,
-	}
-	Dogfight(dfp1, dfp2)
-	fmt.Println(dfp1.DogfightResult)
-	fmt.Println(dfp2.DogfightResult)
+	ldp1 := DogfightPositionTossup
+	ldp2 := DogfightPositionTossup
+	Dogfight(fighter1, &dr1, ldp1, fighter2, &dr2, ldp2)
+	fmt.Println(dr1)
+	fmt.Println(dr2)
 }
 
 func TestMoreRounds(t *testing.T) {
