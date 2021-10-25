@@ -7,70 +7,57 @@ import (
 	"strings"
 )
 
-func IgnoreBraces(s string) string {
-	i := strings.Index(s, "(")
-	if i == -1 {
+func ignoreBraces(s string) string {
+	i1 := strings.Index(s, "(")
+	i2 := strings.Index(s, ")")
+	if i1 == -1 {
 		return s
 	}
-	return s[:i-1]
+	out :=s[i1+1:i2]
+	return out
+}
+
+type NameSet struct {
+	Males []string
+	Females []string
+	Surnames []string
+}
+
+var theNameSet = map[countrycodes.Code]NameSet{
+	countrycodes.UK: {
+		Males:    country.MaleFirstNamesUK,
+		Females:  country.FemaleFirstNamesUK,
+		Surnames: country.SurnamesUK,
+	},
+	countrycodes.Germany: {
+		Males:    country.MaleFirstNamesGermany,
+		Females:  country.FemaleFirstNamesGermany,
+		Surnames: country.SurnamesGermany,
+	},
+	countrycodes.USA: {
+		Males:    country.MaleFirstNamesUSA,
+		Females:  country.FemaleFirstNamesUK,
+		Surnames: country.SurnamesUK,
+	},
+	countrycodes.Russia: {
+		Males:    country.MaleFirstNamesRussia,
+		Females:  country.FemaleFirstNamesRussia,
+		Surnames: country.SurnamesRussia,
+	},
 }
 
 func CreateMaleFullName(cc countrycodes.Code) string {
-	switch cc {
-	case countrycodes.UK:
-		r := randomizer.Roll1DN(len(country.MaleFirstNamesUK))
-		firstname := country.MaleFirstNamesUK[r-1]
-		r = randomizer.Roll1DN(len(country.SurnamesUK))
-		surname := country.SurnamesUK[r-1]
-		return firstname + " " + surname
-	case countrycodes.Germany:
-		r := randomizer.Roll1DN(len(country.MaleFirstNamesGermany))
-		firstname := country.MaleFirstNamesGermany[r-1]
-		r = randomizer.Roll1DN(len(country.SurnamesGermany))
-		surname := country.SurnamesGermany[r-1]
-		return firstname + " " + surname
-	case countrycodes.USA:
-		r := randomizer.Roll1DN(len(country.MaleFirstNamesUSA))
-		firstname := strings.Title(strings.ToLower(country.MaleFirstNamesUSA[r-1]))
-		r = randomizer.Roll1DN(len(country.SurnamesUSA))
-		surname := strings.Title(strings.ToLower(country.SurnamesUSA[r-1]))
-		return firstname + " " + surname
-	case countrycodes.Russia:
-		r := randomizer.Roll1DN(len(country.MaleFirstNamesRussia))
-		firstname := IgnoreBraces(country.MaleFirstNamesRussia[r-1])
-		r = randomizer.Roll1DN(len(country.SurnamesRussia))
-		surname := IgnoreBraces(country.SurnamesRussia[r-1])
-		return firstname + " " + surname
-	}
-	return countrycodes.InvalidParameter
+	r := randomizer.Roll1DN(len(theNameSet[cc].Males))
+	firstname := ignoreBraces(strings.Title(strings.ToLower(theNameSet[cc].Males[r-1])))
+	r = randomizer.Roll1DN(len(theNameSet[cc].Surnames))
+	surname := ignoreBraces(strings.Title(strings.ToLower(theNameSet[cc].Surnames[r-1])))
+	return firstname + " " + surname
 }
 
 func CreateFemaleFullName(cc countrycodes.Code) string {
-	switch cc {
-	case countrycodes.UK:
-		r := randomizer.Roll1DN(len(country.FemaleFirstNamesUK))
-		firstname := country.FemaleFirstNamesUK[r-1]
-		r = randomizer.Roll1DN(len(country.SurnamesUK))
-		surname := strings.Title(country.SurnamesUK[r-1])
-		return firstname + " " + surname
-	case countrycodes.Germany:
-		r := randomizer.Roll1DN(len(country.FemaleFirstNamesGermany))
-		firstname := country.FemaleFirstNamesGermany[r-1]
-		r = randomizer.Roll1DN(len(country.SurnamesGermany))
-		surname := strings.Title(country.SurnamesGermany[r-1])
-		return firstname + " " + surname
-	case countrycodes.USA:
-		r := randomizer.Roll1DN(len(country.FemaleFirstNamesUSA))
-		firstname := strings.Title(strings.ToLower(country.FemaleFirstNamesUSA[r-1]))
-		r = randomizer.Roll1DN(len(country.SurnamesUSA))
-		surname := strings.Title(strings.ToLower(country.SurnamesUSA[r-1]))
-		return firstname + " " + surname
-	case countrycodes.Russia:
-		r := randomizer.Roll1DN(len(country.FemaleFirstNamesRussia))
-		firstname := IgnoreBraces(country.FemaleFirstNamesRussia[r-1])
-		r = randomizer.Roll1DN(len(country.SurnamesRussia))
-		surname := IgnoreBraces(country.SurnamesRussia[r-1])
-		return firstname + " " + surname
-	}
-	return countrycodes.InvalidParameter
+	r := randomizer.Roll1DN(len(theNameSet[cc].Females))
+	firstname := ignoreBraces(strings.Title(strings.ToLower(theNameSet[cc].Females[r-1])))
+	r = randomizer.Roll1DN(len(theNameSet[cc].Surnames))
+	surname := ignoreBraces(strings.Title(strings.ToLower(theNameSet[cc].Surnames[r-1])))
+	return firstname + " " + surname
 }

@@ -115,6 +115,6 @@ func TestFindDuplicates(t *testing.T) {
 }
 
 func TestIgnoreBraces(t *testing.T) {
-	is := IgnoreBraces("bla (uschi)")
+	is := ignoreBraces("bla (uschi)")
 	fmt.Println(is)
 }

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
-	"github.com/CmdSoda/boardgamewars/internal/military"
+	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
 	"io/ioutil"
 	"os"
@@ -16,6 +16,7 @@ type AircraftId int
 type Aircraft struct {
 	AircraftId
 	countrycodes.Code
+	Id                 uuid.UUID
 	Altitude           AltitudeBand // Aktuelle Höhe.
 	CurrentPosition    Position
 	NextTargetLocation Position // Das ist die Position, die das Flugzeug jetzt ansteuert.
@@ -29,11 +30,11 @@ func (a Aircraft) String() string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "%s\nPilots: ", a.GetParameters().Name)
 	for _, pilot := range a.Pilots {
-		fmt.Fprintf(&b, TheRoster.GetPilot(pilot).String() + " ")
+		fmt.Fprintf(&b, TheRoster.GetPilot(pilot).String()+" ")
 	}
 	fmt.Fprint(&b, "\nDamage: ")
 	for _, d := range a.Damage {
-		fmt.Fprintf(&b, d.String() + " ")
+		fmt.Fprintf(&b, d.String()+" ")
 	}
 	return b.String()
 }
@@ -43,7 +44,7 @@ func (a *Aircraft) AddPilot(p Pilot) {
 	TheRoster.Add(p)
 }
 
-func (a *Aircraft) FillUpSeats(oc military.NatoOfficerCode) {
+func (a *Aircraft) FillUpSeats(oc nato.Code) {
 	a.Pilots = make([]uuid.UUID, 0)
 	currentoc := oc
 	for i := 0; i < a.GetParameters().Seats; i++ {
@@ -54,22 +55,19 @@ func (a *Aircraft) FillUpSeats(oc military.NatoOfficerCode) {
 	}
 }
 
-func NewAircraftById(id AircraftId, configurationName string, cc countrycodes.Code, oc military.NatoOfficerCode) *Aircraft {
-	ac := Aircraft{AircraftId: id}
-	ac.Code = cc
-	ac.WeaponSystems = NewWeaponSystems(id, configurationName)
-	for i := 0; i < len(ac.WeaponSystems); i++ {
-		ac.WeaponSystems[i].InitWeaponSystem()
-	}
-	ac.Damage = make([]DamageType, 0)
-	ac.FillUpSeats(oc)
-	return &ac
-}
-
-func NewAircraftByName(name string, configurationName string, cc countrycodes.Code, oc military.NatoOfficerCode) *Aircraft {
+func NewAircraft(name string, configurationName string, cc countrycodes.Code, oc nato.Code) *Aircraft {
 	id := GetAircraftIdByName(name)
 	if id >= 0 {
-		return NewAircraftById(id, configurationName, cc, oc)
+		ac := Aircraft{AircraftId: id}
+		ac.Id = uuid.New()
+		ac.Code = cc
+		ac.WeaponSystems = NewWeaponSystems(id, configurationName)
+		for i := 0; i < len(ac.WeaponSystems); i++ {
+			ac.WeaponSystems[i].InitWeaponSystem()
+		}
+		ac.Damage = make([]DamageType, 0)
+		ac.FillUpSeats(oc)
+		return &ac
 	}
 	return nil
 }

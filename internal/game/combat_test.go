@@ -2,15 +2,15 @@ package game
 
 import (
 	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
-	"github.com/CmdSoda/boardgamewars/internal/military"
+	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"testing"
 )
 
 func TestDogfight(t *testing.T) {
 	InitGame()
 
-	fighter1 := NewAircraftByName("F14", "Default", countrycodes.UK, military.NatoOfficerCodeOF2)
-	fighter2 := NewAircraftByName("F14", "Default", countrycodes.UK, military.NatoOfficerCodeOF1)
+	fighter1 := NewAircraft("F14", "Default", countrycodes.UK, nato.OF2)
+	fighter2 := NewAircraft("F14", "Default", countrycodes.UK, nato.OF1)
 
 	Dogfight(fighter1, fighter2)
 }

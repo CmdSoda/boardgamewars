@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
-	"github.com/CmdSoda/boardgamewars/internal/military"
+	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -39,13 +39,12 @@ func TestCreateAircraftLibrary(t *testing.T) {
 }
 
 func TestLoadAircraftLibrary(t *testing.T) {
-	var err error
 	file, err := os.Open("data/aircrafts.json")
 	if err != nil {
 		t.FailNow()
 	}
-	bytes, err := ioutil.ReadAll(file)
-	if err != nil {
+	bytes, err2 := ioutil.ReadAll(file)
+	if err2 != nil {
 		t.FailNow()
 	}
 	al := AircraftLibrary{}
@@ -61,13 +60,13 @@ func TestLoadAircraftLibrary(t *testing.T) {
 
 func TestAircraftPilots(t *testing.T) {
 	InitGame()
-	ac := NewAircraftByName("F14", "Default", countrycodes.UK, military.NatoOfficerCodeOF2)
+	ac := NewAircraft("F14", "Default", countrycodes.UK, nato.OF2)
 	fmt.Println(ac)
-	ac = NewAircraftByName("F14", "Default", countrycodes.Germany, military.NatoOfficerCodeOF2)
+	ac = NewAircraft("F14", "Default", countrycodes.Germany, nato.OF2)
 	fmt.Println(ac)
-	ac = NewAircraftByName("F14", "Default", countrycodes.USA, military.NatoOfficerCodeOF2)
+	ac = NewAircraft("F14", "Default", countrycodes.USA, nato.OF2)
 	fmt.Println(ac)
-	ac = NewAircraftByName("F14", "Default", countrycodes.Russia, military.NatoOfficerCodeOF2)
+	ac = NewAircraft("F14", "Default", countrycodes.Russia, nato.OF2)
 	fmt.Println(ac)
 	fmt.Println(TheRoster)
 }

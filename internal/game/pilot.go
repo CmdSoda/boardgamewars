@@ -5,6 +5,7 @@ import (
 	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/CmdSoda/boardgamewars/internal/military"
 	"github.com/CmdSoda/boardgamewars/internal/namegenerator"
+	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"github.com/google/uuid"
 )
@@ -53,19 +54,7 @@ func (p Pilot) String() string {
 		p.PilotStats.Kills)
 }
 
-func NewPilot(cc countrycodes.Code, ofc military.NatoOfficerCode) Pilot {
-	var af military.AirForce
-	switch cc {
-	case countrycodes.UK:
-		af = military.AirForceRAF
-	case countrycodes.Germany:
-		af = military.AirForceGAF
-	case countrycodes.USA:
-		af = military.AirForceUSAF
-	case countrycodes.Russia:
-		af = military.AirForceRFAF
-	}
-
+func NewPilot(cc countrycodes.Code, ofc nato.Code) Pilot {
 	var g Gender
 	gr := randomizer.Roll1D10()
 	if gr >= 2 {
@@ -86,6 +75,6 @@ func NewPilot(cc countrycodes.Code, ofc military.NatoOfficerCode) Pilot {
 		UUID:       uuid.New(),
 		Gender:     g,
 		Country:    cc,
-		FlightRank: military.NewRank(af, ofc),
+		FlightRank: military.NewRank(cc, ofc),
 	}
 }
