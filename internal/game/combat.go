@@ -13,15 +13,18 @@ func DogfightPerformance(rating1 Rating, lastPosition1 DogfightPosition,
 	if dfdelta > 0 {
 		if dfdelta >= 7 {
 			return DogfightPositionBehindEnemiesTailOptimal
-		} else if dfdelta >= 3 {
+		} else if dfdelta >= 4 {
 			return DogfightPositionBehindEnemiesTail
+		} else if dfdelta >= 2 {
+			return DogfightPositionAdventage
 		}
 	} else {
 		if -dfdelta >= 7 {
 			return DogfightPositionEnemyAtMySixOptimal
-		}
-		if -dfdelta >= 3 {
+		} else if -dfdelta >= 4 {
 			return DogfightPositionEnemyAtMySix
+		} else if -dfdelta >= 2 {
+			return DogfightPositionDisadvantage
 		}
 	}
 	return DogfightPositionTossup
@@ -42,7 +45,7 @@ func Dogfight(df1 *DogfightParameters, df2 *DogfightParameters) {
 	// SRMs (Short-Range-Missles) gegeneinander einsetzen
 	// 2) Abschuss der SRM
 	// Falls keine SRM => Einsatz der Gun
-	if dfa1Pos > 0 {
+	if dfa1Pos >= DogfightPositionBehindEnemiesTail {
 		bestws := df1.Aircraft.GetBestDogfightingWeapon()
 		df1.DogfightResult.WeaponUsed = bestws
 		if bestws != nil {
@@ -53,7 +56,7 @@ func Dogfight(df1 *DogfightParameters, df2 *DogfightParameters) {
 				df1.DogfightResult.DamageDone = append(df1.DogfightResult.DamageDone, dt)
 			}
 		}
-	} else if -dfa1Pos > 0 {
+	} else if -dfa1Pos >= DogfightPositionBehindEnemiesTail {
 		bestws := df2.Aircraft.GetBestDogfightingWeapon()
 		df2.DogfightResult.WeaponUsed = bestws
 		if bestws != nil {
@@ -71,23 +74,25 @@ func Sim10Rounds(aircraft1 *Aircraft, aircraft2 *Aircraft) ([]DogfightResult, []
 	drl1 := make([]DogfightResult, 0)
 	drl2 := make([]DogfightResult, 0)
 
-	for i := 0; i < 10; i++ {
-		dr1 := DogfightResult{}
-		dr2 := DogfightResult{}
-		dfp1 := &DogfightParameters{
-			Aircraft:             *aircraft1,
-			DogfightResult:       dr1,
-			LastDogfightPosition: 0,
-		}
-		dfp2 := &DogfightParameters{
-			Aircraft:             *aircraft2,
-			DogfightResult:       dr2,
-			LastDogfightPosition: 0,
-		}
+	dr1 := DogfightResult{}
+	dr2 := DogfightResult{}
+	dfp1 := &DogfightParameters{
+		Aircraft:             *aircraft1,
+		DogfightResult:       dr1,
+		LastDogfightPosition: 0,
+	}
+	dfp2 := &DogfightParameters{
+		Aircraft:             *aircraft2,
+		DogfightResult:       dr2,
+		LastDogfightPosition: 0,
+	}
 
+	for i := 0; i < 10; i++ {
 		Dogfight(dfp1, dfp2)
-		drl1 = append(drl1, dr1)
-		drl2 = append(drl2, dr2)
+		dfp1.LastDogfightPosition = dfp1.DogfightResult.Fighter1Position
+		dfp2.LastDogfightPosition = dfp2.DogfightResult.Fighter1Position
+		drl1 = append(drl1, dfp1.DogfightResult)
+		drl2 = append(drl2, dfp2.DogfightResult)
 	}
 	return drl1, drl2
 }
