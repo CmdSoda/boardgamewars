@@ -1,6 +1,6 @@
 package country
 
-var SurnamesUSA = []string {
+var SurnamesUSA = []string{
 	"SMITH",
 	"JOHNSON",
 	"MILLER",
@@ -2003,7 +2003,7 @@ var SurnamesUSA = []string {
 	"STOREY",
 }
 
-var FemaleFirstNamesUSA = []string {
+var FemaleFirstNamesUSA = []string{
 	"MARY",
 	"PATRICIA",
 	"LINDA",

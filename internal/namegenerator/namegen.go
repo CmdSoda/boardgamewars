@@ -13,13 +13,13 @@ func ignoreBraces(s string) string {
 	if i1 == -1 {
 		return s
 	}
-	out :=s[i1+1:i2]
+	out := s[i1+1 : i2]
 	return out
 }
 
 type NameSet struct {
-	Males []string
-	Females []string
+	Males    []string
+	Females  []string
 	Surnames []string
 }
 

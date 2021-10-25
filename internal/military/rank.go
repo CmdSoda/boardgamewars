@@ -43,11 +43,11 @@ func GetFlightRank(list []FlightRank, noc nato.Code) FlightRank {
 	return frl.RandomPick()
 }
 
-var TheFlightRanks = map[countrycodes.Code][]FlightRank {
-	countrycodes.UK: PilotRanksUK,
+var TheFlightRanks = map[countrycodes.Code][]FlightRank{
+	countrycodes.UK:      PilotRanksUK,
 	countrycodes.Germany: PilotRanksGermany,
-	countrycodes.USA: PilotRanksUSA,
-	countrycodes.Russia: PilotRanksUSA,
+	countrycodes.USA:     PilotRanksUSA,
+	countrycodes.Russia:  PilotRanksUSA,
 }
 
 func NewRank(cc countrycodes.Code, noc nato.Code) FlightRank {

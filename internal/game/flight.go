@@ -19,4 +19,3 @@ type Squadron struct {
 	Flight3 FullFlight
 	Flight4 FullFlight
 }
-

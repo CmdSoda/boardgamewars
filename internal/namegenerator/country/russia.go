@@ -1,6 +1,6 @@
 package country
 
-var SurnamesRussia = []string {
+var SurnamesRussia = []string{
 	"Abakumov (Абакумов)",
 	"Abdulov (Абдулов)",
 	"Abramov (Абрамов)",
@@ -1708,7 +1708,7 @@ var SurnamesRussia = []string {
 	"Yushkivyin (Юшкивыин)",
 }
 
-var FemaleFirstNamesRussia = []string {
+var FemaleFirstNamesRussia = []string{
 	"Agrippina",
 	"Albina",
 	"Alevtina",

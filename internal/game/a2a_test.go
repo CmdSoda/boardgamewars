@@ -22,7 +22,6 @@ func TestCreateAir2AirWeaponsLibrary(t *testing.T) {
 	fmt.Println(string(jb))
 }
 
-
 func TestLoadAir2AirLibrary(t *testing.T) {
 	var err error
 	file, err := os.Open("data/a2a.json")
