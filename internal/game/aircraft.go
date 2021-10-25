@@ -37,6 +37,9 @@ func (a Aircraft) String() string {
 	for _, d := range a.Damage {
 		fmt.Fprintf(&b, d.String()+" ")
 	}
+	if len(a.Damage) == 0 {
+		fmt.Fprint(&b, "\n")
+	}
 	return b.String()
 }
 

@@ -55,7 +55,7 @@ func (awp Air2AirWeaponParameters) Hit(target Aircraft, dfp DogfightPosition) bo
 	if dfp == DogfightPositionBehindEnemiesTailOptimal {
 		wep += 2
 	}
-	dfpw := DogfightPerformance(wep, target.GetParameters().Dogfighting)
+	dfpw := DogfightPerformance(wep, DogfightPositionIgnore, target.GetParameters().Dogfighting, DogfightPositionIgnore)
 	return dfpw > 0
 }
 
