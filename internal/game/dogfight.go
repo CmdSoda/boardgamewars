@@ -60,7 +60,7 @@ func (d DogfightResult) String() string {
 	} else {
 		fmt.Fprint(&sb, "WeaponUsed: none, ")
 	}
-	fmt.Fprint(&sb, "Damage2: ")
+	fmt.Fprint(&sb, "Damage: ")
 	for _, dt := range d.DamageDone {
 		fmt.Fprintf(&sb, "%s, ", dt.String())
 	}

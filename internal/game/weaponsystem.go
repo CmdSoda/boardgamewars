@@ -13,7 +13,7 @@ const (
 type WeaponSystem struct {
 	WeaponSystemName string
 	Category         string
-	Depleted         bool
+	Depleted         bool // Weapon used, Tank has been droped.
 	*Air2AirWeaponParameters
 }
 
