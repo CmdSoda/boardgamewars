@@ -10,12 +10,13 @@ import (
 // An airbase can be at land and on the carrier
 
 type Airbase struct {
-	Id                uuid.UUID
-	Name              string
-	BelongsTo         countrycodes.Code
-	AcceptAllies      bool
-	AircraftsInHangar []Aircraft
-	StationedPilots   []Pilot
+	Id                  uuid.UUID
+	Name                string
+	BelongsTo           countrycodes.Code
+	AcceptAllies        bool
+	AircraftsHangar     []Aircraft
+	AircraftsMaintained []Aircraft
+	StationedPilots     []Pilot
 	Position
 }
 
@@ -39,8 +40,8 @@ func (al AirbaseList) String() string {
 func (ab Airbase) String() string {
 	var sb strings.Builder
 	fmt.Fprintf(&sb, "Airbase: %s [%s]\n", ab.Name, ab.BelongsTo.String())
-	fmt.Fprint(&sb, "AircraftsInHangar: ")
-	for _, aircraft := range ab.AircraftsInHangar {
+	fmt.Fprint(&sb, "AircraftsHangar: ")
+	for _, aircraft := range ab.AircraftsHangar {
 		fmt.Fprintf(&sb, "%s, ", aircraft.GetParameters().Name)
 	}
 	fmt.Fprint(&sb, "\n")
@@ -56,13 +57,13 @@ func NewAirbase(name string, cc countrycodes.Code, pos Position) Airbase {
 	ab.BelongsTo = cc
 	ab.Position = pos
 	AllAirbases[ab.Id] = ab
-	ab.AircraftsInHangar = []Aircraft{}
+	ab.AircraftsHangar = []Aircraft{}
 	ab.StationedPilots = []Pilot{}
 	return ab
 }
 
 func (ab *Airbase) AddToHangar(ac Aircraft) {
-	ab.AircraftsInHangar = append(ab.AircraftsInHangar, ac)
+	ab.AircraftsHangar = append(ab.AircraftsHangar, ac)
 }
 
 func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, cc countrycodes.Code, count int) {
@@ -70,7 +71,7 @@ func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string
 		ac := NewAircraft(aircraftName, configurationName, cc)
 		ac.StationedAt = ab.Id
 		if ac != nil {
-			ab.AircraftsInHangar = append(ab.AircraftsInHangar, *ac)
+			ab.AircraftsHangar = append(ab.AircraftsHangar, *ac)
 		}
 	}
 }
