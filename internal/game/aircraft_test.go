@@ -60,13 +60,13 @@ func TestLoadAircraftLibrary(t *testing.T) {
 
 func TestAircraftPilots(t *testing.T) {
 	InitGame()
-	ac := NewAircraft("F14", "Default", countrycodes.UK, nato.OF2)
+	ac := NewAircraftManned("F14", "Default", countrycodes.UK, nato.OF2)
 	fmt.Println(ac)
-	ac = NewAircraft("F14", "Default", countrycodes.Germany, nato.OF2)
+	ac = NewAircraftManned("F14", "Default", countrycodes.Germany, nato.OF2)
 	fmt.Println(ac)
-	ac = NewAircraft("F14", "Default", countrycodes.USA, nato.OF2)
+	ac = NewAircraftManned("F14", "Default", countrycodes.USA, nato.OF2)
 	fmt.Println(ac)
-	ac = NewAircraft("F14", "Default", countrycodes.Russia, nato.OF2)
+	ac = NewAircraftManned("F14", "Default", countrycodes.Russia, nato.OF2)
 	fmt.Println(ac)
 	fmt.Println(TheRoster)
 }

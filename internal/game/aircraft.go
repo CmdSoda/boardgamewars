@@ -55,7 +55,13 @@ func (a *Aircraft) FillUpSeats(oc nato.Code) {
 	}
 }
 
-func NewAircraft(name string, configurationName string, cc countrycodes.Code, oc nato.Code) *Aircraft {
+func NewAircraftManned(name string, configurationName string, cc countrycodes.Code, oc nato.Code) *Aircraft {
+	ac := NewAircraft(name, configurationName, cc)
+	ac.FillUpSeats(oc)
+	return ac
+}
+
+func NewAircraft(name string, configurationName string, cc countrycodes.Code) *Aircraft {
 	id := GetAircraftIdByName(name)
 	if id >= 0 {
 		ac := Aircraft{AircraftId: id}
@@ -66,7 +72,6 @@ func NewAircraft(name string, configurationName string, cc countrycodes.Code, oc
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
 		ac.Damage = make([]DamageType, 0)
-		ac.FillUpSeats(oc)
 		return &ac
 	}
 	return nil
