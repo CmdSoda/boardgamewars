@@ -3,6 +3,7 @@ package game
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -10,7 +11,7 @@ import (
 
 func TestCreateAir2AirWeaponsLibrary(t *testing.T) {
 	ap := Air2AirWeaponParameters{}
-	ap.EquipmentId = 0
+	ap.Id = uuid.New()
 	ap.Name = "Aim-7"
 	ap.Dogfighting = 9
 	ap.BVR = 0

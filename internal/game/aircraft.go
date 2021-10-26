@@ -1,22 +1,19 @@
 package game
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
-	"io/ioutil"
-	"os"
 	"strings"
 )
 
 type AircraftId int
 
 type Aircraft struct {
-	AircraftId
-	countrycodes.Code
 	Id                 uuid.UUID
+	ParametersId       uuid.UUID
+	Country            countrycodes.Code
 	Altitude           AltitudeBand // Aktuelle Höhe.
 	CurrentPosition    Position
 	NextTargetLocation Position // Das ist die Position, die das Flugzeug jetzt ansteuert.
@@ -51,8 +48,9 @@ func (a *Aircraft) AddPilot(p Pilot) {
 func (a *Aircraft) FillUpSeats(oc nato.Code) {
 	a.Pilots = make([]uuid.UUID, 0)
 	currentoc := oc
+
 	for i := 0; i < a.GetParameters().Seats; i++ {
-		a.AddPilot(NewPilot(a.Code, currentoc))
+		a.AddPilot(NewPilot(a.Country, currentoc))
 		if currentoc > 1 {
 			currentoc = currentoc - 1
 		}
@@ -70,17 +68,20 @@ func (a *Aircraft) AssignToAB(id uuid.UUID) bool {
 
 func NewAircraftManned(name string, configurationName string, cc countrycodes.Code, oc nato.Code) *Aircraft {
 	ac := NewAircraft(name, configurationName, cc)
-	ac.FillUpSeats(oc)
+	if ac != nil {
+		ac.FillUpSeats(oc)
+	}
 	return ac
 }
 
 func NewAircraft(name string, configurationName string, cc countrycodes.Code) *Aircraft {
 	id := GetAircraftIdByName(name)
-	if id >= 0 {
-		ac := Aircraft{AircraftId: id}
+	if id != nil {
+		ac := Aircraft{}
 		ac.Id = uuid.New()
-		ac.Code = cc
-		ac.WeaponSystems = NewWeaponSystems(id, configurationName)
+		ac.ParametersId = *id
+		ac.Country = cc
+		ac.WeaponSystems = NewWeaponSystems(*id, configurationName)
 		for i := 0; i < len(ac.WeaponSystems); i++ {
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
@@ -90,74 +91,18 @@ func NewAircraft(name string, configurationName string, cc countrycodes.Code) *A
 	return nil
 }
 
-func GetAircraftIdByName(name string) AircraftId {
+func GetAircraftIdByName(name string) *uuid.UUID {
 	for _, parameters := range AirLib {
 		if parameters.Name == name {
-			return parameters.AircraftId
-		}
-	}
-	return -1
-}
-
-type AircraftParameters struct {
-	AircraftId
-	Name                  string
-	Nickname              string
-	FirstFlight           Year
-	Introduction          Year
-	CombatSpeed           Rating
-	CruiseSpeed           Rating
-	CombatFuelConsumption Rating // Treibstoffverbrauch im Kampf pro Runde.
-	CruiseFuelConsumption Rating // Treibstoffverbrauch beim Cruisen pro Runde.
-	Fuel                  Rating
-	MaxAltitude           AltitudeBand
-	Dogfighting           Rating
-	Configurations        WeaponSystemConfigurationList
-	MaintenanceTime       Rating
-	StructuralDefense     Rating
-	MaxHitpoints          Hitpoints
-	MaxDamagePoints       int
-	Seats                 int
-}
-
-type AircraftLibrary []AircraftParameters
-
-var AirLib AircraftLibrary
-
-type AircraftParametersNotFound struct {
-	Type AircraftId
-}
-
-func (p *AircraftParametersNotFound) Error() string {
-	return fmt.Sprintf("Could not find parameters for aircraft %d", p.Type)
-}
-
-func LoadAircrafts() (*AircraftLibrary, error) {
-	var err error
-	file, err := os.Open("data/aircrafts.json")
-	if err != nil {
-		return nil, err
-	}
-	bytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		return nil, err
-	}
-	al := AircraftLibrary{}
-	err = json.Unmarshal(bytes, &al)
-	if err != nil {
-		return nil, err
-	}
-	AirLib = al
-	return &al, nil
-}
-
-func (a Aircraft) GetParameters() *AircraftParameters {
-	for _, parameters := range AirLib {
-		if parameters.AircraftId == a.AircraftId {
-			return &parameters
+			return &parameters.Id
 		}
 	}
 	return nil
+}
+
+func (a Aircraft) GetParameters() AircraftParameters {
+	ap, _ := AirLib[a.ParametersId]
+	return ap
 }
 
 func (a Aircraft) GetBestDogfightingWeapon() *WeaponSystem {
@@ -202,7 +147,7 @@ func (a *Aircraft) DepleteWeapon(ws WeaponSystem) {
 	if ws.Air2AirWeaponParameters != nil {
 		for i, system := range a.WeaponSystems {
 			if system.Depleted == false && system.Air2AirWeaponParameters != nil &&
-				ws.Air2AirWeaponParameters.EquipmentId == system.Air2AirWeaponParameters.EquipmentId {
+				ws.Air2AirWeaponParameters.Id == system.Air2AirWeaponParameters.Id {
 				a.WeaponSystems[i].Depleted = true
 				return
 			}

@@ -35,12 +35,14 @@ type Pilot struct {
 }
 
 type PilotStats struct {
-	Sorties int
-	Hits    int
-	Kills   int
-	Kia     bool
-	Mia     bool
-	XP      int
+	Sorties   int
+	Hits      int
+	Kills     int
+	Kia       bool
+	Mia       bool
+	XP        int
+	Reflexes  int // Reflexe im Dogfight: -2, -1, 0, +1, +2
+	Endurance int // Wieviel Stress kann der Pilot verkraften.
 }
 
 func (p Pilot) String() string {

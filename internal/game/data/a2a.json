@@ -1,12 +1,24 @@
 [
   {
-    "EquipmentId": 0,
+    "Id": "34bca5fb-89a9-47b3-bb9f-a7bcaf569cfd",
     "Name": "Aim-7",
+    "Dogfighting": 6,
+    "BVR": 0,
+    "Speed": 9,
+    "Range": 25,
+    "Damage": 500,
+    "OrdenanceWeight": 4,
+    "Tags": [ ]
+  },
+  {
+    "Id": "3699bee4-369a-11ec-8d3d-0242ac130003",
+    "Name": "Aim-9",
     "Dogfighting": 9,
     "BVR": 0,
     "Speed": 9,
     "Range": 10,
     "Damage": 500,
-    "OrdenanceWeight": 4
+    "OrdenanceWeight": 4,
+    "Tags": [ "AllAspect" ]
   }
 ]

@@ -3,12 +3,13 @@ package game
 import (
 	"encoding/json"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
+	"github.com/google/uuid"
 	"io/ioutil"
 	"os"
 )
 
 type Air2AirWeaponParameters struct {
-	EquipmentId
+	Id              uuid.UUID
 	Name            string
 	Dogfighting     Rating // Wie gut verhält sich die Waffe im Dogfight
 	BVR             Rating // Wie gut verhält sich die Waffe im BVR
@@ -16,6 +17,7 @@ type Air2AirWeaponParameters struct {
 	Range           Rating // Wie weit fliegt die Waffe
 	Damage          Hitpoints
 	OrdenanceWeight Rating
+	Tags            []string
 }
 
 type Air2AirWeaponLibrary []Air2AirWeaponParameters
