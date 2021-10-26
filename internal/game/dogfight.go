@@ -39,10 +39,11 @@ func (dp DogfightPosition) String() string {
 }
 
 type DogfightResult struct {
+	Round            int
 	Fighter1Position DogfightPosition
 	WeaponUsed       *WeaponSystem
 	Hit              bool
-	DamageDone       []DamageType
+	DamageConflicted []DamageType
 }
 
 type DogfightParameters struct {
@@ -53,19 +54,18 @@ type DogfightParameters struct {
 
 func (d DogfightResult) String() string {
 	var sb strings.Builder
-	fmt.Fprint(&sb, "Dogfight Result: ")
-	fmt.Fprintf(&sb, "%s, ", d.Fighter1Position)
+	fmt.Fprintf(&sb, "%d.Dogfight Result: ", d.Round)
+	fmt.Fprintf(&sb, "%s", d.Fighter1Position)
 	if d.WeaponUsed != nil {
-		fmt.Fprintf(&sb, "WeaponUsed: %s, ", d.WeaponUsed.Name)
-	} else {
-		fmt.Fprint(&sb, "WeaponUsed: none, ")
-	}
-	fmt.Fprint(&sb, "Damage: ")
-	for _, dt := range d.DamageDone {
-		fmt.Fprintf(&sb, "%s, ", dt.String())
-	}
-	if len(d.DamageDone) == 0 {
-		fmt.Fprint(&sb, "none")
+		fmt.Fprintf(&sb, ", HitWith: %s", d.WeaponUsed.Name)
+		if len(d.DamageConflicted) > 0 {
+			fmt.Fprint(&sb, ", DamageConflicted: ")
+			for _, dt := range d.DamageConflicted {
+				fmt.Fprintf(&sb, "%s, ", dt.String())
+			}
+		} else {
+			fmt.Fprint(&sb, ", no damage")
+		}
 	}
 	fmt.Fprint(&sb, "\n")
 	return sb.String()

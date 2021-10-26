@@ -13,11 +13,9 @@ func TestDogfight(t *testing.T) {
 	fighter1 := NewAircraftManned("F14", "Default", countrycodes.UK, nato.OF2)
 	fighter2 := NewAircraftManned("F14", "Default", countrycodes.UK, nato.OF1)
 
-	var dr1 DogfightResult
-	var dr2 DogfightResult
 	ldp1 := DogfightPositionTossup
 	ldp2 := DogfightPositionTossup
-	Dogfight(fighter1, &dr1, ldp1, fighter2, &dr2, ldp2)
+	dr1, dr2 := Dogfight(fighter1, ldp1, fighter2, ldp2)
 	fmt.Println(dr1)
 	fmt.Println(dr2)
 }
@@ -26,9 +24,10 @@ func TestMoreRounds(t *testing.T) {
 	InitGame()
 
 	fighter1 := NewAircraftManned("F14", "Default", countrycodes.UK, nato.OF2)
-	fighter2 := NewAircraftManned("F14", "Default", countrycodes.UK, nato.OF1)
+	fighter2 := NewAircraftManned("MiG-29", "Default", countrycodes.UK, nato.OF1)
 
 	drl1, drl2 := Sim10Rounds(fighter1, fighter2)
+
 	fmt.Println(drl1)
 	fmt.Println(drl2)
 }

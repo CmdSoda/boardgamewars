@@ -11,7 +11,7 @@
     "CruiseFuelConsumption": 0,
     "Fuel": 20,
     "MaxAltitude": 5,
-    "Dogfighting": 7,
+    "Dogfighting": 5,
     "Configurations": [
       {
         "ConfigurationName": "Default",
@@ -40,5 +40,48 @@
     "MaxHitpoints": 500,
     "MaxDamagePoints": 2,
     "Seats": 2
+  },
+  {
+    "AircraftId": 1,
+    "Name": "MiG-29",
+    "Nickname": "Fulcrum",
+    "FirstFlight": 1970,
+    "Introduction": 1974,
+    "CombatSpeed": 10,
+    "CruiseSpeed": 4,
+    "CombatFuelConsumption": 4,
+    "CruiseFuelConsumption": 0,
+    "Fuel": 20,
+    "MaxAltitude": 5,
+    "Dogfighting": 9,
+    "Configurations": [
+      {
+        "ConfigurationName": "Default",
+        "WeaponSystems": [
+          {
+            "WeaponSystemName": "Tank500",
+            "Category": "DropTank"
+          },
+          {
+            "WeaponSystemName": "Tank500",
+            "Category": "DropTank"
+          },
+          {
+            "WeaponSystemName": "Aim-7",
+            "Category": "A2A"
+          },
+          {
+            "WeaponSystemName": "Aim-7",
+            "Category": "A2A"
+          }
+        ]
+      }
+    ],
+    "MaintenanceTime": 5,
+    "StructuralDefense": 0,
+    "MaxHitpoints": 500,
+    "MaxDamagePoints": 2,
+    "Seats": 1
   }
+
 ]

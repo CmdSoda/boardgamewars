@@ -10,6 +10,14 @@ func DogfightPerformance(rating1 Rating, lastPosition1 DogfightPosition,
 	dfr2 := randomizer.Roll1D10() + int(rating2)
 	dfdelta := dfr1 - dfr2
 
+	if lastPosition1 == DogfightPositionAdventage {
+		dfdelta = dfdelta + 3
+	}
+
+	if lastPosition2 == DogfightPositionAdventage {
+		dfdelta = dfdelta - 3
+	}
+
 	if dfdelta > 0 {
 		if dfdelta >= 7 {
 			return DogfightPositionBehindEnemiesTailOptimal
@@ -32,10 +40,13 @@ func DogfightPerformance(rating1 Rating, lastPosition1 DogfightPosition,
 
 // Dogfight Eine Runde im Luftkampf. Etwa 10 Sekunden dauer.
 func Dogfight(
-	aircraft1 *Aircraft, dfr1 *DogfightResult, ldp1 DogfightPosition,
-	aircraft2 *Aircraft, dfr2 *DogfightResult, ldp2 DogfightPosition) {
+	aircraft1 *Aircraft, ldp1 DogfightPosition,
+	aircraft2 *Aircraft, ldp2 DogfightPosition) (DogfightResult, DogfightResult) {
 	ap1 := aircraft1.GetParameters()
 	ap2 := aircraft2.GetParameters()
+
+	var dfr1 DogfightResult
+	var dfr2 DogfightResult
 
 	// In Position setzen
 	// Flugzeuge mit grösseren Dogfighting-Rating haben höhere Chance.
@@ -55,7 +66,7 @@ func Dogfight(
 			if bestws.Hit(*aircraft2, dfa1Pos) {
 				dfr1.Hit = true
 				dt := aircraft2.DoDamageWith(*bestws)
-				dfr1.DamageDone = append(dfr1.DamageDone, dt)
+				dfr1.DamageConflicted = append(dfr1.DamageConflicted, dt)
 			}
 		}
 	} else if -dfa1Pos >= DogfightPositionBehindEnemiesTail {
@@ -66,23 +77,24 @@ func Dogfight(
 			if bestws.Hit(*aircraft1, -dfa1Pos) {
 				dfr2.Hit = true
 				dt := aircraft1.DoDamageWith(*bestws)
-				dfr2.DamageDone = append(dfr2.DamageDone, dt)
+				dfr2.DamageConflicted = append(dfr2.DamageConflicted, dt)
 			}
 		}
 	}
+	return dfr1, dfr2
 }
 
 func Sim10Rounds(aircraft1 *Aircraft, aircraft2 *Aircraft) ([]DogfightResult, []DogfightResult) {
 	drl1 := make([]DogfightResult, 0)
 	drl2 := make([]DogfightResult, 0)
 
-	dr1 := DogfightResult{}
-	dr2 := DogfightResult{}
 	ldp1 := DogfightPositionTossup
 	ldp2 := DogfightPositionTossup
 
 	for i := 0; i < 10; i++ {
-		Dogfight(aircraft1, &dr1, ldp1, aircraft2, &dr2, ldp2)
+		dr1, dr2 := Dogfight(aircraft1, ldp1, aircraft2, ldp2)
+		dr1.Round = i
+		dr2.Round = i
 		ldp1 = dr1.Fighter1Position
 		ldp2 = dr2.Fighter1Position
 		drl1 = append(drl1, dr1)
