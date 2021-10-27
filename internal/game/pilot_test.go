@@ -9,6 +9,6 @@ import (
 
 func TestNewPilot(t *testing.T) {
 	InitGame()
-	p := NewPilot(countrycodes.UK, nato.OF2)
+	p := NewPilot(countrycodes.Germany, nato.OF3)
 	fmt.Println(p)
 }

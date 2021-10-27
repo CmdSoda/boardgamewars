@@ -21,6 +21,7 @@ type NameSet struct {
 	Males    []string
 	Females  []string
 	Surnames []string
+	Cities   []string
 }
 
 var theNameSet = map[countrycodes.Code]NameSet{
@@ -28,21 +29,25 @@ var theNameSet = map[countrycodes.Code]NameSet{
 		Males:    country.MaleFirstNamesUK,
 		Females:  country.FemaleFirstNamesUK,
 		Surnames: country.SurnamesUK,
+		Cities:   country.CitiesUK,
 	},
 	countrycodes.Germany: {
 		Males:    country.MaleFirstNamesGermany,
 		Females:  country.FemaleFirstNamesGermany,
 		Surnames: country.SurnamesGermany,
+		Cities:   country.CitiesGermany,
 	},
 	countrycodes.USA: {
 		Males:    country.MaleFirstNamesUSA,
-		Females:  country.FemaleFirstNamesUK,
-		Surnames: country.SurnamesUK,
+		Females:  country.FemaleFirstNamesUSA,
+		Surnames: country.SurnamesUSA,
+		Cities:   country.CitiesUSA,
 	},
 	countrycodes.Russia: {
 		Males:    country.MaleFirstNamesRussia,
 		Females:  country.FemaleFirstNamesRussia,
 		Surnames: country.SurnamesRussia,
+		Cities:   country.CitiesRussia,
 	},
 }
 
@@ -60,4 +65,10 @@ func CreateFemaleFullName(cc countrycodes.Code) string {
 	r = randomizer.Roll1DN(len(theNameSet[cc].Surnames))
 	surname := ignoreBraces(strings.Title(strings.ToLower(theNameSet[cc].Surnames[r-1])))
 	return firstname + " " + surname
+}
+
+func CreateCityName(cc countrycodes.Code) string {
+	r := randomizer.Roll1DN(len(theNameSet[cc].Cities))
+	city := ignoreBraces(strings.Title(strings.ToLower(theNameSet[cc].Cities[r-1])))
+	return city
 }
