@@ -47,14 +47,14 @@ func TestSearch(t *testing.T) {
 }
 
 func Test_searchWide(t *testing.T) {
-	m := NewMap(10, 10)
+	m := NewMap(5, 5)
 	start := hexagon.Position{
 		Column: 1,
 		Row:    1,
 	}
 	end := hexagon.Position{
-		Column: 10,
-		Row:    10,
+		Column: 5,
+		Row:    5,
 	}
 	currentpath := make(hexagon.PositionList, 0, 0)
 	currentpath = append(currentpath, start)
