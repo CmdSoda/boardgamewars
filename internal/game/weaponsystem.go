@@ -1,7 +1,5 @@
 package game
 
-import "github.com/google/uuid"
-
 type WeaponSystemCategory int
 
 const (
@@ -21,7 +19,7 @@ type WeaponSystem struct {
 
 type WeaponSystemList []WeaponSystem
 
-func NewWeaponSystems(acId uuid.UUID, configname string) WeaponSystemList {
+func NewWeaponSystems(acId AircraftParametersId, configname string) WeaponSystemList {
 	for _, parameters := range AirLib {
 		if parameters.Id == acId {
 			for _, configuration := range parameters.Configurations {

@@ -70,8 +70,6 @@ func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string
 	for i := 0; i < count; i++ {
 		ac := NewAircraft(aircraftName, configurationName, cc)
 		ac.StationedAt = ab.Id
-		if ac != nil {
-			ab.AircraftsHangar = append(ab.AircraftsHangar, *ac)
-		}
+		ab.AircraftsHangar = append(ab.AircraftsHangar, ac)
 	}
 }

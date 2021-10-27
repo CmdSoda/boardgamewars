@@ -7,8 +7,13 @@ import (
 	"os"
 )
 
+type AircraftParametersId uuid.UUID
+
+var InvalidAircraftParametersId = AircraftParametersId(uuid.MustParse("24b30695-6da6-4037-932c-f413e06c5ade"))
+
 type AircraftParameters struct {
-	Id                    uuid.UUID
+	Id                    AircraftParametersId
+	IdAsString            string
 	Name                  string
 	Nickname              string
 	FirstFlight           Year
@@ -28,7 +33,7 @@ type AircraftParameters struct {
 	Seats                 int
 }
 
-type AircraftLibrary map[uuid.UUID]AircraftParameters
+type AircraftLibrary map[AircraftParametersId]AircraftParameters
 
 type AircraftLibraryFile []AircraftParameters
 
@@ -51,6 +56,7 @@ func LoadAircrafts() error {
 	}
 	AirLib = AircraftLibrary{}
 	for _, parameters := range al {
+		parameters.Id = AircraftParametersId(uuid.MustParse(parameters.IdAsString))
 		AirLib[parameters.Id] = parameters
 	}
 	return nil

@@ -18,6 +18,6 @@ func TestHangar(t *testing.T) {
 	InitGame()
 	ab := NewAirbase("Fallujah AB", countrycodes.USA, Position{3, 5})
 	ac := NewAircraft("F14", "Default", countrycodes.USA)
-	ab.AddToHangar(*ac)
+	ab.AddToHangar(ac)
 	fmt.Println(ab)
 }

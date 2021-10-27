@@ -11,7 +11,7 @@ import (
 
 func TestCreateAircraftLibrary(t *testing.T) {
 	ap := AircraftParameters{}
-	ap.Id = uuid.New()
+	ap.Id = AircraftParametersId(uuid.New())
 	ap.Name = "F14"
 	ap.Nickname = "Tomcat"
 	ap.FirstFlight = 1970

@@ -8,11 +8,13 @@ import (
 	"strings"
 )
 
-type AircraftId int
+type AircraftId uuid.UUID
+
+var InvalidAircraftId = AircraftId(uuid.MustParse("0a491791-3cd8-4316-bacf-de84f5e8df27"))
 
 type Aircraft struct {
-	Id                 uuid.UUID
-	ParametersId       uuid.UUID
+	Id                 AircraftId
+	ParametersId       AircraftParametersId
 	Country            countrycodes.Code
 	Altitude           AltitudeBand // Aktuelle Höhe.
 	CurrentPosition    Position
@@ -66,38 +68,38 @@ func (a *Aircraft) AssignToAB(id uuid.UUID) bool {
 	return false
 }
 
-func NewAircraftManned(name string, configurationName string, cc countrycodes.Code, oc nato.Code) *Aircraft {
+func NewAircraftManned(name string, configurationName string, cc countrycodes.Code, oc nato.Code) Aircraft {
 	ac := NewAircraft(name, configurationName, cc)
-	if ac != nil {
+	if ac.Id != InvalidAircraftId {
 		ac.FillUpSeats(oc)
 	}
 	return ac
 }
 
-func NewAircraft(name string, configurationName string, cc countrycodes.Code) *Aircraft {
-	id := GetAircraftIdByName(name)
-	if id != nil {
-		ac := Aircraft{}
-		ac.Id = uuid.New()
-		ac.ParametersId = *id
+func NewAircraft(name string, configurationName string, cc countrycodes.Code) Aircraft {
+	ac := Aircraft{}
+	id := GetAircraftParametersIdByName(name)
+	if id != InvalidAircraftParametersId {
+		ac.Id = AircraftId(uuid.New())
+		ac.ParametersId = id
 		ac.Country = cc
-		ac.WeaponSystems = NewWeaponSystems(*id, configurationName)
+		ac.WeaponSystems = NewWeaponSystems(id, configurationName)
 		for i := 0; i < len(ac.WeaponSystems); i++ {
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
 		ac.Damage = make([]DamageType, 0)
-		return &ac
+		return ac
 	}
-	return nil
+	return ac
 }
 
-func GetAircraftIdByName(name string) *uuid.UUID {
+func GetAircraftParametersIdByName(name string) AircraftParametersId {
 	for _, parameters := range AirLib {
 		if parameters.Name == name {
-			return &parameters.Id
+			return parameters.Id
 		}
 	}
-	return nil
+	return InvalidAircraftParametersId
 }
 
 func (a Aircraft) GetParameters() AircraftParameters {

@@ -1,6 +1,6 @@
 [
   {
-    "Id": "e3b4031e-369a-11ec-8d3d-0242ac130003",
+    "IdAsString": "e3b4031e-369a-11ec-8d3d-0242ac130003",
     "Name": "F14",
     "Nickname": "Tomcat",
     "FirstFlight": 1970,
@@ -42,7 +42,7 @@
     "Seats": 2
   },
   {
-    "Id": "f0645118-369a-11ec-8d3d-0242ac130003",
+    "IdAsString": "f0645118-369a-11ec-8d3d-0242ac130003",
     "Name": "MiG-29",
     "Nickname": "Fulcrum",
     "FirstFlight": 1970,

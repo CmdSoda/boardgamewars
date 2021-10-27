@@ -41,12 +41,9 @@ func DogfightPerformance(rating1 Rating, lastPosition1 DogfightPosition,
 // Dogfight Eine Runde im Luftkampf. Etwa 10 Sekunden dauer.
 func Dogfight(
 	aircraft1 *Aircraft, ldp1 DogfightPosition,
-	aircraft2 *Aircraft, ldp2 DogfightPosition) (*DogfightResult, *DogfightResult) {
+	aircraft2 *Aircraft, ldp2 DogfightPosition) (DogfightResult, DogfightResult) {
 	var dfr1 DogfightResult
 	var dfr2 DogfightResult
-	if aircraft1 == nil || aircraft2 == nil {
-		return nil, nil
-	}
 	ap1 := aircraft1.GetParameters()
 	ap2 := aircraft2.GetParameters()
 
@@ -83,16 +80,12 @@ func Dogfight(
 			}
 		}
 	}
-	return &dfr1, &dfr2
+	return dfr1, dfr2
 }
 
 func Sim10Rounds(aircraft1 *Aircraft, aircraft2 *Aircraft) (*[]DogfightResult, *[]DogfightResult) {
 	drl1 := make([]DogfightResult, 0)
 	drl2 := make([]DogfightResult, 0)
-
-	if aircraft1 == nil || aircraft2 == nil {
-		return nil, nil
-	}
 
 	ldp1 := DogfightPositionTossup
 	ldp2 := DogfightPositionTossup
@@ -103,8 +96,8 @@ func Sim10Rounds(aircraft1 *Aircraft, aircraft2 *Aircraft) (*[]DogfightResult, *
 		dr2.Round = i
 		ldp1 = dr1.Fighter1Position
 		ldp2 = dr2.Fighter1Position
-		drl1 = append(drl1, *dr1)
-		drl2 = append(drl2, *dr2)
+		drl1 = append(drl1, dr1)
+		drl2 = append(drl2, dr2)
 	}
 	return &drl1, &drl2
 }
