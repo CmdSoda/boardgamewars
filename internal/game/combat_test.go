@@ -9,7 +9,7 @@ import (
 )
 
 func TestDogfight(t *testing.T) {
-	InitGame()
+	assert.Nil(t, InitGame())
 
 	fighter1 := NewAircraftManned("F14", "Default", countrycodes.UK, nato.OF2)
 	fighter2 := NewAircraftManned("MiG-29", "Default", countrycodes.UK, nato.OF1)
@@ -27,7 +27,7 @@ func TestDogfight(t *testing.T) {
 }
 
 func TestMoreRounds(t *testing.T) {
-	InitGame()
+	assert.Nil(t, InitGame())
 
 	fighter1 := NewAircraftManned("F14", "Default", countrycodes.UK, nato.OF2)
 	fighter2 := NewAircraftManned("MiG-29", "Default", countrycodes.Russia, nato.OF1)

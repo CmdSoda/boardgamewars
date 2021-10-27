@@ -10,7 +10,7 @@ import (
 )
 
 func TestAircraftPilots(t *testing.T) {
-	InitGame()
+	assert.Nil(t, InitGame())
 	ac := NewAircraftManned("F14", "Default", countrycodes.UK, nato.OF2)
 	fmt.Println(ac)
 	ac = NewAircraftManned("F14", "Default", countrycodes.Germany, nato.OF2)
@@ -19,11 +19,11 @@ func TestAircraftPilots(t *testing.T) {
 	fmt.Println(ac)
 	ac = NewAircraftManned("F14", "Default", countrycodes.Russia, nato.OF2)
 	fmt.Println(ac)
-	fmt.Println(TheRoster)
+	fmt.Println(Globals.PilotRoster)
 }
 
 func TestAssign(t *testing.T) {
-	InitGame()
+	assert.Nil(t, InitGame())
 	wrongid := uuid.New()
 	ac := NewAircraft("F14", "Default", countrycodes.UK)
 	assert.Equal(t, false, ac.AssignToAB(wrongid))

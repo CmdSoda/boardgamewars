@@ -37,8 +37,6 @@ type AircraftLibrary map[AircraftParametersId]AircraftParameters
 
 type AircraftLibraryFile []AircraftParameters
 
-var AirLib AircraftLibrary
-
 func LoadAircrafts() error {
 	var err error
 	file, err := os.Open("data/aircrafts.json")
@@ -54,10 +52,10 @@ func LoadAircrafts() error {
 	if err != nil {
 		return err
 	}
-	AirLib = AircraftLibrary{}
+	Globals.AircraftLibrary = AircraftLibrary{}
 	for _, parameters := range al {
 		parameters.Id = AircraftParametersId(uuid.MustParse(parameters.IdAsString))
-		AirLib[parameters.Id] = parameters
+		Globals.AircraftLibrary[parameters.Id] = parameters
 	}
 	return nil
 }

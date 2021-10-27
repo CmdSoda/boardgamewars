@@ -13,8 +13,8 @@ type AircraftId uuid.UUID
 var InvalidAircraftId = AircraftId(uuid.MustParse("0a491791-3cd8-4316-bacf-de84f5e8df27"))
 
 type Aircraft struct {
-	Id                 AircraftId
-	ParametersId       AircraftParametersId
+	AircraftId
+	AircraftParametersId
 	Country            countrycodes.Code
 	Altitude           AltitudeBand // Aktuelle Höhe.
 	CurrentPosition    Position
@@ -22,7 +22,7 @@ type Aircraft struct {
 	WeaponSystems      []WeaponSystem
 	Damage             []DamageType // Eine Liste von Schäden
 	Destroyed          bool
-	Pilots             []uuid.UUID
+	Pilots             []PilotId
 	StationedAt        uuid.UUID
 }
 
@@ -30,7 +30,7 @@ func (a Aircraft) String() string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "%s\nPilots: ", a.GetParameters().Name)
 	for _, pilot := range a.Pilots {
-		fmt.Fprintf(&b, TheRoster.GetPilot(pilot).String()+" ")
+		fmt.Fprintf(&b, Globals.PilotRoster.GetPilot(pilot).String()+" ")
 	}
 	fmt.Fprint(&b, "\nDamage: ")
 	for _, d := range a.Damage {
@@ -43,12 +43,12 @@ func (a Aircraft) String() string {
 }
 
 func (a *Aircraft) AddPilot(p Pilot) {
-	a.Pilots = append(a.Pilots, p.UUID)
-	TheRoster.Add(p)
+	a.Pilots = append(a.Pilots, p.PilotId)
+	Globals.PilotRoster.Add(p)
 }
 
 func (a *Aircraft) FillUpSeats(oc nato.Code) {
-	a.Pilots = make([]uuid.UUID, 0)
+	a.Pilots = make([]PilotId, 0)
 	currentoc := oc
 
 	for i := 0; i < a.GetParameters().Seats; i++ {
@@ -60,7 +60,7 @@ func (a *Aircraft) FillUpSeats(oc nato.Code) {
 }
 
 func (a *Aircraft) AssignToAB(id uuid.UUID) bool {
-	_, exist := AllAirbases[id]
+	_, exist := Globals.AirbaseList[id]
 	if exist {
 		a.StationedAt = id
 		return true
@@ -70,7 +70,7 @@ func (a *Aircraft) AssignToAB(id uuid.UUID) bool {
 
 func NewAircraftManned(name string, configurationName string, cc countrycodes.Code, oc nato.Code) Aircraft {
 	ac := NewAircraft(name, configurationName, cc)
-	if ac.Id != InvalidAircraftId {
+	if ac.AircraftId != InvalidAircraftId {
 		ac.FillUpSeats(oc)
 	}
 	return ac
@@ -78,12 +78,12 @@ func NewAircraftManned(name string, configurationName string, cc countrycodes.Co
 
 func NewAircraft(name string, configurationName string, cc countrycodes.Code) Aircraft {
 	ac := Aircraft{}
-	id := GetAircraftParametersIdByName(name)
-	if id != InvalidAircraftParametersId {
-		ac.Id = AircraftId(uuid.New())
-		ac.ParametersId = id
+	acpid := GetAircraftParametersIdByName(name)
+	if acpid != InvalidAircraftParametersId {
+		ac.AircraftId = AircraftId(uuid.New())
+		ac.AircraftParametersId = acpid
 		ac.Country = cc
-		ac.WeaponSystems = NewWeaponSystems(id, configurationName)
+		ac.WeaponSystems = NewWeaponSystems(acpid, configurationName)
 		for i := 0; i < len(ac.WeaponSystems); i++ {
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
@@ -94,7 +94,7 @@ func NewAircraft(name string, configurationName string, cc countrycodes.Code) Ai
 }
 
 func GetAircraftParametersIdByName(name string) AircraftParametersId {
-	for _, parameters := range AirLib {
+	for _, parameters := range Globals.AircraftLibrary {
 		if parameters.Name == name {
 			return parameters.Id
 		}
@@ -103,7 +103,7 @@ func GetAircraftParametersIdByName(name string) AircraftParametersId {
 }
 
 func (a Aircraft) GetParameters() AircraftParameters {
-	ap, _ := AirLib[a.ParametersId]
+	ap, _ := Globals.AircraftLibrary[a.AircraftParametersId]
 	return ap
 }
 

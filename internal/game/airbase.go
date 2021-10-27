@@ -22,10 +22,8 @@ type Airbase struct {
 
 type AirbaseList map[uuid.UUID]Airbase
 
-var AllAirbases AirbaseList
-
 func NewAirbaseList() {
-	AllAirbases = map[uuid.UUID]Airbase{}
+	Globals.AirbaseList = map[uuid.UUID]Airbase{}
 }
 
 func (al AirbaseList) String() string {
@@ -56,7 +54,7 @@ func NewAirbase(name string, cc countrycodes.Code, pos Position) Airbase {
 	ab.Name = name
 	ab.BelongsTo = cc
 	ab.Position = pos
-	AllAirbases[ab.Id] = ab
+	Globals.AirbaseList[ab.Id] = ab
 	ab.AircraftsHangar = []Aircraft{}
 	ab.StationedPilots = []Pilot{}
 	return ab

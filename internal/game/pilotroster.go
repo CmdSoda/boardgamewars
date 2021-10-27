@@ -2,26 +2,21 @@ package game
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"strings"
 )
 
-type PilotRoster map[uuid.UUID]Pilot
+type PilotRoster map[PilotId]Pilot
 
 func (pr PilotRoster) Add(p Pilot) bool {
-	if pr.Exist(p.UUID) {
+	_, exist := Globals.PilotRoster[p.PilotId]
+	if exist {
 		return false
 	}
-	pr[p.UUID] = p
+	pr[p.PilotId] = p
 	return true
 }
 
-func (pr PilotRoster) Exist(id uuid.UUID) bool {
-	_, exist := pr[id]
-	return exist
-}
-
-func (pr PilotRoster) GetPilot(id uuid.UUID) Pilot {
+func (pr PilotRoster) GetPilot(id PilotId) Pilot {
 	return pr[id]
 }
 
@@ -34,8 +29,6 @@ func (pr PilotRoster) String() string {
 	return b.String()
 }
 
-var TheRoster PilotRoster
-
 func NewPilotRoster() {
-	TheRoster = PilotRoster{}
+	Globals.PilotRoster = PilotRoster{}
 }

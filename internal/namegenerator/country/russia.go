@@ -1,6 +1,6 @@
 package country
 
-var AirForceBasesRussia = []string {
+var AirForceBasesRussia = []string{
 	"Achinsk Airport",
 	"Afrikanda",
 	"Aleysk",

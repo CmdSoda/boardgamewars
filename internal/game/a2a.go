@@ -22,29 +22,27 @@ type Air2AirWeaponParameters struct {
 
 type Air2AirWeaponLibrary []Air2AirWeaponParameters
 
-var Air2AirLib Air2AirWeaponLibrary
-
-func LoadAir2AirWeapons() (*Air2AirWeaponLibrary, error) {
+func LoadAir2AirWeapons() error {
 	var err error
 	file, err := os.Open("data/a2a.json")
 	if err != nil {
-		return nil, err
+		return err
 	}
 	bytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	a2al := Air2AirWeaponLibrary{}
 	err = json.Unmarshal(bytes, &a2al)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	Air2AirLib = a2al
-	return &a2al, nil
+	Globals.Air2AirWeaponLibrary = a2al
+	return nil
 }
 
 func GetAir2AirWeaponParametersFromName(name string) *Air2AirWeaponParameters {
-	for _, parameters := range Air2AirLib {
+	for _, parameters := range Globals.Air2AirWeaponLibrary {
 		if parameters.Name == name {
 			return &parameters
 		}

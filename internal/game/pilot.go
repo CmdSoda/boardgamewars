@@ -25,8 +25,10 @@ func (g Gender) String() string {
 	}
 }
 
+type PilotId uuid.UUID
+
 type Pilot struct {
-	uuid.UUID
+	PilotId
 	Name string
 	Gender
 	Background PilotBackground
@@ -76,7 +78,7 @@ func NewPilot(cc countrycodes.Code, ofc nato.Code) Pilot {
 
 	return Pilot{
 		Name:       fn(cc),
-		UUID:       uuid.New(),
+		PilotId:    PilotId(uuid.New()),
 		Gender:     g,
 		Background: PilotBackground{Country: cc, Born: namegenerator.CreateCityName(cc), Age: 18 + randomizer.Roll1DN(5) + 4*(int(ofc)-1)},
 		FlightRank: military.NewRank(cc, ofc),
