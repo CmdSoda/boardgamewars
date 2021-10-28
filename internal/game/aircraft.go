@@ -99,6 +99,7 @@ func GetAircraftParametersIdByName(name string) AircraftParametersId {
 			return parameters.Id
 		}
 	}
+	panic("unkown aircraft name: " + name)
 	return InvalidAircraftParametersId
 }
 

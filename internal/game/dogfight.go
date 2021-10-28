@@ -18,19 +18,6 @@ const (
 	DogfightPositionEnemyAtMySixOptimal      DogfightPosition = -3
 )
 
-type DogfightSituation struct {
-	BlueFighter Aircraft
-	BlueSupport *Aircraft // optional
-	RedFighter  Aircraft
-	RedSupport  *Aircraft // optional
-}
-
-type DogfightSetup struct {
-	TeamBlue   []Aircraft
-	TeamRed    []Aircraft
-	Situations []DogfightSituation
-}
-
 func (dp DogfightPosition) String() string {
 	switch dp {
 	case DogfightPositionBehindEnemiesTailOptimal:
