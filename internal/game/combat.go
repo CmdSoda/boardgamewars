@@ -51,8 +51,8 @@ func Dogfight(
 	// Flugzeuge mit grösseren Dogfighting-Rating haben höhere Chance.
 	// 1) Kampf um die Position => Endet in einer Position
 	dfa1Pos := DogfightPerformance(ap1.Dogfighting, ldp1, ap2.Dogfighting, ldp2)
-	dfr1.Fighter1Position = dfa1Pos
-	dfr2.Fighter1Position = -dfa1Pos
+	dfr1.Position = dfa1Pos
+	dfr2.Position = -dfa1Pos
 
 	// SRMs (Short-Range-Missles) gegeneinander einsetzen
 	// 2) Abschuss der SRM
@@ -94,8 +94,8 @@ func Sim10Rounds(aircraft1 *Aircraft, aircraft2 *Aircraft) (*[]DogfightResult, *
 		dr1, dr2 := Dogfight(aircraft1, ldp1, aircraft2, ldp2)
 		dr1.Round = i
 		dr2.Round = i
-		ldp1 = dr1.Fighter1Position
-		ldp2 = dr2.Fighter1Position
+		ldp1 = dr1.Position
+		ldp2 = dr2.Position
 		drl1 = append(drl1, dr1)
 		drl2 = append(drl2, dr2)
 	}

@@ -18,6 +18,19 @@ const (
 	DogfightPositionEnemyAtMySixOptimal      DogfightPosition = -3
 )
 
+type DogfightSituation struct {
+	BlueFighter Aircraft
+	BlueSupport *Aircraft // optional
+	RedFighter  Aircraft
+	RedSupport  *Aircraft // optional
+}
+
+type DogfightSetup struct {
+	TeamBlue   []Aircraft
+	TeamRed    []Aircraft
+	Situations []DogfightSituation
+}
+
 func (dp DogfightPosition) String() string {
 	switch dp {
 	case DogfightPositionBehindEnemiesTailOptimal:
@@ -40,7 +53,7 @@ func (dp DogfightPosition) String() string {
 
 type DogfightResult struct {
 	Round            int
-	Fighter1Position DogfightPosition
+	Position         DogfightPosition
 	WeaponUsed       *WeaponSystem
 	Hit              bool
 	DamageConflicted []DamageType
@@ -55,7 +68,7 @@ type DogfightParameters struct {
 func (d DogfightResult) String() string {
 	var sb strings.Builder
 	fmt.Fprintf(&sb, "%d.Dogfight Result: ", d.Round)
-	fmt.Fprintf(&sb, "%s", d.Fighter1Position)
+	fmt.Fprintf(&sb, "%s", d.Position)
 	if d.WeaponUsed != nil {
 		fmt.Fprintf(&sb, ", HitWith: %s", d.WeaponUsed.Name)
 		if len(d.DamageConflicted) > 0 {
