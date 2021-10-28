@@ -48,7 +48,7 @@ type PilotStats struct {
 }
 
 func (p Pilot) String() string {
-	return fmt.Sprintf("%s(%s) (%s) [%s] (%d-%d-%d) %dyo (%s)",
+	return fmt.Sprintf("%s(%s) (%s) [%s] (%d-%d-%d) %dyo (Born: %s HomeBase: %s)",
 		p.Name,
 		p.Gender,
 		p.FlightRank,
@@ -57,7 +57,12 @@ func (p Pilot) String() string {
 		p.PilotStats.Hits,
 		p.PilotStats.Kills,
 		p.Background.Age,
-		p.Background.Born)
+		p.Background.Born,
+		p.Background.HomeAirBase)
+}
+
+func RollAge(ofc nato.Code) int {
+	return 18 + randomizer.Roll1DN(5) + 4*(int(ofc)-1)
 }
 
 func NewPilot(cc countrycodes.Code, ofc nato.Code) Pilot {
@@ -77,10 +82,15 @@ func NewPilot(cc countrycodes.Code, ofc nato.Code) Pilot {
 	}
 
 	return Pilot{
-		Name:       fn(cc),
-		PilotId:    PilotId(uuid.New()),
-		Gender:     g,
-		Background: PilotBackground{Country: cc, Born: namegenerator.CreateCityName(cc), Age: 18 + randomizer.Roll1DN(5) + 4*(int(ofc)-1)},
+		Name:    fn(cc),
+		PilotId: PilotId(uuid.New()),
+		Gender:  g,
+		Background: PilotBackground{
+			Country:     cc,
+			Born:        namegenerator.CreateCityName(cc),
+			Age:         RollAge(ofc),
+			HomeAirBase: namegenerator.CreateAirForceBaseName(cc),
+		},
 		FlightRank: military.NewRank(cc, ofc),
 	}
 }

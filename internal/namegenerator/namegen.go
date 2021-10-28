@@ -80,6 +80,6 @@ func CreateCityName(cc countrycodes.Code) string {
 
 func CreateAirForceBaseName(cc countrycodes.Code) string {
 	r := randomizer.Roll1DN(len(theNameSet[cc].AirForceBase))
-	city := ignoreBraces(strings.Title(strings.ToLower(theNameSet[cc].AirForceBase[r-1])))
-	return city
+	airforcebase := ignoreBraces(strings.Title(strings.ToLower(theNameSet[cc].AirForceBase[r-1])))
+	return airforcebase
 }
