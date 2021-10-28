@@ -61,8 +61,22 @@ func (p Pilot) String() string {
 		p.Background.HomeAirBase)
 }
 
+// RollAge
+// https://www.operationmilitarykids.org/air-force-age-limits/
 func RollAge(ofc nato.Code) int {
-	return 18 + randomizer.Roll1DN(5) + 4*(int(ofc)-1)
+	switch ofc {
+	case nato.OF1:
+		return randomizer.Roll(22, 24)
+	case nato.OF2:
+		return randomizer.Roll(25, 28)
+	case nato.OF3:
+		return randomizer.Roll(27, 31)
+	case nato.OF4:
+		return randomizer.Roll(29, 35)
+	case nato.OF5:
+		return randomizer.Roll(32, 39)
+	}
+	return 0
 }
 
 func NewPilot(cc countrycodes.Code, ofc nato.Code) Pilot {

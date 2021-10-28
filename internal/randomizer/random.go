@@ -18,3 +18,9 @@ func Roll1D10() int {
 func Roll1DN(n int) int {
 	return rand.Intn(n) + 1
 }
+
+func Roll(n int, m int) int {
+	rng := m - n
+	roll := Roll1DN(rng+1) + (n - 1)
+	return roll
+}

@@ -10,6 +10,6 @@ import (
 
 func TestNewPilot(t *testing.T) {
 	assert.Nil(t, InitGame())
-	p := NewPilot(countrycodes.Germany, nato.OF1)
+	p := NewPilot(countrycodes.Germany, nato.OF5)
 	fmt.Println(p)
 }
