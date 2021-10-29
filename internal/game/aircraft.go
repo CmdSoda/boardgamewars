@@ -68,7 +68,7 @@ func (a *Aircraft) AssignToAB(id uuid.UUID) bool {
 	return false
 }
 
-func NewAircraftManned(name string, configurationName string, cc countrycodes.Code, oc nato.Code) Aircraft {
+func NewAircraftManned(name string, configurationName string, cc countrycodes.Code, oc nato.Code) *Aircraft {
 	ac := NewAircraft(name, configurationName, cc)
 	if ac.AircraftId != InvalidAircraftId {
 		ac.FillUpSeats(oc)
@@ -76,7 +76,7 @@ func NewAircraftManned(name string, configurationName string, cc countrycodes.Co
 	return ac
 }
 
-func NewAircraft(name string, configurationName string, cc countrycodes.Code) Aircraft {
+func NewAircraft(name string, configurationName string, cc countrycodes.Code) *Aircraft {
 	ac := Aircraft{}
 	acpid := GetAircraftParametersIdByName(name)
 	if acpid != InvalidAircraftParametersId {
@@ -88,9 +88,9 @@ func NewAircraft(name string, configurationName string, cc countrycodes.Code) Ai
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
 		ac.Damage = make([]DamageType, 0)
-		return ac
+		return &ac
 	}
-	return ac
+	return &ac
 }
 
 func GetAircraftParametersIdByName(name string) AircraftParametersId {

@@ -14,7 +14,7 @@ type Airbase struct {
 	Name                string
 	BelongsTo           countrycodes.Code
 	AcceptAllies        bool
-	AircraftsHangar     []Aircraft
+	AircraftsHangar     map[AircraftId]*Aircraft
 	AircraftsMaintained []Aircraft
 	StationedPilots     []Pilot
 	Position
@@ -55,19 +55,19 @@ func NewAirbase(name string, cc countrycodes.Code, pos Position) Airbase {
 	ab.BelongsTo = cc
 	ab.Position = pos
 	Globals.AirbaseList[ab.Id] = ab
-	ab.AircraftsHangar = []Aircraft{}
+	ab.AircraftsHangar = map[AircraftId]*Aircraft{}
 	ab.StationedPilots = []Pilot{}
 	return ab
 }
 
-func (ab *Airbase) AddToHangar(ac Aircraft) {
-	ab.AircraftsHangar = append(ab.AircraftsHangar, ac)
+func (ab *Airbase) AddToHangar(ac *Aircraft) {
+	ab.AircraftsHangar[ac.AircraftId] = ac
 }
 
 func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, cc countrycodes.Code, count int) {
 	for i := 0; i < count; i++ {
 		ac := NewAircraft(aircraftName, configurationName, cc)
 		ac.StationedAt = ab.Id
-		ab.AircraftsHangar = append(ab.AircraftsHangar, ac)
+		ab.AircraftsHangar[ac.AircraftId] = ac
 	}
 }

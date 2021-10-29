@@ -38,8 +38,8 @@ func DogfightPerformance(rating1 Rating, lastPosition1 DogfightPosition,
 	return DogfightPositionTossup
 }
 
-// Dogfight Eine Runde im Luftkampf. Etwa 10 Sekunden dauer.
-func Dogfight(
+// ExecuteDogfight Eine Runde im Luftkampf. Etwa 10 Sekunden dauer.
+func ExecuteDogfight(
 	aircraft1 *Aircraft, ldp1 DogfightPosition,
 	aircraft2 *Aircraft, ldp2 DogfightPosition) (DogfightResult, DogfightResult) {
 	var dfr1 DogfightResult
@@ -91,7 +91,7 @@ func Sim10Rounds(aircraft1 *Aircraft, aircraft2 *Aircraft) (*[]DogfightResult, *
 	ldp2 := DogfightPositionTossup
 
 	for i := 0; i < 10; i++ {
-		dr1, dr2 := Dogfight(aircraft1, ldp1, aircraft2, ldp2)
+		dr1, dr2 := ExecuteDogfight(aircraft1, ldp1, aircraft2, ldp2)
 		dr1.Round = i
 		dr2.Round = i
 		ldp1 = dr1.Position

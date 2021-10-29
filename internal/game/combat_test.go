@@ -19,7 +19,7 @@ func TestDogfight(t *testing.T) {
 
 	ldp1 := DogfightPositionTossup
 	ldp2 := DogfightPositionTossup
-	dr1, dr2 := Dogfight(&fighter1, ldp1, &fighter2, ldp2)
+	dr1, dr2 := ExecuteDogfight(fighter1, ldp1, fighter2, ldp2)
 	assert.NotNil(t, dr1)
 	assert.NotNil(t, dr2)
 	fmt.Println(dr1)
@@ -35,7 +35,7 @@ func TestMoreRounds(t *testing.T) {
 	assert.NotNil(t, fighter1)
 	assert.NotNil(t, fighter2)
 
-	drl1, drl2 := Sim10Rounds(&fighter1, &fighter2)
+	drl1, drl2 := Sim10Rounds(fighter1, fighter2)
 	assert.NotNil(t, drl1)
 	assert.NotNil(t, drl2)
 

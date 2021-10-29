@@ -43,7 +43,7 @@ type PilotStats struct {
 	Kia       bool
 	Mia       bool
 	XP        int
-	Reflexes  int // Reflexe im Dogfight: -2, -1, 0, +1, +2
+	Reflexes  int // Reflexe im ExecuteDogfight: -2, -1, 0, +1, +2
 	Endurance int // Wieviel Stress kann der Pilot verkraften.
 }
 

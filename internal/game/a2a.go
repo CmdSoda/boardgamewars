@@ -11,7 +11,7 @@ import (
 type Air2AirWeaponParameters struct {
 	Id              uuid.UUID
 	Name            string
-	Dogfighting     Rating // Wie gut verhält sich die Waffe im Dogfight
+	Dogfighting     Rating // Wie gut verhält sich die Waffe im ExecuteDogfight
 	BVR             Rating // Wie gut verhält sich die Waffe im BVR
 	Speed           Rating // Wie schnell ist die Waffe
 	Range           Rating // Wie weit fliegt die Waffe

@@ -30,3 +30,13 @@ func TestAssign(t *testing.T) {
 	nellis := NewAirbase("Nellis AB", countrycodes.USA, Position{6, 9})
 	assert.Equal(t, true, ac.AssignToAB(nellis.Id))
 }
+
+func TestAircraftMap(t *testing.T) {
+	assert.Nil(t, InitGame())
+	ab := NewAirbase("Carrier", countrycodes.UK, Position{4, 6})
+	ac := NewAircraftManned("F14", "Default", countrycodes.UK, nato.OF2)
+	ab.AddToHangar(ac)
+	ac.Damage = append(ac.Damage, DamageTypeCockpit)
+	id := ac.AircraftId
+	fmt.Println(ab.AircraftsHangar[id])
+}

@@ -54,7 +54,7 @@ type DogfightParameters struct {
 
 func (d DogfightResult) String() string {
 	var sb strings.Builder
-	fmt.Fprintf(&sb, "%d.Dogfight Result: ", d.Round)
+	fmt.Fprintf(&sb, "%d.ExecuteDogfight Result: ", d.Round)
 	fmt.Fprintf(&sb, "%s", d.Position)
 	if d.WeaponUsed != nil {
 		fmt.Fprintf(&sb, ", HitWith: %s", d.WeaponUsed.Name)

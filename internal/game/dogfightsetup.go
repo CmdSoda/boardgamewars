@@ -1,22 +1,19 @@
 package game
 
-type DogfightSituation struct {
-	BlueFighter Aircraft
-	BlueSupport *Aircraft // optional
-	RedFighter  Aircraft
-	RedSupport  *Aircraft // optional
-}
-
 type DogfightSetup struct {
-	TeamBlue   []Aircraft
-	TeamRed    []Aircraft
-	Situations []DogfightSituation
+	TeamBlue   []AircraftId
+	TeamRed    []AircraftId
 }
 
-func NewDogfightSetup(blue []Aircraft, red []Aircraft) DogfightSetup {
-	return DogfightSetup{
-		TeamBlue:   blue,
-		TeamRed:    red,
-		Situations: []DogfightSituation{},
-	}
+type DogfightGroup struct {
+	BlueFighter AircraftId
+	BlueSupport *AircraftId // optional
+	RedFighter  AircraftId
+	RedSupport  *AircraftId // optional
+}
+
+type Dogfight struct {
+	Groups []DogfightGroup
+	TeamBlueWaiting []AircraftId
+	TeamRedWaiting []AircraftId
 }
