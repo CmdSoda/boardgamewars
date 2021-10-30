@@ -2,8 +2,6 @@ package game
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
-	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
 	"strings"
 )
@@ -15,7 +13,7 @@ var InvalidAircraftId = AircraftId(uuid.MustParse("0a491791-3cd8-4316-bacf-de84f
 type Aircraft struct {
 	AircraftId
 	AircraftParametersId
-	Country            countrycodes.Code
+	WarParty
 	Altitude           AltitudeBand // Aktuelle Höhe.
 	CurrentPosition    Position
 	NextTargetLocation Position // Das ist die Position, die das Flugzeug jetzt ansteuert.
@@ -30,7 +28,7 @@ func (a Aircraft) String() string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "%s\nPilots: ", a.GetParameters().Name)
 	for _, pilot := range a.Pilots {
-		fmt.Fprintf(&b, Globals.PilotRoster.GetPilot(pilot).String()+" ")
+		fmt.Fprintf(&b, a.WarParty.Pilots[pilot].String()+" ")
 	}
 	fmt.Fprint(&b, "\nDamage: ")
 	for _, d := range a.Damage {
@@ -42,21 +40,8 @@ func (a Aircraft) String() string {
 	return b.String()
 }
 
-func (a *Aircraft) AddPilot(p Pilot) {
+func (a *Aircraft) AddPilot(p *Pilot) {
 	a.Pilots = append(a.Pilots, p.PilotId)
-	Globals.PilotRoster.Add(p)
-}
-
-func (a *Aircraft) FillUpSeats(oc nato.Code) {
-	a.Pilots = make([]PilotId, 0)
-	currentoc := oc
-
-	for i := 0; i < a.GetParameters().Seats; i++ {
-		a.AddPilot(NewPilot(a.Country, currentoc))
-		if currentoc > 1 {
-			currentoc = currentoc - 1
-		}
-	}
 }
 
 func (a *Aircraft) AssignToAB(id uuid.UUID) bool {
@@ -68,21 +53,13 @@ func (a *Aircraft) AssignToAB(id uuid.UUID) bool {
 	return false
 }
 
-func NewAircraftManned(name string, configurationName string, cc countrycodes.Code, oc nato.Code) *Aircraft {
-	ac := NewAircraft(name, configurationName, cc)
-	if ac.AircraftId != InvalidAircraftId {
-		ac.FillUpSeats(oc)
-	}
-	return ac
-}
-
-func NewAircraft(name string, configurationName string, cc countrycodes.Code) *Aircraft {
+func NewAircraft(name string, configurationName string, warpartyid WarPartyId) *Aircraft {
 	ac := Aircraft{}
 	acpid := GetAircraftParametersIdByName(name)
 	if acpid != InvalidAircraftParametersId {
 		ac.AircraftId = AircraftId(uuid.New())
 		ac.AircraftParametersId = acpid
-		ac.Country = cc
+		ac.Country = Globals.WarPartyList[warpartyid].Country
 		ac.WeaponSystems = NewWeaponSystems(acpid, configurationName)
 		for i := 0; i < len(ac.WeaponSystems); i++ {
 			ac.WeaponSystems[i].InitWeaponSystem()
@@ -155,5 +132,14 @@ func (a *Aircraft) DepleteWeapon(ws WeaponSystem) {
 				return
 			}
 		}
+	}
+}
+
+func (a *Aircraft) FillSeatsWith(pl []PilotId) {
+	if len(pl) > a.GetParameters().Seats {
+		panic("too many pilots")
+	}
+	for _, pilotid := range pl {
+		a.Pilots = append(a.Pilots, pilotid)
 	}
 }

@@ -1,10 +1,10 @@
 package game
 
 type Context struct {
-	PilotRoster
 	AirbaseList
 	AircraftLibrary
 	Air2AirWeaponLibrary
+	WarPartyList
 }
 
 var Globals = Context{}

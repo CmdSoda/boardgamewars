@@ -2,8 +2,6 @@ package game
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
-	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -11,8 +9,8 @@ import (
 func TestDogfight(t *testing.T) {
 	assert.Nil(t, InitGame())
 
-	fighter1 := NewAircraftManned("F14", "Default", countrycodes.UK, nato.OF2)
-	fighter2 := NewAircraftManned("MiG-29", "Default", countrycodes.UK, nato.OF1)
+	fighter1 := NewAircraft("F14", "Default", WarPartyIdUK)
+	fighter2 := NewAircraft("MiG-29", "Default", WarPartyIdUK)
 
 	assert.NotNil(t, fighter1)
 	assert.NotNil(t, fighter2)
@@ -29,8 +27,8 @@ func TestDogfight(t *testing.T) {
 func TestMoreRounds(t *testing.T) {
 	assert.Nil(t, InitGame())
 
-	fighter1 := NewAircraftManned("F14", "Default", countrycodes.UK, nato.OF2)
-	fighter2 := NewAircraftManned("MiG-29", "Default", countrycodes.Russia, nato.OF1)
+	fighter1 := NewAircraft("F14", "Default", WarPartyIdUK)
+	fighter2 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
 
 	assert.NotNil(t, fighter1)
 	assert.NotNil(t, fighter2)

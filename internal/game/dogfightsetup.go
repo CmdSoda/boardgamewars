@@ -1,8 +1,8 @@
 package game
 
 type DogfightSetup struct {
-	TeamBlue   []AircraftId
-	TeamRed    []AircraftId
+	TeamBlue []AircraftId
+	TeamRed  []AircraftId
 }
 
 type DogfightGroup struct {
@@ -13,7 +13,7 @@ type DogfightGroup struct {
 }
 
 type Dogfight struct {
-	Groups []DogfightGroup
+	Groups          []DogfightGroup
 	TeamBlueWaiting []AircraftId
-	TeamRedWaiting []AircraftId
+	TeamRedWaiting  []AircraftId
 }

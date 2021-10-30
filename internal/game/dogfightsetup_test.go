@@ -2,26 +2,24 @@ package game
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
-	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func CreateSetup() DogfightSetup {
 	var blue = []*Aircraft{
-		NewAircraftManned("F14", "Default", countrycodes.USA, nato.OF1),
-		NewAircraftManned("F14", "Default", countrycodes.USA, nato.OF1),
+		NewAircraft("F14", "Default", WarPartyIdUSA),
+		NewAircraft("F14", "Default", WarPartyIdUSA),
 	}
 
 	var red = []*Aircraft{
-		NewAircraftManned("MiG-29", "Default", countrycodes.Russia, nato.OF1),
-		NewAircraftManned("MiG-29", "Default", countrycodes.Russia, nato.OF1),
+		NewAircraft("MiG-29", "Default", WarPartyIdRussia),
+		NewAircraft("MiG-29", "Default", WarPartyIdRussia),
 	}
 
 	return DogfightSetup{
-		TeamBlue: []AircraftId{ blue[0].AircraftId, blue[1].AircraftId },
-		TeamRed:  []AircraftId{ red[0].AircraftId, red[1].AircraftId },
+		TeamBlue: []AircraftId{blue[0].AircraftId, blue[1].AircraftId},
+		TeamRed:  []AircraftId{red[0].AircraftId, red[1].AircraftId},
 	}
 }
 

@@ -2,7 +2,6 @@ package game
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/google/uuid"
 	"strings"
 )
@@ -12,7 +11,7 @@ import (
 type Airbase struct {
 	Id                  uuid.UUID
 	Name                string
-	BelongsTo           countrycodes.Code
+	BelongsTo           WarPartyId
 	AcceptAllies        bool
 	AircraftsHangar     map[AircraftId]*Aircraft
 	AircraftsMaintained []Aircraft
@@ -21,10 +20,6 @@ type Airbase struct {
 }
 
 type AirbaseList map[uuid.UUID]Airbase
-
-func NewAirbaseList() {
-	Globals.AirbaseList = map[uuid.UUID]Airbase{}
-}
 
 func (al AirbaseList) String() string {
 	var sb strings.Builder
@@ -37,7 +32,8 @@ func (al AirbaseList) String() string {
 
 func (ab Airbase) String() string {
 	var sb strings.Builder
-	fmt.Fprintf(&sb, "Airbase: %s [%s]\n", ab.Name, ab.BelongsTo.String())
+	wp := Globals.WarPartyList[ab.BelongsTo]
+	fmt.Fprintf(&sb, "Airbase: %s [%s]\n", ab.Name, wp.String())
 	fmt.Fprint(&sb, "AircraftsHangar: ")
 	for _, aircraft := range ab.AircraftsHangar {
 		fmt.Fprintf(&sb, "%s, ", aircraft.GetParameters().Name)
@@ -48,11 +44,11 @@ func (ab Airbase) String() string {
 	return sb.String()
 }
 
-func NewAirbase(name string, cc countrycodes.Code, pos Position) Airbase {
+func NewAirbase(name string, warpartyid WarPartyId, pos Position) Airbase {
 	ab := Airbase{}
 	ab.Id = uuid.New()
 	ab.Name = name
-	ab.BelongsTo = cc
+	ab.BelongsTo = warpartyid
 	ab.Position = pos
 	Globals.AirbaseList[ab.Id] = ab
 	ab.AircraftsHangar = map[AircraftId]*Aircraft{}
@@ -64,9 +60,9 @@ func (ab *Airbase) AddToHangar(ac *Aircraft) {
 	ab.AircraftsHangar[ac.AircraftId] = ac
 }
 
-func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, cc countrycodes.Code, count int) {
+func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, warpartyid WarPartyId, count int) {
 	for i := 0; i < count; i++ {
-		ac := NewAircraft(aircraftName, configurationName, cc)
+		ac := NewAircraft(aircraftName, configurationName, warpartyid)
 		ac.StationedAt = ab.Id
 		ab.AircraftsHangar[ac.AircraftId] = ac
 	}
