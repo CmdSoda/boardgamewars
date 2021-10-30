@@ -18,8 +18,8 @@ func CreateSetup() DogfightSetup {
 	}
 
 	return DogfightSetup{
-		TeamBlue: []AircraftId{blue[0].AircraftId, blue[1].AircraftId},
-		TeamRed:  []AircraftId{red[0].AircraftId, red[1].AircraftId},
+		TeamBlue: AircraftIdList{&blue[0].AircraftId, &blue[1].AircraftId},
+		TeamRed:  AircraftIdList{&red[0].AircraftId, &red[1].AircraftId},
 	}
 }
 

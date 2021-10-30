@@ -13,11 +13,11 @@ type AirbaseId uuid.UUID
 type Airbase struct {
 	Id                  AirbaseId
 	Name                string
-	BelongsTo           WarPartyId
+	BelongsTo           *WarPartyId
 	AcceptAllies        bool
 	AircraftsHangar     map[AircraftId]*Aircraft
-	AircraftsMaintained []Aircraft
-	StationedPilots     []Pilot
+	AircraftsMaintained map[AircraftId]*Aircraft
+	StationedPilots     map[PilotId]*Pilot
 	Position
 }
 
@@ -34,7 +34,7 @@ func (al AirbaseList) String() string {
 
 func (ab Airbase) String() string {
 	var sb strings.Builder
-	wp := Globals.WarPartyList[ab.BelongsTo]
+	wp := Globals.WarPartyList[*ab.BelongsTo]
 	fmt.Fprintf(&sb, "Airbase: %s [%s]\n", ab.Name, wp.String())
 	fmt.Fprint(&sb, "AircraftsHangar: ")
 	for _, aircraft := range ab.AircraftsHangar {
@@ -46,7 +46,7 @@ func (ab Airbase) String() string {
 	return sb.String()
 }
 
-func NewAirbase(name string, warpartyid WarPartyId, pos Position) Airbase {
+func NewAirbase(name string, warpartyid *WarPartyId, pos Position) Airbase {
 	ab := Airbase{}
 	ab.Id = AirbaseId(uuid.New())
 	ab.Name = name
@@ -54,7 +54,8 @@ func NewAirbase(name string, warpartyid WarPartyId, pos Position) Airbase {
 	ab.Position = pos
 	Globals.AirbaseList[ab.Id] = ab
 	ab.AircraftsHangar = map[AircraftId]*Aircraft{}
-	ab.StationedPilots = []Pilot{}
+	ab.AircraftsMaintained = map[AircraftId]*Aircraft{}
+	ab.StationedPilots = map[PilotId]*Pilot{}
 	return ab
 }
 

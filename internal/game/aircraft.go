@@ -8,6 +8,8 @@ import (
 
 type AircraftId uuid.UUID
 
+type AircraftIdList []*AircraftId
+
 var InvalidAircraftId = AircraftId(uuid.MustParse("0a491791-3cd8-4316-bacf-de84f5e8df27"))
 
 type Aircraft struct {
@@ -17,7 +19,7 @@ type Aircraft struct {
 	Altitude           AltitudeBand // Aktuelle Höhe.
 	CurrentPosition    Position
 	NextTargetLocation Position // Das ist die Position, die das Flugzeug jetzt ansteuert.
-	WeaponSystems      []WeaponSystem
+	WeaponSystems      []*WeaponSystem
 	Damage             []DamageType // Eine Liste von Schäden
 	Destroyed          bool
 	Pilots             []*PilotId
@@ -42,6 +44,9 @@ func (a Aircraft) String() string {
 }
 
 func (a *Aircraft) AddPilot(p *Pilot) {
+	if len(a.Pilots) >= a.GetParameters().Seats {
+		panic("too many pilots in aircraft")
+	}
 	a.Pilots = append(a.Pilots, &p.PilotId)
 }
 
@@ -61,7 +66,7 @@ func NewAircraft(name string, configurationName string, warpartyid *WarPartyId) 
 		ac.AircraftId = AircraftId(uuid.New())
 		ac.AircraftParametersId = acpid
 		ac.WarPartyId = warpartyid
-		ac.WeaponSystems = NewWeaponSystems(acpid, configurationName)
+		ac.WeaponSystems = GetWeaponSystemList(acpid, configurationName)
 		for i := 0; i < len(ac.WeaponSystems); i++ {
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
@@ -92,7 +97,7 @@ func (a Aircraft) GetBestDogfightingWeapon() *WeaponSystem {
 	for _, system := range a.WeaponSystems {
 		if system.Depleted == false && system.Air2AirWeaponParameters != nil {
 			if int(system.Air2AirWeaponParameters.Dogfighting) > max {
-				bestws = &system
+				bestws = system
 				max = int(system.Dogfighting)
 			}
 		}

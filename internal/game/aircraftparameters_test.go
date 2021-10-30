@@ -25,7 +25,7 @@ func TestCreateAircraftLibrary(t *testing.T) {
 	ap.Dogfighting = 7
 	wsc := WeaponSystemConfiguration{
 		ConfigurationName: "Default",
-		WeaponSystems: []WeaponSystem{{
+		WeaponSystems: WeaponSystemList{{
 			WeaponSystemName: "Tank500",
 			Category:         "DropTank",
 		}},
