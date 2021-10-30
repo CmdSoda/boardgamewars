@@ -21,7 +21,7 @@ func TestAircraftPilots(t *testing.T) {
 
 func TestAssign(t *testing.T) {
 	assert.Nil(t, InitGame())
-	wrongid := uuid.New()
+	wrongid := AirbaseId(uuid.New())
 	ac := NewAircraft("F14", "Default", WarPartyIdUK)
 	assert.Equal(t, false, ac.AssignToAB(wrongid))
 	nellis := NewAirbase("Nellis AB", WarPartyIdUSA, Position{6, 9})

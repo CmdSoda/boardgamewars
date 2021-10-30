@@ -8,8 +8,10 @@ import (
 
 // An airbase can be at land and on the carrier
 
+type AirbaseId uuid.UUID
+
 type Airbase struct {
-	Id                  uuid.UUID
+	Id                  AirbaseId
 	Name                string
 	BelongsTo           WarPartyId
 	AcceptAllies        bool
@@ -19,7 +21,7 @@ type Airbase struct {
 	Position
 }
 
-type AirbaseList map[uuid.UUID]Airbase
+type AirbaseList map[AirbaseId]Airbase
 
 func (al AirbaseList) String() string {
 	var sb strings.Builder
@@ -46,7 +48,7 @@ func (ab Airbase) String() string {
 
 func NewAirbase(name string, warpartyid WarPartyId, pos Position) Airbase {
 	ab := Airbase{}
-	ab.Id = uuid.New()
+	ab.Id = AirbaseId(uuid.New())
 	ab.Name = name
 	ab.BelongsTo = warpartyid
 	ab.Position = pos

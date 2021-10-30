@@ -21,7 +21,7 @@ type Aircraft struct {
 	Damage             []DamageType // Eine Liste von Schäden
 	Destroyed          bool
 	Pilots             []PilotId
-	StationedAt        uuid.UUID
+	StationedAt        AirbaseId
 }
 
 func (a Aircraft) String() string {
@@ -44,7 +44,7 @@ func (a *Aircraft) AddPilot(p *Pilot) {
 	a.Pilots = append(a.Pilots, p.PilotId)
 }
 
-func (a *Aircraft) AssignToAB(id uuid.UUID) bool {
+func (a *Aircraft) AssignToAB(id AirbaseId) bool {
 	_, exist := Globals.AirbaseList[id]
 	if exist {
 		a.StationedAt = id
