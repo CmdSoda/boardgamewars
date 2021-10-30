@@ -9,8 +9,8 @@ import (
 func TestDogfight(t *testing.T) {
 	assert.Nil(t, InitGame())
 
-	fighter1 := NewAircraft("F14", "Default", WarPartyIdUK)
-	fighter2 := NewAircraft("MiG-29", "Default", WarPartyIdUK)
+	fighter1 := NewAircraft("F14", "Default", &WarPartyIdUK)
+	fighter2 := NewAircraft("MiG-29", "Default", &WarPartyIdUK)
 
 	assert.NotNil(t, fighter1)
 	assert.NotNil(t, fighter2)
@@ -27,8 +27,8 @@ func TestDogfight(t *testing.T) {
 func TestMoreRounds(t *testing.T) {
 	assert.Nil(t, InitGame())
 
-	fighter1 := NewAircraft("F14", "Default", WarPartyIdUK)
-	fighter2 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
+	fighter1 := NewAircraft("F14", "Default", &WarPartyIdUK)
+	fighter2 := NewAircraft("MiG-29", "Default", &WarPartyIdRussia)
 
 	assert.NotNil(t, fighter1)
 	assert.NotNil(t, fighter2)

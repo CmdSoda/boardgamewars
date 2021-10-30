@@ -62,10 +62,10 @@ func (ab *Airbase) AddToHangar(ac *Aircraft) {
 	ab.AircraftsHangar[ac.AircraftId] = ac
 }
 
-func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, warpartyid WarPartyId, count int) {
+func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, warpartyid *WarPartyId, count int) {
 	for i := 0; i < count; i++ {
 		ac := NewAircraft(aircraftName, configurationName, warpartyid)
-		ac.StationedAt = ab.Id
+		ac.StationedAt = &ab.Id
 		ab.AircraftsHangar[ac.AircraftId] = ac
 	}
 }

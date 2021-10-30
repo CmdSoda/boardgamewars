@@ -11,7 +11,7 @@ import (
 func Test(t *testing.T) {
 	assert.Nil(t, InitGame())
 	wp := NewWarParty("USA", countrycodes.USA, Blue)
-	ac := NewAircraft("F14", "Default", wp.WarPartyId)
+	ac := NewAircraft("F14", "Default", &wp.WarPartyId)
 	pl := NewPilots(ac.GetParameters().Seats, wp.WarPartyId, nato.OF1)
 	ac.FillSeatsWith(pl)
 	wp.Aircrafts[ac.AircraftId] = ac
