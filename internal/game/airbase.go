@@ -13,11 +13,12 @@ type AirbaseId uuid.UUID
 type Airbase struct {
 	Id                  AirbaseId
 	Name                string
-	BelongsTo           *WarPartyId
+	BelongsTo           WarPartyId
 	AcceptAllies        bool
-	AircraftsHangar     map[AircraftId]*Aircraft
-	AircraftsMaintained map[AircraftId]*Aircraft
-	StationedPilots     map[PilotId]*Pilot
+	AllAircrafts        []AircraftId // Alle Aircrafts, die zu dieser Basis gehören
+	AllPilots           []PilotId    // Alle Piloten, die zu dieser Basis gehören
+	AircraftsHangar     []AircraftId
+	AircraftsMaintained []AircraftId
 	Position
 }
 
@@ -34,11 +35,11 @@ func (al AirbaseList) String() string {
 
 func (ab Airbase) String() string {
 	var sb strings.Builder
-	wp := Globals.WarPartyList[*ab.BelongsTo]
+	wp := Globals.AllWarParties[ab.BelongsTo]
 	fmt.Fprintf(&sb, "Airbase: %s [%s]\n", ab.Name, wp.String())
 	fmt.Fprint(&sb, "AircraftsHangar: ")
-	for _, aircraft := range ab.AircraftsHangar {
-		fmt.Fprintf(&sb, "%s, ", aircraft.GetParameters().Name)
+	for _, aircraftid := range ab.AircraftsHangar {
+		fmt.Fprintf(&sb, "%s, ", Globals.AllAircrafts[aircraftid].GetParameters().Name)
 	}
 	fmt.Fprint(&sb, "\n")
 	fmt.Fprintf(&sb, "Location: %s\n", ab.Position)
@@ -46,27 +47,28 @@ func (ab Airbase) String() string {
 	return sb.String()
 }
 
-func NewAirbase(name string, warpartyid *WarPartyId, pos Position) Airbase {
+func NewAirbase(name string, warpartyid WarPartyId, pos Position) Airbase {
 	ab := Airbase{}
 	ab.Id = AirbaseId(uuid.New())
 	ab.Name = name
 	ab.BelongsTo = warpartyid
 	ab.Position = pos
 	Globals.AirbaseList[ab.Id] = ab
-	ab.AircraftsHangar = map[AircraftId]*Aircraft{}
-	ab.AircraftsMaintained = map[AircraftId]*Aircraft{}
-	ab.StationedPilots = map[PilotId]*Pilot{}
+	ab.AircraftsHangar = []AircraftId{}
+	ab.AircraftsMaintained = []AircraftId{}
+	ab.AllPilots = []PilotId{}
+	ab.AllAircrafts = []AircraftId{}
 	return ab
 }
 
-func (ab *Airbase) AddToHangar(ac *Aircraft) {
-	ab.AircraftsHangar[ac.AircraftId] = ac
+func (ab *Airbase) AddToHangar(acid AircraftId) {
+	ab.AircraftsHangar = append(ab.AircraftsHangar, acid)
 }
 
-func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, warpartyid *WarPartyId, count int) {
+func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, warpartyid WarPartyId, count int) {
 	for i := 0; i < count; i++ {
 		ac := NewAircraft(aircraftName, configurationName, warpartyid)
-		ac.StationedAt = &ab.Id
-		ab.AircraftsHangar[ac.AircraftId] = ac
+		ac.StationedAt = ab.Id
+		ab.AircraftsHangar = append(ab.AircraftsHangar, ac.AircraftId)
 	}
 }

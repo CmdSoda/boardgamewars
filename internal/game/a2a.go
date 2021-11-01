@@ -50,12 +50,13 @@ func GetAir2AirWeaponParametersFromName(name string) *Air2AirWeaponParameters {
 	return nil
 }
 
-func (awp Air2AirWeaponParameters) Hit(target Aircraft, dfp DogfightPosition) bool {
+func (awp Air2AirWeaponParameters) Hit(target AircraftId, dfp DogfightPosition) bool {
 	wep := awp.Dogfighting
 	if dfp == DogfightPositionBehindEnemiesTailOptimal {
 		wep += 2
 	}
-	dfpw := DogfightPerformance(wep, DogfightPositionIgnore, target.GetParameters().Dogfighting, DogfightPositionIgnore)
+	targetac := Globals.AllAircrafts[target]
+	dfpw := DogfightPerformance(wep, DogfightPositionIgnore, targetac.GetParameters().Dogfighting, DogfightPositionIgnore)
 	return dfpw > 0
 }
 

@@ -29,8 +29,8 @@ type PilotId uuid.UUID
 
 type Pilot struct {
 	PilotId
-	Name        string
-	*WarPartyId // Gehört dieser WarParty an
+	Name       string
+	WarPartyId // Gehört dieser WarParty an
 	Gender
 	Background PilotBackground
 	military.FlightRank
@@ -80,10 +80,10 @@ func RollAge(ofc nato.Code) int {
 	return 0
 }
 
-func NewPilot(warpartyid *WarPartyId, ofc nato.Code) *Pilot {
+func NewPilot(warpartyid WarPartyId, ofc nato.Code) PilotId {
 	var g Gender
 
-	wp, exist := Globals.WarPartyList[*warpartyid]
+	wp, exist := Globals.AllWarParties[warpartyid]
 	if exist == false {
 		panic("warpartyid does not exist")
 	}
@@ -102,7 +102,7 @@ func NewPilot(warpartyid *WarPartyId, ofc nato.Code) *Pilot {
 		fn = namegenerator.CreateFemaleFullName
 	}
 
-	np := &Pilot{
+	np := Pilot{
 		Name:       fn(wp.Country),
 		WarPartyId: warpartyid,
 		PilotId:    PilotId(uuid.New()),
@@ -115,15 +115,17 @@ func NewPilot(warpartyid *WarPartyId, ofc nato.Code) *Pilot {
 		},
 		FlightRank: military.NewRank(wp.Country, ofc),
 	}
-	Globals.WarPartyList[*warpartyid].Pilots[np.PilotId] = np
-	return np
+
+	m := append(Globals.AllWarParties[warpartyid].Pilots, np.PilotId)
+	wp.Pilots = m
+	return np.PilotId
 }
 
-func NewPilots(count int, warpartyid *WarPartyId, ofc nato.Code) []PilotId {
+func NewPilots(count int, warpartyid WarPartyId, ofc nato.Code) []PilotId {
 	var pilots []PilotId
 	for i := 0; i < count; i++ {
 		np := NewPilot(warpartyid, ofc)
-		pilots = append(pilots, np.PilotId)
+		pilots = append(pilots, np)
 	}
 	return pilots
 }

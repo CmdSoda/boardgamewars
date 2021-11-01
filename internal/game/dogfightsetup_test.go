@@ -7,14 +7,14 @@ import (
 )
 
 func CreateSetup() DogfightSetup {
-	var blue = []*Aircraft{
-		NewAircraft("F14", "Default", &WarPartyIdUSA),
-		NewAircraft("F14", "Default", &WarPartyIdUSA),
+	var blue = []Aircraft{
+		NewAircraft("F14", "Default", WarPartyIdUSA),
+		NewAircraft("F14", "Default", WarPartyIdUSA),
 	}
 
-	var red = []*Aircraft{
-		NewAircraft("MiG-29", "Default", &WarPartyIdRussia),
-		NewAircraft("MiG-29", "Default", &WarPartyIdRussia),
+	var red = []Aircraft{
+		NewAircraft("MiG-29", "Default", WarPartyIdRussia),
+		NewAircraft("MiG-29", "Default", WarPartyIdRussia),
 	}
 
 	return DogfightSetup{

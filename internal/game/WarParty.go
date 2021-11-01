@@ -15,8 +15,8 @@ const (
 	Red  WarPartyColor = 1
 )
 
-func (wps *WarPartyColor) String() string {
-	switch *wps {
+func (wps WarPartyColor) String() string {
+	switch wps {
 	case Blue:
 		return "Blue"
 	case Red:
@@ -30,24 +30,24 @@ type WarParty struct {
 	WarPartyColor
 	Name      string
 	Country   countrycodes.Code
-	Pilots    map[PilotId]*Pilot
-	Aircrafts map[AircraftId]*Aircraft
+	Pilots    []PilotId
+	Aircrafts []AircraftId
 }
 
-func (w *WarParty) String() string {
+func (w WarParty) String() string {
 	return fmt.Sprintf("%s [%s]\nAircrafts: %d", w.Name, w.WarPartyColor.String(), len(w.Aircrafts))
 }
 
 type WarPartyList map[WarPartyId]WarParty
 
-func NewWarParty(name string, code countrycodes.Code, side WarPartyColor) *WarParty {
+func NewWarParty(name string, code countrycodes.Code, side WarPartyColor) WarParty {
 	wp := WarParty{}
 	wp.Name = name
 	wp.Country = code
 	wp.WarPartyColor = side
 	wp.WarPartyId = WarPartyId(uuid.New())
-	wp.Pilots = map[PilotId]*Pilot{}
-	wp.Aircrafts = map[AircraftId]*Aircraft{}
-	Globals.WarPartyList[wp.WarPartyId] = wp
-	return &wp
+	wp.Pilots = []PilotId{}
+	wp.Aircrafts = []AircraftId{}
+	Globals.AllWarParties[wp.WarPartyId] = wp
+	return wp
 }

@@ -15,23 +15,23 @@ var InvalidAircraftId = AircraftId(uuid.MustParse("0a491791-3cd8-4316-bacf-de84f
 type Aircraft struct {
 	AircraftId
 	AircraftParametersId
-	*WarPartyId
+	WarPartyId
 	Altitude           AltitudeBand // Aktuelle Höhe.
 	CurrentPosition    Position
 	NextTargetLocation Position // Das ist die Position, die das Flugzeug jetzt ansteuert.
-	WeaponSystems      []*WeaponSystem
+	WeaponSystems      []WeaponSystem
 	Damage             []DamageType // Eine Liste von Schäden
 	Destroyed          bool
-	Pilots             []*PilotId
-	StationedAt        *AirbaseId
+	Pilots             []PilotId
+	StationedAt        AirbaseId
 }
 
 func (a Aircraft) String() string {
 	var b strings.Builder
-	wp := Globals.WarPartyList[*a.WarPartyId]
 	fmt.Fprintf(&b, "%s\nPilots: ", a.GetParameters().Name)
-	for _, pilot := range a.Pilots {
-		fmt.Fprintf(&b, wp.Pilots[*pilot].String()+" ")
+	for _, pilotid := range a.Pilots {
+		p := Globals.AllPilots[pilotid]
+		fmt.Fprintf(&b, p.String()+" ")
 	}
 	fmt.Fprint(&b, "\nDamage: ")
 	for _, d := range a.Damage {
@@ -43,15 +43,15 @@ func (a Aircraft) String() string {
 	return b.String()
 }
 
-func (a *Aircraft) AddPilot(p *Pilot) {
+func (a *Aircraft) AddPilot(id PilotId) {
 	if len(a.Pilots) >= a.GetParameters().Seats {
 		panic("too many pilots in aircraft")
 	}
-	a.Pilots = append(a.Pilots, &p.PilotId)
+	a.Pilots = append(a.Pilots, id)
 }
 
-func (a *Aircraft) AssignToAB(id *AirbaseId) bool {
-	_, exist := Globals.AirbaseList[*id]
+func (a *Aircraft) AssignToAB(id AirbaseId) bool {
+	_, exist := Globals.AirbaseList[id]
 	if exist {
 		a.StationedAt = id
 		return true
@@ -59,7 +59,7 @@ func (a *Aircraft) AssignToAB(id *AirbaseId) bool {
 	return false
 }
 
-func NewAircraft(name string, configurationName string, warpartyid *WarPartyId) *Aircraft {
+func NewAircraft(name string, configurationName string, warpartyid WarPartyId) Aircraft {
 	ac := Aircraft{}
 	acpid := GetAircraftParametersIdByName(name)
 	if acpid != InvalidAircraftParametersId {
@@ -71,9 +71,9 @@ func NewAircraft(name string, configurationName string, warpartyid *WarPartyId) 
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
 		ac.Damage = make([]DamageType, 0)
-		return &ac
+		return ac
 	}
-	return &ac
+	return ac
 }
 
 func GetAircraftParametersIdByName(name string) AircraftParametersId {
@@ -91,18 +91,20 @@ func (a Aircraft) GetParameters() AircraftParameters {
 	return ap
 }
 
-func (a Aircraft) GetBestDogfightingWeapon() *WeaponSystem {
-	var bestws *WeaponSystem = nil
+func (a Aircraft) GetBestDogfightingWeapon() (WeaponSystem, bool) {
+	var bestws WeaponSystem
 	var max = 0
+	exist := false
 	for _, system := range a.WeaponSystems {
 		if system.Depleted == false && system.Air2AirWeaponParameters != nil {
 			if int(system.Air2AirWeaponParameters.Dogfighting) > max {
 				bestws = system
 				max = int(system.Dogfighting)
+				exist = true
 			}
 		}
 	}
-	return bestws
+	return bestws, exist
 }
 
 func (a *Aircraft) AddLightDamage(dt DamageType) {
@@ -146,6 +148,6 @@ func (a *Aircraft) FillSeatsWith(pl []PilotId) {
 		panic("too many pilots")
 	}
 	for _, pilotid := range pl {
-		a.Pilots = append(a.Pilots, &pilotid)
+		a.Pilots = append(a.Pilots, pilotid)
 	}
 }

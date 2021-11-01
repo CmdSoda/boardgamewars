@@ -4,7 +4,9 @@ type Context struct {
 	AirbaseList
 	AircraftLibrary
 	Air2AirWeaponLibrary
-	WarPartyList
+	AllWarParties WarPartyList
+	AllAircrafts map[AircraftId]Aircraft
+	AllPilots map[PilotId]Pilot
 }
 
 var Globals = Context{}

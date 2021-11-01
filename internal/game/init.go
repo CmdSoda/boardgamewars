@@ -18,10 +18,10 @@ func CreateWarParties() {
 		WarPartyColor: Blue,
 		Name:          "USA",
 		Country:       countrycodes.USA,
-		Pilots:        map[PilotId]*Pilot{},
-		Aircrafts:     map[AircraftId]*Aircraft{},
+		Pilots:        []PilotId{},
+		Aircrafts:     []AircraftId{},
 	}
-	Globals.WarPartyList[WarPartyIdUSA] = wpUSA
+	Globals.AllWarParties[WarPartyIdUSA] = wpUSA
 
 	// Russia
 	wpRussia := WarParty{
@@ -29,10 +29,10 @@ func CreateWarParties() {
 		WarPartyColor: Red,
 		Name:          "Russia",
 		Country:       countrycodes.Russia,
-		Pilots:        map[PilotId]*Pilot{},
-		Aircrafts:     map[AircraftId]*Aircraft{},
+		Pilots:        []PilotId{},
+		Aircrafts:     []AircraftId{},
 	}
-	Globals.WarPartyList[WarPartyIdRussia] = wpRussia
+	Globals.AllWarParties[WarPartyIdRussia] = wpRussia
 
 	// UK
 	wpUK := WarParty{
@@ -40,10 +40,10 @@ func CreateWarParties() {
 		WarPartyColor: Red,
 		Name:          "UK",
 		Country:       countrycodes.UK,
-		Pilots:        map[PilotId]*Pilot{},
-		Aircrafts:     map[AircraftId]*Aircraft{},
+		Pilots:        []PilotId{},
+		Aircrafts:     []AircraftId{},
 	}
-	Globals.WarPartyList[WarPartyIdUK] = wpUK
+	Globals.AllWarParties[WarPartyIdUK] = wpUK
 
 	// Germany
 	wpGermany := WarParty{
@@ -51,15 +51,16 @@ func CreateWarParties() {
 		WarPartyColor: Blue,
 		Name:          "Germany",
 		Country:       countrycodes.Germany,
-		Pilots:        map[PilotId]*Pilot{},
-		Aircrafts:     map[AircraftId]*Aircraft{},
+		Pilots:        []PilotId{},
+		Aircrafts:     []AircraftId{},
 	}
-	Globals.WarPartyList[WarPartyIdGermany] = wpGermany
+	Globals.AllWarParties[WarPartyIdGermany] = wpGermany
 }
 
 func InitGame() error {
 	var err error
-	Globals.WarPartyList = map[WarPartyId]WarParty{}
+	Globals.AllWarParties = map[WarPartyId]WarParty{}
+	Globals.AllAircrafts = map[AircraftId]Aircraft{}
 	CreateWarParties()
 	Globals.AirbaseList = map[AirbaseId]Airbase{}
 	randomizer.Init()

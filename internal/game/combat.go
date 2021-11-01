@@ -40,12 +40,14 @@ func DogfightPerformance(rating1 Rating, lastPosition1 DogfightPosition,
 
 // ExecuteDogfight Eine Runde im Luftkampf. Etwa 10 Sekunden dauer.
 func ExecuteDogfight(
-	aircraft1 *Aircraft, ldp1 DogfightPosition,
-	aircraft2 *Aircraft, ldp2 DogfightPosition) (DogfightResult, DogfightResult) {
+	acid1 AircraftId, ldp1 DogfightPosition,
+	acid2 AircraftId, ldp2 DogfightPosition) (DogfightResult, DogfightResult) {
 	var dfr1 DogfightResult
 	var dfr2 DogfightResult
-	ap1 := aircraft1.GetParameters()
-	ap2 := aircraft2.GetParameters()
+	ac1 := Globals.AllAircrafts[acid1]
+	ac2 := Globals.AllAircrafts[acid2]
+	ap1 := ac1.GetParameters()
+	ap2 := ac2.GetParameters()
 
 	// In Position setzen
 	// Flugzeuge mit grösseren Dogfighting-Rating haben höhere Chance.
@@ -58,24 +60,24 @@ func ExecuteDogfight(
 	// 2) Abschuss der SRM
 	// Falls keine SRM => Einsatz der Gun
 	if dfa1Pos >= DogfightPositionBehindEnemiesTail {
-		bestws := aircraft1.GetBestDogfightingWeapon()
-		dfr1.WeaponUsed = bestws
-		if bestws != nil {
-			aircraft1.DepleteWeapon(*bestws)
-			if bestws.Hit(*aircraft2, dfa1Pos) {
+		bestws, exist := ac1.GetBestDogfightingWeapon()
+		dfr1.WeaponUsed = &bestws
+		if exist {
+			ac1.DepleteWeapon(bestws)
+			if bestws.Hit(acid2, dfa1Pos) {
 				dfr1.Hit = true
-				dt := aircraft2.DoDamageWith(*bestws)
+				dt := ac2.DoDamageWith(bestws)
 				dfr1.DamageConflicted = append(dfr1.DamageConflicted, dt)
 			}
 		}
 	} else if -dfa1Pos >= DogfightPositionBehindEnemiesTail {
-		bestws := aircraft2.GetBestDogfightingWeapon()
-		dfr2.WeaponUsed = bestws
-		if bestws != nil {
-			aircraft2.DepleteWeapon(*bestws)
-			if bestws.Hit(*aircraft1, -dfa1Pos) {
+		bestws, exist := ac2.GetBestDogfightingWeapon()
+		dfr2.WeaponUsed = &bestws
+		if exist {
+			ac2.DepleteWeapon(bestws)
+			if bestws.Hit(acid1, -dfa1Pos) {
 				dfr2.Hit = true
-				dt := aircraft1.DoDamageWith(*bestws)
+				dt := ac1.DoDamageWith(bestws)
 				dfr2.DamageConflicted = append(dfr2.DamageConflicted, dt)
 			}
 		}
@@ -83,7 +85,7 @@ func ExecuteDogfight(
 	return dfr1, dfr2
 }
 
-func Sim10Rounds(aircraft1 *Aircraft, aircraft2 *Aircraft) (*[]DogfightResult, *[]DogfightResult) {
+func Sim10Rounds(acid1 AircraftId, acid2 AircraftId) (*[]DogfightResult, *[]DogfightResult) {
 	drl1 := make([]DogfightResult, 0)
 	drl2 := make([]DogfightResult, 0)
 
@@ -91,7 +93,7 @@ func Sim10Rounds(aircraft1 *Aircraft, aircraft2 *Aircraft) (*[]DogfightResult, *
 	ldp2 := DogfightPositionTossup
 
 	for i := 0; i < 10; i++ {
-		dr1, dr2 := ExecuteDogfight(aircraft1, ldp1, aircraft2, ldp2)
+		dr1, dr2 := ExecuteDogfight(acid1, ldp1, acid2, ldp2)
 		dr1.Round = i
 		dr2.Round = i
 		ldp1 = dr1.Position

@@ -17,7 +17,7 @@ type WeaponSystem struct {
 	*Air2AirWeaponParameters
 }
 
-type WeaponSystemList []*WeaponSystem
+type WeaponSystemList []WeaponSystem
 
 func GetWeaponSystemList(acId AircraftParametersId, configname string) WeaponSystemList {
 	for _, parameters := range Globals.AircraftLibrary {
