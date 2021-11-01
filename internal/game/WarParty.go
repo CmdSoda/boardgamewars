@@ -32,6 +32,7 @@ type WarParty struct {
 	Country   countrycodes.Code
 	Pilots    []PilotId
 	Aircrafts []AircraftId
+	Airbases  map[AirbaseId]struct{}
 }
 
 func (w WarParty) String() string {
@@ -48,6 +49,7 @@ func NewWarParty(name string, code countrycodes.Code, side WarPartyColor) WarPar
 	wp.WarPartyId = WarPartyId(uuid.New())
 	wp.Pilots = []PilotId{}
 	wp.Aircrafts = []AircraftId{}
+	wp.Airbases = map[AirbaseId]struct{}{}
 	Globals.AllWarParties[wp.WarPartyId] = wp
 	return wp
 }

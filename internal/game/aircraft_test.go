@@ -26,7 +26,7 @@ func TestAssign(t *testing.T) {
 	ac := NewAircraft("F14", "Default", WarPartyIdUK)
 	assert.Equal(t, false, ac.AssignToAB(wrongid))
 	nellis := NewAirbase("Nellis AB", WarPartyIdUSA, Position{6, 9})
-	assert.Equal(t, true, ac.AssignToAB(nellis.Id))
+	assert.Equal(t, true, ac.AssignToAB(nellis.AirbaseId))
 }
 
 func TestAircraftMap(t *testing.T) {

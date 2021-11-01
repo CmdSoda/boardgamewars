@@ -11,7 +11,7 @@ import (
 type AirbaseId uuid.UUID
 
 type Airbase struct {
-	Id                  AirbaseId
+	AirbaseId
 	Name                string
 	BelongsTo           WarPartyId
 	AcceptAllies        bool
@@ -49,11 +49,11 @@ func (ab Airbase) String() string {
 
 func NewAirbase(name string, warpartyid WarPartyId, pos Position) Airbase {
 	ab := Airbase{}
-	ab.Id = AirbaseId(uuid.New())
+	ab.AirbaseId = AirbaseId(uuid.New())
 	ab.Name = name
 	ab.BelongsTo = warpartyid
 	ab.Position = pos
-	Globals.AirbaseList[ab.Id] = ab
+	Globals.AirbaseList[ab.AirbaseId] = ab
 	ab.AircraftsHangar = []AircraftId{}
 	ab.AircraftsMaintained = []AircraftId{}
 	ab.AllPilots = []PilotId{}
@@ -68,7 +68,13 @@ func (ab *Airbase) AddToHangar(acid AircraftId) {
 func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, warpartyid WarPartyId, count int) {
 	for i := 0; i < count; i++ {
 		ac := NewAircraft(aircraftName, configurationName, warpartyid)
-		ac.StationedAt = ab.Id
+		ac.StationedAt = ab.AirbaseId
 		ab.AircraftsHangar = append(ab.AircraftsHangar, ac.AircraftId)
 	}
+}
+
+func (ab *Airbase) AssignToWarParty(wpid WarPartyId) {
+	wp := Globals.AllWarParties[wpid]
+	ab.BelongsTo = wpid
+	wp.Airbases[ab.AirbaseId] = struct{}{}
 }
