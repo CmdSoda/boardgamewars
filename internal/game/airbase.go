@@ -22,9 +22,9 @@ type Airbase struct {
 	Position
 }
 
-type AirbaseList map[AirbaseId]Airbase
+type AirbasesMap map[AirbaseId]Airbase
 
-func (al AirbaseList) String() string {
+func (al AirbasesMap) String() string {
 	var sb strings.Builder
 	fmt.Fprint(&sb, "Airbases:\n")
 	for _, airbase := range al {
@@ -53,7 +53,7 @@ func NewAirbase(name string, warpartyid WarPartyId, pos Position) Airbase {
 	ab.Name = name
 	ab.BelongsTo = warpartyid
 	ab.Position = pos
-	Globals.AirbaseList[ab.AirbaseId] = ab
+	Globals.AllAirbases[ab.AirbaseId] = ab
 	ab.AircraftsHangar = []AircraftId{}
 	ab.AircraftsMaintained = []AircraftId{}
 	ab.AllPilots = []PilotId{}

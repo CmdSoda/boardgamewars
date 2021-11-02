@@ -38,7 +38,7 @@ func TestCreateAircraftLibrary(t *testing.T) {
 }
 
 func TestLoadAircraftLibrary(t *testing.T) {
-	file, err := os.Open("data/aircrafts.json")
+	file, err := os.Open("data/aircraftparameters.json")
 	if err != nil {
 		t.FailNow()
 	}

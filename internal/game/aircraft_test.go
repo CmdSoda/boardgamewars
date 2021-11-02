@@ -41,3 +41,20 @@ func TestAircraftMap(t *testing.T) {
 	ac.Damage = append(ac.Damage, DamageTypeCockpit)
 	fmt.Println(ab.AircraftsHangar)
 }
+
+func TestAircraftId(t *testing.T) {
+	assert.Nil(t, InitGame())
+	ac := NewAircraft("F14", "Default", WarPartyIdUK)
+	_, exist := Globals.AllAircrafts[ac.AircraftId]
+	assert.True(t, exist)
+}
+
+func TestAircraft_AssignToAB(t *testing.T) {
+	assert.Nil(t, InitGame())
+	ab := NewAirbase("Carrier", WarPartyIdUK, Position{4, 6})
+	ac := NewAircraft("F14", "Default", WarPartyIdUK)
+	ac.AssignToAB(ab.AirbaseId)
+	_, exist := Globals.AllAirbases[ab.AirbaseId]
+	assert.True(t, exist)
+	assert.Equal(t, ab.AirbaseId, ac.StationedAt)
+}

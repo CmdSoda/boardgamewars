@@ -11,7 +11,7 @@ func TestAirbase(t *testing.T) {
 	ab := NewAirbase("Fallujah AB", WarPartyIdUSA, Position{3, 5})
 	ab.CreateAircrafts("F14", "Default", WarPartyIdUSA, 6)
 	fmt.Println(ab.String())
-	fmt.Println(Globals.AirbaseList)
+	fmt.Println(Globals.AllAirbases)
 }
 
 func TestHangar(t *testing.T) {

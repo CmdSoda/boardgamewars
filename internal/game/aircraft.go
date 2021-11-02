@@ -12,6 +12,8 @@ type AircraftIdList []*AircraftId
 
 var InvalidAircraftId = AircraftId(uuid.MustParse("0a491791-3cd8-4316-bacf-de84f5e8df27"))
 
+type AircraftsMap map[AircraftId]Aircraft
+
 type Aircraft struct {
 	AircraftId
 	AircraftParametersId
@@ -51,7 +53,7 @@ func (a *Aircraft) AddPilot(id PilotId) {
 }
 
 func (a *Aircraft) AssignToAB(id AirbaseId) bool {
-	_, exist := Globals.AirbaseList[id]
+	_, exist := Globals.AllAirbases[id]
 	if exist {
 		a.StationedAt = id
 		return true
@@ -71,13 +73,15 @@ func NewAircraft(name string, configurationName string, warpartyid WarPartyId) A
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
 		ac.Damage = make([]DamageType, 0)
+		Globals.AllAircrafts[ac.AircraftId] = ac
 		return ac
 	}
 	return ac
 }
 
 func GetAircraftParametersIdByName(name string) AircraftParametersId {
-	for _, parameters := range Globals.AircraftLibrary {
+	// TODO refactor
+	for _, parameters := range Globals.AllAircraftParameters {
 		if parameters.Name == name {
 			return parameters.Id
 		}
@@ -87,7 +91,7 @@ func GetAircraftParametersIdByName(name string) AircraftParametersId {
 }
 
 func (a Aircraft) GetParameters() AircraftParameters {
-	ap, _ := Globals.AircraftLibrary[a.AircraftParametersId]
+	ap, _ := Globals.AllAircraftParameters[a.AircraftParametersId]
 	return ap
 }
 
@@ -95,6 +99,9 @@ func (a Aircraft) GetBestDogfightingWeapon() (WeaponSystem, bool) {
 	var bestws WeaponSystem
 	var max = 0
 	exist := false
+	if a.WeaponSystems == nil {
+		panic("no weapon systems")
+	}
 	for _, system := range a.WeaponSystems {
 		if system.Depleted == false && system.Air2AirWeaponParameters != nil {
 			if int(system.Air2AirWeaponParameters.Dogfighting) > max {

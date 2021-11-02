@@ -27,6 +27,8 @@ func (g Gender) String() string {
 
 type PilotId uuid.UUID
 
+type PilotsMap map[PilotId]Pilot
+
 type Pilot struct {
 	PilotId
 	Name       string

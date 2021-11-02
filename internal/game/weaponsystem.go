@@ -20,7 +20,7 @@ type WeaponSystem struct {
 type WeaponSystemList []WeaponSystem
 
 func GetWeaponSystemList(acId AircraftParametersId, configname string) WeaponSystemList {
-	for _, parameters := range Globals.AircraftLibrary {
+	for _, parameters := range Globals.AllAircraftParameters {
 		if parameters.Id == acId {
 			for _, configuration := range parameters.Configurations {
 				if configuration.ConfigurationName == configname {

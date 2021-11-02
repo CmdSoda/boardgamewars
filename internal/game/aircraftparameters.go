@@ -33,13 +33,13 @@ type AircraftParameters struct {
 	Seats                 int
 }
 
-type AircraftLibrary map[AircraftParametersId]AircraftParameters
+type AircraftParametersMap map[AircraftParametersId]AircraftParameters
 
 type AircraftLibraryFile []AircraftParameters
 
-func LoadAircrafts() error {
+func LoadAircraftParameters() error {
 	var err error
-	file, err := os.Open("data/aircrafts.json")
+	file, err := os.Open("data/aircraftparameters.json")
 	if err != nil {
 		return err
 	}
@@ -52,10 +52,10 @@ func LoadAircrafts() error {
 	if err != nil {
 		return err
 	}
-	Globals.AircraftLibrary = AircraftLibrary{}
+	Globals.AllAircraftParameters = AircraftParametersMap{}
 	for _, parameters := range al {
 		parameters.Id = AircraftParametersId(uuid.MustParse(parameters.IdAsString))
-		Globals.AircraftLibrary[parameters.Id] = parameters
+		Globals.AllAircraftParameters[parameters.Id] = parameters
 	}
 	return nil
 }

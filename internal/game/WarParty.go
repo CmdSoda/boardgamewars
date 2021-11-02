@@ -39,7 +39,7 @@ func (w WarParty) String() string {
 	return fmt.Sprintf("%s [%s]\nAircrafts: %d", w.Name, w.WarPartyColor.String(), len(w.Aircrafts))
 }
 
-type WarPartyList map[WarPartyId]WarParty
+type WarPartyMap map[WarPartyId]WarParty
 
 func NewWarParty(name string, code countrycodes.Code, side WarPartyColor) WarParty {
 	wp := WarParty{}

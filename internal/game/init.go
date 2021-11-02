@@ -62,9 +62,9 @@ func InitGame() error {
 	Globals.AllWarParties = map[WarPartyId]WarParty{}
 	Globals.AllAircrafts = map[AircraftId]Aircraft{}
 	CreateWarParties()
-	Globals.AirbaseList = map[AirbaseId]Airbase{}
+	Globals.AllAirbases = map[AirbaseId]Airbase{}
 	randomizer.Init()
-	if err = LoadAircrafts(); err != nil {
+	if err = LoadAircraftParameters(); err != nil {
 		return err
 	}
 	if err = LoadAir2AirWeapons(); err != nil {

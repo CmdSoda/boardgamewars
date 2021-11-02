@@ -57,7 +57,7 @@ func (d DogfightResult) String() string {
 	fmt.Fprintf(&sb, "%d.ExecuteDogfight Result: ", d.Round)
 	fmt.Fprintf(&sb, "%s", d.Position)
 	if d.WeaponUsed != nil {
-		fmt.Fprintf(&sb, ", HitWith: %s", d.WeaponUsed.Name)
+		fmt.Fprintf(&sb, ", HitWith: %s", d.WeaponUsed.WeaponSystemName)
 		if len(d.DamageConflicted) > 0 {
 			fmt.Fprint(&sb, ", DamageConflicted: ")
 			for _, dt := range d.DamageConflicted {

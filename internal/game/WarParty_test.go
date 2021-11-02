@@ -67,6 +67,7 @@ func TestList(t *testing.T) {
 func TestNewWarParty(t *testing.T) {
 	assert.Nil(t, InitGame())
 	wp := NewWarParty("NeueParty", countrycodes.USA, Blue)
+	fmt.Println(wp)
 	ab := NewAirbase("Parkhaus", wp.WarPartyId, Position{1, 1})
 	assert.Equal(t, wp.Name, Globals.AllWarParties[wp.WarPartyId].Name)
 	ab.AssignToWarParty(wp.WarPartyId)
@@ -74,3 +75,21 @@ func TestNewWarParty(t *testing.T) {
 	//assert.Equal(t, wp.Airbases)
 }
 
+func TestBlueRed(t *testing.T) {
+	wp1 := NewWarParty("NeueParty", countrycodes.USA, Blue)
+	wp2 := NewWarParty("NeueParty2", countrycodes.Russia, Red)
+	wp3 := NewWarParty("NeueParty3", countrycodes.Russia, 99)
+	fmt.Println(wp1)
+	fmt.Println(wp2)
+	fmt.Println(wp3)
+}
+
+func subfunction(il []int) {
+	il[0] = 99
+}
+
+func TestSlice2Evil(t *testing.T) {
+	l := make([]int, 1) // "{ 0 }"
+	subfunction(l)      // "{ 99 }"
+	assert.Equal(t, 99, l[0])
+}
