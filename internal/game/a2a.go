@@ -41,13 +41,13 @@ func LoadAir2AirWeapons() error {
 	return nil
 }
 
-func GetAir2AirWeaponParametersFromName(name string) *Air2AirWeaponParameters {
+func GetAir2AirWeaponParametersFromName(name string) (Air2AirWeaponParameters, bool) {
 	for _, parameters := range Globals.Air2AirWeaponLibrary {
 		if parameters.Name == name {
-			return &parameters
+			return parameters, true
 		}
 	}
-	return nil
+	return Air2AirWeaponParameters{}, false
 }
 
 func (awp Air2AirWeaponParameters) Hit(target AircraftId, dfp DogfightPosition) bool {

@@ -35,7 +35,10 @@ func GetWeaponSystemList(acId AircraftParametersId, configname string) WeaponSys
 func (ws *WeaponSystem) InitWeaponSystem() {
 	switch GetWeaponSystemCategoryFromString(ws.Category) {
 	case WeaponSystemCategoryA2A:
-		ws.Air2AirWeaponParameters = GetAir2AirWeaponParametersFromName(ws.WeaponSystemName)
+		aws, exist := GetAir2AirWeaponParametersFromName(ws.WeaponSystemName)
+		if exist {
+			ws.Air2AirWeaponParameters = &aws
+		}
 	}
 }
 

@@ -10,8 +10,6 @@ type AircraftId uuid.UUID
 
 type AircraftIdList []*AircraftId
 
-var InvalidAircraftId = AircraftId(uuid.MustParse("0a491791-3cd8-4316-bacf-de84f5e8df27"))
-
 type AircraftsMap map[AircraftId]Aircraft
 
 type Aircraft struct {
@@ -63,8 +61,8 @@ func (a *Aircraft) AssignToAB(id AirbaseId) bool {
 
 func NewAircraft(name string, configurationName string, warpartyid WarPartyId) Aircraft {
 	ac := Aircraft{}
-	acpid := GetAircraftParametersIdByName(name)
-	if acpid != InvalidAircraftParametersId {
+	acpid, exist := GetAircraftParametersIdByName(name)
+	if exist {
 		ac.AircraftId = AircraftId(uuid.New())
 		ac.AircraftParametersId = acpid
 		ac.WarPartyId = warpartyid
@@ -79,15 +77,14 @@ func NewAircraft(name string, configurationName string, warpartyid WarPartyId) A
 	return ac
 }
 
-func GetAircraftParametersIdByName(name string) AircraftParametersId {
-	// TODO refactor
+func GetAircraftParametersIdByName(name string) (AircraftParametersId, bool) {
 	for _, parameters := range Globals.AllAircraftParameters {
 		if parameters.Name == name {
-			return parameters.Id
+			return parameters.Id, true
 		}
 	}
 	panic("unkown aircraft name: " + name)
-	return InvalidAircraftParametersId
+	return InvalidAircraftParametersId, false
 }
 
 func (a Aircraft) GetParameters() AircraftParameters {
