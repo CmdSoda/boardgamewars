@@ -16,22 +16,10 @@
       {
         "ConfigurationName": "Default",
         "WeaponSystems": [
-          {
-            "WeaponSystemName": "Tank500",
-            "Category": "DropTank"
-          },
-          {
-            "WeaponSystemName": "Tank500",
-            "Category": "DropTank"
-          },
-          {
-            "WeaponSystemName": "Aim-7",
-            "Category": "A2A"
-          },
-          {
-            "WeaponSystemName": "Aim-7",
-            "Category": "A2A"
-          }
+          "Tank500",
+          "Tank500",
+          "Aim-7",
+          "Aim-7"
         ]
       }
     ],
@@ -83,5 +71,4 @@
     "MaxDamagePoints": 2,
     "Seats": 1
   }
-
 ]

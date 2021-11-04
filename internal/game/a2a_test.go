@@ -25,7 +25,7 @@ func TestCreateAir2AirWeaponsLibrary(t *testing.T) {
 
 func TestLoadAir2AirLibrary(t *testing.T) {
 	var err error
-	file, err := os.Open("data/a2a.json")
+	file, err := os.Open("data/air2air.json")
 	if err != nil {
 		t.FailNow()
 	}

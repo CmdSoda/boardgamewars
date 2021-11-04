@@ -19,7 +19,7 @@ type Aircraft struct {
 	Altitude           AltitudeBand // Aktuelle Höhe.
 	CurrentPosition    Position
 	NextTargetLocation Position // Das ist die Position, die das Flugzeug jetzt ansteuert.
-	WeaponSystems      []WeaponSystem
+	WeaponSystems      WeaponSystemList
 	Damage             []DamageType // Eine Liste von Schäden
 	Destroyed          bool
 	Pilots             []PilotId

@@ -24,7 +24,7 @@ type Air2AirWeaponLibrary []Air2AirWeaponParameters
 
 func LoadAir2AirWeapons() error {
 	var err error
-	file, err := os.Open("data/a2a.json")
+	file, err := os.Open("data/air2air.json")
 	if err != nil {
 		return err
 	}

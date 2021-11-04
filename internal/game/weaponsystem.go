@@ -1,5 +1,7 @@
 package game
 
+import "fmt"
+
 type WeaponSystemCategory int
 
 const (
@@ -18,6 +20,13 @@ type WeaponSystem struct {
 }
 
 type WeaponSystemList []WeaponSystem
+
+func GetWeaponSystemsFrom(wsl []string) WeaponSystemList {
+	for _, wsname := range wsl {
+		fmt.Println(wsname)
+	}
+	return WeaponSystemList{}
+}
 
 func GetWeaponSystemList(acId AircraftParametersId, configname string) WeaponSystemList {
 	for _, parameters := range Globals.AllAircraftParameters {
