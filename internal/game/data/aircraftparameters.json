@@ -16,10 +16,22 @@
       {
         "ConfigurationName": "Default",
         "WeaponSystems": [
-          "Tank500",
-          "Tank500",
-          "Aim-7",
-          "Aim-7"
+          {
+            "WeaponSystemName": "Tank500",
+            "Category": "DropTank"
+          },
+          {
+            "WeaponSystemName": "Tank500",
+            "Category": "DropTank"
+          },
+          {
+            "WeaponSystemName": "Aim-7",
+            "Category": "A2A"
+          },
+          {
+            "WeaponSystemName": "Aim-7",
+            "Category": "A2A"
+          }
         ]
       }
     ],
