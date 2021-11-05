@@ -2,11 +2,11 @@ package game
 
 import "fmt"
 
-type Position struct {
-	X int
-	Y int
+type FloatPosition struct {
+	X float64
+	Y float64
 }
 
-func (p Position) String() string {
-	return fmt.Sprintf("%d, %d", p.X, p.Y)
+func (p FloatPosition) String() string {
+	return fmt.Sprintf("%f, %f", p.X, p.Y)
 }

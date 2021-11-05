@@ -19,15 +19,15 @@ func NewMap(width int, height int) Map {
 	}
 }
 
-func (m Map) GetTileAt(p hexagon.Position) Tile {
+func (m Map) GetTileAt(p hexagon.HexPosition) Tile {
 	return m.Tiles[p.Column-1+(m.Height-p.Row)*m.Width]
 }
 
-func (m *Map) SetTileAt(p hexagon.Position, t Tile) {
+func (m *Map) SetTileAt(p hexagon.HexPosition, t Tile) {
 	m.Tiles[p.Column-1+(m.Height-p.Row)*m.Width] = t
 }
 
-func (m *Map) InsideMap(p hexagon.Position) bool {
+func (m *Map) InsideMap(p hexagon.HexPosition) bool {
 	return p.Column >= 1 && p.Column <= m.Width && p.Row >= 1 && p.Row <= m.Height
 }
 
@@ -38,7 +38,7 @@ type SearchParameter struct {
 	Handlers []SearchHandler
 }
 
-func (m Map) recursiveDeep(path hexagon.PositionList, end hexagon.Position, results *SolutionList) {
+func (m Map) recursiveDeep(path hexagon.PositionList, end hexagon.HexPosition, results *SolutionList) {
 	if path.LastElement().Equal(end) {
 		co := make(hexagon.PositionList, len(path))
 		copy(co, path)
@@ -73,7 +73,7 @@ func (m Map) evolveFromHere(s Solution, solutions *SolutionList, added *Solution
 	}
 }
 
-func (m Map) SearchDeep(start hexagon.Position, end hexagon.Position, sp *SearchParameter) hexagon.PositionList {
+func (m Map) SearchDeep(start hexagon.HexPosition, end hexagon.HexPosition, sp *SearchParameter) hexagon.PositionList {
 	currentPath := make(hexagon.PositionList, 0, 0)
 	currentPath = append(currentPath, start)
 	results := make(SolutionList, 0, 0)
@@ -81,7 +81,7 @@ func (m Map) SearchDeep(start hexagon.Position, end hexagon.Position, sp *Search
 	return currentPath
 }
 
-func (m Map) SearchWide(start hexagon.Position, end hexagon.Position, sp *SearchParameter) hexagon.PositionList {
+func (m Map) SearchWide(start hexagon.HexPosition, end hexagon.HexPosition, sp *SearchParameter) hexagon.PositionList {
 	currentPath := make(hexagon.PositionList, 0, 0)
 	results := make(SolutionList, 0, 0)
 	currentPath = append(currentPath, start)

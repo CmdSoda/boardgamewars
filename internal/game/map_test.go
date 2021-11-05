@@ -16,14 +16,14 @@ func TestNewMap(t *testing.T) {
 
 func TestGetTileAt(t *testing.T) {
 	m := NewMap(3, 3)
-	m.SetTileAt(hexagon.Position{1, 1}, Tile{
+	m.SetTileAt(hexagon.HexPosition{1, 1}, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundMud,
 	})
 	assert.Equal(t, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundMud,
-	}, m.GetTileAt(hexagon.Position{1, 1}))
+	}, m.GetTileAt(hexagon.HexPosition{1, 1}))
 	assert.Equal(t, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundMud,
@@ -31,15 +31,15 @@ func TestGetTileAt(t *testing.T) {
 	assert.Equal(t, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundStreet,
-	}, m.GetTileAt(hexagon.Position{0, 0}))
+	}, m.GetTileAt(hexagon.HexPosition{0, 0}))
 }
 
 func TestSearch(t *testing.T) {
 	m := NewMap(3, 3)
-	m.SearchDeep(hexagon.Position{
+	m.SearchDeep(hexagon.HexPosition{
 		Column: 1,
 		Row:    1,
-	}, hexagon.Position{
+	}, hexagon.HexPosition{
 		Column: 3,
 		Row:    3,
 	}, nil)
@@ -48,11 +48,11 @@ func TestSearch(t *testing.T) {
 
 func Test_searchWide(t *testing.T) {
 	m := NewMap(5, 5)
-	start := hexagon.Position{
+	start := hexagon.HexPosition{
 		Column: 1,
 		Row:    1,
 	}
-	end := hexagon.Position{
+	end := hexagon.HexPosition{
 		Column: 5,
 		Row:    5,
 	}
@@ -99,10 +99,10 @@ func Test_arrayCopy(t *testing.T) {
 
 func Test_evolveSolution(t *testing.T) {
 	m := NewMap(5, 5)
-	m.SearchWide(hexagon.Position{
+	m.SearchWide(hexagon.HexPosition{
 		Column: 1,
 		Row:    1,
-	}, hexagon.Position{
+	}, hexagon.HexPosition{
 		Column: 3,
 		Row:    3,
 	}, nil)

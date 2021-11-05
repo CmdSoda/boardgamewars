@@ -49,9 +49,9 @@ func ExecuteDogfight(
 	ap1 := ac1.GetParameters()
 	ap2 := ac2.GetParameters()
 
-	// In Position setzen
+	// In FloatPosition setzen
 	// Flugzeuge mit grösseren Dogfighting-Rating haben höhere Chance.
-	// 1) Kampf um die Position => Endet in einer Position
+	// 1) Kampf um die FloatPosition => Endet in einer FloatPosition
 	dfa1Pos := DogfightPerformance(ap1.Dogfighting, ldp1, ap2.Dogfighting, ldp2)
 	dfr1.Position = dfa1Pos
 	dfr2.Position = -dfa1Pos

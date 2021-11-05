@@ -7,30 +7,30 @@ import (
 	"math"
 )
 
-// HexWidth breite eines Position.
+// HexWidth breite eines HexPosition.
 var HexWidth = math.Sqrt(3)
 
-// HexHalfWidth halbe breite eines Position.
+// HexHalfWidth halbe breite eines HexPosition.
 var HexHalfWidth = HexWidth / 2
 
-type Position struct {
+type HexPosition struct {
 	Column int
 	Row    int
 }
 
-func NewHexagon(c int, r int) Position {
-	return Position{
+func NewHexagon(c int, r int) HexPosition {
+	return HexPosition{
 		Column: c,
 		Row:    r,
 	}
 }
 
-func (h Position) String() string {
+func (h HexPosition) String() string {
 	return fmt.Sprintf("(%d, %d)", h.Column, h.Row)
 }
 
 // GetCenterCoordinates ermittelt den Mittelpunkt eines hexagons.
-func (h Position) GetCenterCoordinates(useOffset bool) vector.Vector {
+func (h HexPosition) GetCenterCoordinates(useOffset bool) vector.Vector {
 	center := vector.Vector{}
 
 	var offsetValue = 0.0
@@ -49,7 +49,7 @@ func (h Position) GetCenterCoordinates(useOffset bool) vector.Vector {
 	return center
 }
 
-func (h Position) GetSegments() [6]Segment {
+func (h HexPosition) GetSegments() [6]Segment {
 	segments := [6]Segment{}
 	for i := 0; i < len(segments); i++ {
 		segments[i] = NewSegment(Direction(i), h.GetCenterCoordinates(false))
@@ -57,64 +57,64 @@ func (h Position) GetSegments() [6]Segment {
 	return segments
 }
 
-func (h Position) GetAdjacent(direction Direction) *Position {
-	retHex := Position{}
+func (h HexPosition) GetAdjacent(direction Direction) *HexPosition {
+	retHex := HexPosition{}
 	switch direction {
 	case NW:
 		if h.Row%2 == 0 {
-			retHex = Position{
+			retHex = HexPosition{
 				Column: h.Column,
 				Row:    h.Row + 1,
 			}
 		} else {
-			retHex = Position{
+			retHex = HexPosition{
 				Column: h.Column - 1,
 				Row:    h.Row + 1,
 			}
 		}
 	case NE:
 		if h.Row%2 == 0 {
-			retHex = Position{
+			retHex = HexPosition{
 				Column: h.Column + 1,
 				Row:    h.Row + 1,
 			}
 		} else {
-			retHex = Position{
+			retHex = HexPosition{
 				Column: h.Column,
 				Row:    h.Row + 1,
 			}
 		}
 	case E:
-		retHex = Position{
+		retHex = HexPosition{
 			Column: h.Column + 1,
 			Row:    h.Row,
 		}
 	case SE:
 		if h.Row%2 == 0 {
-			retHex = Position{
+			retHex = HexPosition{
 				Column: h.Column + 1,
 				Row:    h.Row - 1,
 			}
 		} else {
-			retHex = Position{
+			retHex = HexPosition{
 				Column: h.Column,
 				Row:    h.Row - 1,
 			}
 		}
 	case SW:
 		if h.Row%2 == 0 {
-			retHex = Position{
+			retHex = HexPosition{
 				Column: h.Column,
 				Row:    h.Row - 1,
 			}
 		} else {
-			retHex = Position{
+			retHex = HexPosition{
 				Column: h.Column - 1,
 				Row:    h.Row - 1,
 			}
 		}
 	case W:
-		retHex = Position{
+		retHex = HexPosition{
 			Column: h.Column - 1,
 			Row:    h.Row,
 		}
@@ -127,11 +127,11 @@ func (h Position) GetAdjacent(direction Direction) *Position {
 	return &retHex
 }
 
-func (h Position) Equal(h2 Position) bool {
+func (h HexPosition) Equal(h2 HexPosition) bool {
 	return h.Row == h2.Row && h.Column == h2.Column
 }
 
-func (h Position) CalculateIntersectionCount(startHex Position, endHex Position) int {
+func (h HexPosition) CalculateIntersectionCount(startHex HexPosition, endHex HexPosition) int {
 	segments := h.GetSegments()
 	count := 0
 	for _, s := range segments {
@@ -160,9 +160,9 @@ func CalculateDistancePointLine(point vector.Vector, lineStart vector.Vector, li
 	return b.Cross(p3.Sub(start3)).Norm() / b.Norm()
 }
 
-type PositionList []Position
+type PositionList []HexPosition
 
-func (poslist PositionList) Contains(p Position) bool {
+func (poslist PositionList) Contains(p HexPosition) bool {
 	for _, p2 := range poslist {
 		if p2.Equal(p) {
 			return true
@@ -171,7 +171,7 @@ func (poslist PositionList) Contains(p Position) bool {
 	return false
 }
 
-func (poslist PositionList) LastElement() Position {
+func (poslist PositionList) LastElement() HexPosition {
 	return poslist[len(poslist)-1]
 }
 

@@ -68,7 +68,7 @@ func TestNewWarParty(t *testing.T) {
 	assert.Nil(t, InitGame())
 	wp := NewWarParty("NeueParty", countrycodes.USA, Blue)
 	fmt.Println(wp)
-	ab := NewAirbase("Parkhaus", wp.WarPartyId, Position{1, 1})
+	ab := NewAirbase("Parkhaus", wp.WarPartyId, FloatPosition{1, 1})
 	assert.Equal(t, wp.Name, Globals.AllWarParties[wp.WarPartyId].Name)
 	ab.AssignToWarParty(wp.WarPartyId)
 	assert.Equal(t, wp.WarPartyId, ab.BelongsTo)

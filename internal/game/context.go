@@ -7,6 +7,7 @@ type Context struct {
 	AllWarParties WarPartyMap
 	AllAircrafts  AircraftsMap
 	AllPilots     PilotsMap
+	AllCounters   CounterList
 }
 
 var Globals = Context{}

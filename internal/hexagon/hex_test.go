@@ -17,7 +17,7 @@ func TestGetAdjacent(t *testing.T) {
 		name   string
 		fields fields
 		args   args
-		want   *Position
+		want   *HexPosition
 	}{
 		{
 			name: "NE",
@@ -26,7 +26,7 @@ func TestGetAdjacent(t *testing.T) {
 				Row:    2,
 			},
 			args: args{direction: NE},
-			want: &Position{
+			want: &HexPosition{
 				Column: 3,
 				Row:    3,
 			},
@@ -38,7 +38,7 @@ func TestGetAdjacent(t *testing.T) {
 				Row:    2,
 			},
 			args: args{direction: E},
-			want: &Position{
+			want: &HexPosition{
 				Column: 3,
 				Row:    2,
 			},
@@ -50,7 +50,7 @@ func TestGetAdjacent(t *testing.T) {
 				Row:    2,
 			},
 			args: args{direction: SE},
-			want: &Position{
+			want: &HexPosition{
 				Column: 3,
 				Row:    1,
 			},
@@ -62,7 +62,7 @@ func TestGetAdjacent(t *testing.T) {
 				Row:    2,
 			},
 			args: args{direction: SW},
-			want: &Position{
+			want: &HexPosition{
 				Column: 2,
 				Row:    1,
 			},
@@ -74,7 +74,7 @@ func TestGetAdjacent(t *testing.T) {
 				Row:    2,
 			},
 			args: args{direction: W},
-			want: &Position{
+			want: &HexPosition{
 				Column: 1,
 				Row:    2,
 			},
@@ -86,7 +86,7 @@ func TestGetAdjacent(t *testing.T) {
 				Row:    2,
 			},
 			args: args{direction: NW},
-			want: &Position{
+			want: &HexPosition{
 				Column: 2,
 				Row:    3,
 			},
@@ -103,7 +103,7 @@ func TestGetAdjacent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			h := Position{
+			h := HexPosition{
 				Column: tt.fields.Column,
 				Row:    tt.fields.Row,
 			}

@@ -19,7 +19,7 @@ type Airbase struct {
 	AllPilots           []PilotId    // Alle Piloten, die zu dieser Basis gehören
 	AircraftsHangar     []AircraftId
 	AircraftsMaintained []AircraftId
-	Position
+	FloatPosition
 }
 
 type AirbasesMap map[AirbaseId]Airbase
@@ -42,17 +42,17 @@ func (ab Airbase) String() string {
 		fmt.Fprintf(&sb, "%s, ", Globals.AllAircrafts[aircraftid].GetParameters().Name)
 	}
 	fmt.Fprint(&sb, "\n")
-	fmt.Fprintf(&sb, "Location: %s\n", ab.Position)
+	fmt.Fprintf(&sb, "Location: %s\n", ab.FloatPosition)
 
 	return sb.String()
 }
 
-func NewAirbase(name string, warpartyid WarPartyId, pos Position) Airbase {
+func NewAirbase(name string, warpartyid WarPartyId, pos FloatPosition) Airbase {
 	ab := Airbase{}
 	ab.AirbaseId = AirbaseId(uuid.New())
 	ab.Name = name
 	ab.BelongsTo = warpartyid
-	ab.Position = pos
+	ab.FloatPosition = pos
 	Globals.AllAirbases[ab.AirbaseId] = ab
 	ab.AircraftsHangar = []AircraftId{}
 	ab.AircraftsMaintained = []AircraftId{}

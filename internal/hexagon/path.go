@@ -1,6 +1,6 @@
 package hexagon
 
-func contains(hexagonList []Position, hex Position) bool {
+func contains(hexagonList []HexPosition, hex HexPosition) bool {
 	for _, h := range hexagonList {
 		if h.Equal(hex) {
 			return true
@@ -10,11 +10,11 @@ func contains(hexagonList []Position, hex Position) bool {
 }
 
 // CalculatePath berechnet die direkten Pfad (LOS) zwischen zwei Hexagons.
-func CalculatePath(startHex Position, endHex Position) []Position {
-	var path = make([]Position, 0)
-	var ignore = make([]Position, 0)
+func CalculatePath(startHex HexPosition, endHex HexPosition) []HexPosition {
+	var path = make([]HexPosition, 0)
+	var ignore = make([]HexPosition, 0)
 	var current = startHex
-	var next = Position{}
+	var next = HexPosition{}
 
 	path = append(path, current)
 
