@@ -46,12 +46,30 @@ type DogfightResult struct {
 	DamageConflicted []DamageType
 }
 
-type DogfightParameters struct {
-	Aircraft
-	DogfightResult
-	LastDogfightPosition DogfightPosition
+// DogfightSetup wird initial für einen Kampf benötigt. Aus diesem struct entsteht dann Dogfight.
+type DogfightSetup struct {
+	TeamBlue AircraftIdList
+	TeamRed  AircraftIdList
 }
 
+// DogfightGroup wird aus dem struct Dogfight erstellt. Je mehr Flugzeuge in der Dogfight Warteliste sind, desto mehr
+// DogfightGroup-Objekte werden erzeugt.
+type DogfightGroup struct {
+	BlueFighter *AircraftId
+	BlueSupport *AircraftId // optional
+	RedFighter  *AircraftId
+	RedSupport  *AircraftId // optional
+}
+
+// Dogfight wird aus einem DogfightSetup initialisiert. Während des Kampfes werden so viele DogfightGroup erstellt, wie
+// es möglich ist.
+type Dogfight struct {
+	Groups          []DogfightGroup
+	TeamBlueWaiting AircraftIdList
+	TeamRedWaiting  AircraftIdList
+}
+
+//goland:noinspection ALL
 func (d DogfightResult) String() string {
 	var sb strings.Builder
 	fmt.Fprintf(&sb, "%d.ExecuteDogfight Result: ", d.Round)
