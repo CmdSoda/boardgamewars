@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -45,4 +46,11 @@ func TestLoadAir2AirLibrary(t *testing.T) {
 	if len(a2al) == 0 {
 		t.FailNow()
 	}
+}
+
+func TestGetAir2AirWeaponParametersFromName(t *testing.T) {
+	assert.Nil(t, InitGame())
+	a2awp, exist := GetAir2AirWeaponParametersFromName("ubekannt")
+	assert.False(t, exist)
+	assert.Equal(t, Air2AirWeaponParameters{}, a2awp)
 }
