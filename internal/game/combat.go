@@ -4,7 +4,7 @@ import (
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 )
 
-func DogfightPerformance(rating1 Rating, lastPosition1 DogfightPosition,
+func SimulateDogfightPosition(rating1 Rating, lastPosition1 DogfightPosition,
 	rating2 Rating, lastPosition2 DogfightPosition) DogfightPosition {
 	dfr1 := randomizer.Roll1D10() + int(rating1)
 	dfr2 := randomizer.Roll1D10() + int(rating2)
@@ -52,7 +52,7 @@ func ExecuteDogfight(
 	// In FloatPosition setzen
 	// Flugzeuge mit grösseren Dogfighting-Rating haben höhere Chance.
 	// 1) Kampf um die FloatPosition => Endet in einer FloatPosition
-	dfa1Pos := DogfightPerformance(ap1.Dogfighting, ldp1, ap2.Dogfighting, ldp2)
+	dfa1Pos := SimulateDogfightPosition(ap1.Dogfighting, ldp1, ap2.Dogfighting, ldp2)
 	dfr1.Position = dfa1Pos
 	dfr2.Position = -dfa1Pos
 

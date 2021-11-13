@@ -38,6 +38,8 @@ func (dp DogfightPosition) String() string {
 	return "Invalid"
 }
 
+// DogfightResult wird nach einem Dogfight zurückgegeben und beinhaltet die Schäden, die an einem Flugzeug verursacht
+// wurden.
 type DogfightResult struct {
 	Round            int
 	Position         DogfightPosition

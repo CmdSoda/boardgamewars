@@ -56,7 +56,7 @@ func (awp Air2AirWeaponParameters) Hit(target AircraftId, dfp DogfightPosition) 
 		wep += 2
 	}
 	targetac := Globals.AllAircrafts[target]
-	dfpw := DogfightPerformance(wep, DogfightPositionIgnore, targetac.GetParameters().Dogfighting, DogfightPositionIgnore)
+	dfpw := SimulateDogfightPosition(wep, DogfightPositionIgnore, targetac.GetParameters().Dogfighting, DogfightPositionIgnore)
 	return dfpw > 0
 }
 
