@@ -126,6 +126,14 @@ func SimulateDogfightPosition(rating1 Rating, lastPosition1 DogfightPosition,
 	return DogfightPositionTossup
 }
 
+func (ds DogfightSetup) CreateDogfith() Dogfight {
+	return Dogfight{}
+}
+
+func (df *Dogfight) PrepateDogfight() {
+
+}
+
 // ExecuteDogfight Eine Runde im Luftkampf. Etwa 10 Sekunden dauer.
 func ExecuteDogfight(
 	acid1 AircraftId, ldp1 DogfightPosition,
