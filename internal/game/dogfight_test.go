@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -129,17 +130,22 @@ func TestDogfight_DistributeAircraftsToGroupsMore(t *testing.T) {
 }
 
 func TestDogfight_Execute(t *testing.T) {
-	assert.Nil(t, InitGame(1))
+	assert.Nil(t, InitGame(3))
 	ds := NewDogfightSetup()
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < 4; i++ {
 		b := NewAircraft("F14", "Default", WarPartyIdUSA)
+		bpl := NewPilots(2, WarPartyIdUSA, nato.OF1)
+		b.FillSeatsWith(bpl)
 		ds.AddBlue(b.AircraftId)
 		r := NewAircraft("F14", "Default", WarPartyIdRussia)
+		rpl := NewPilots(2, WarPartyIdRussia, nato.OF1)
+		r.FillSeatsWith(rpl)
 		ds.AddRed(r.AircraftId)
 	}
 	d := ds.CreateDogfight()
 	assert.True(t, d.DistributeAircraftsToGroups())
-	for i := 0; i < 10; i++ {
+	for round := 0; round < 20; round++ {
+		fmt.Printf("Round %d\n", round)
 		d.Simulate()
 	}
 }

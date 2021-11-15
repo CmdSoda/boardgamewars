@@ -106,9 +106,9 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 	var dfr2 DogfightResult
 	ac1 := Globals.AllAircrafts[dg.BlueFighterId]
 	ac2 := Globals.AllAircrafts[dg.RedFighterId]
+	fmt.Printf("AC%d and AC%d are in combat\n", ac1.ShortId, ac2.ShortId)
 	ap1 := ac1.GetParameters()
 	ap2 := ac2.GetParameters()
-
 	// In FloatPosition setzen
 	// Flugzeuge mit grösseren Dogfighting-Rating haben höhere Chance.
 	// 1) Kampf um die FloatPosition => Endet in einer FloatPosition
@@ -120,6 +120,7 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 	// 2) Abschuss der SRM
 	// Falls keine SRM => Einsatz der Gun
 	if dfa1Pos >= DogfightPositionBehindEnemiesTail {
+		fmt.Printf("AC%d attacks AC%d\n", ac1.ShortId, ac2.ShortId)
 		bestws, exist := ac1.GetBestDogfightingWeapon()
 		dfr1.WeaponUsed = &bestws
 		if exist {
@@ -131,6 +132,7 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 			}
 		}
 	} else if -dfa1Pos >= DogfightPositionBehindEnemiesTail {
+		fmt.Printf("AC%d attacks AC%d\n", ac2.ShortId, ac1.ShortId)
 		bestws, exist := ac2.GetBestDogfightingWeapon()
 		dfr2.WeaponUsed = &bestws
 		if exist {
@@ -215,6 +217,7 @@ type Dogfight struct {
 
 func (d *Dogfight) Simulate() {
 	for i, _ := range d.Groups {
+		fmt.Printf("simulate group %d\n", i)
 		blueResult, redResult := d.Groups[i].Simulate()
 		d.Groups[i].BlueFighterLastPosition = blueResult.Position
 		d.Groups[i].RedFighterLastPosition = redResult.Position

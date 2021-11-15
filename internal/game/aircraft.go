@@ -18,10 +18,14 @@ func (al *AircraftIdList) PullFirst() AircraftId {
 
 type AircraftsMap map[AircraftId]Aircraft
 
+type ShortId int
+var currentShortId ShortId = 0
+
 type Aircraft struct {
 	AircraftId
 	AircraftParametersId
 	WarPartyId
+	ShortId
 	Altitude           AltitudeBand // Aktuelle Höhe.
 	CurrentPosition    FloatPosition
 	NextTargetLocation FloatPosition // Das ist die FloatPosition, die das Flugzeug jetzt ansteuert.
@@ -34,6 +38,7 @@ type Aircraft struct {
 
 func (a Aircraft) String() string {
 	var b strings.Builder
+	fmt.Fprintf(&b, "Aircraft %d\n", a.ShortId)
 	fmt.Fprintf(&b, "%s\nPilots: ", a.GetParameters().Name)
 	for _, pilotid := range a.Pilots {
 		p := Globals.AllPilots[pilotid]
@@ -67,6 +72,8 @@ func (a *Aircraft) AssignToAB(id AirbaseId) bool {
 
 func NewAircraft(name string, configurationName string, warpartyid WarPartyId) Aircraft {
 	ac := Aircraft{}
+	ac.ShortId = currentShortId
+	currentShortId = currentShortId + 1
 	acpid, exist := GetAircraftParametersIdByName(name)
 	if exist {
 		ac.AircraftId = AircraftId(uuid.New())
