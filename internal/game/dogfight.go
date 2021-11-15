@@ -104,11 +104,13 @@ type DogfightGroup struct {
 func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 	var dfr1 DogfightResult
 	var dfr2 DogfightResult
+
 	ac1 := Globals.AllAircrafts[dg.BlueFighterId]
+	ap1 := ac1.GetParameters() // AircraftParameters
+
 	ac2 := Globals.AllAircrafts[dg.RedFighterId]
-	fmt.Printf("AC%d and AC%d are in combat\n", ac1.ShortId, ac2.ShortId)
-	ap1 := ac1.GetParameters()
-	ap2 := ac2.GetParameters()
+	ap2 := ac2.GetParameters() // AircraftParameters
+
 	// In FloatPosition setzen
 	// Flugzeuge mit grösseren Dogfighting-Rating haben höhere Chance.
 	// 1) Kampf um die FloatPosition => Endet in einer FloatPosition
@@ -120,24 +122,24 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 	// 2) Abschuss der SRM
 	// Falls keine SRM => Einsatz der Gun
 	if dfa1Pos >= DogfightPositionBehindEnemiesTail {
-		fmt.Printf("AC%d attacks AC%d\n", ac1.ShortId, ac2.ShortId)
 		bestws, exist := ac1.GetBestDogfightingWeapon()
 		dfr1.WeaponUsed = &bestws
 		if exist {
 			ac1.DepleteWeapon(bestws)
 			if bestws.Hit(dg.RedFighterId, dfa1Pos) {
+				fmt.Printf("AC%d hits AC%d\n", ac1.ShortId, ac2.ShortId)
 				dfr1.Hit = true
 				dt := ac2.DoDamageWith(bestws)
 				dfr1.DamageConflictedToEnemy = append(dfr1.DamageConflictedToEnemy, dt)
 			}
 		}
 	} else if -dfa1Pos >= DogfightPositionBehindEnemiesTail {
-		fmt.Printf("AC%d attacks AC%d\n", ac2.ShortId, ac1.ShortId)
 		bestws, exist := ac2.GetBestDogfightingWeapon()
 		dfr2.WeaponUsed = &bestws
 		if exist {
 			ac2.DepleteWeapon(bestws)
 			if bestws.Hit(dg.BlueFighterId, -dfa1Pos) {
+				fmt.Printf("AC%d hits AC%d\n", ac2.ShortId, ac1.ShortId)
 				dfr2.Hit = true
 				dt := ac1.DoDamageWith(bestws)
 				dfr2.DamageConflictedToEnemy = append(dfr2.DamageConflictedToEnemy, dt)
@@ -217,7 +219,6 @@ type Dogfight struct {
 
 func (d *Dogfight) Simulate() {
 	for i, _ := range d.Groups {
-		fmt.Printf("simulate group %d\n", i)
 		blueResult, redResult := d.Groups[i].Simulate()
 		d.Groups[i].BlueFighterLastPosition = blueResult.Position
 		d.Groups[i].RedFighterLastPosition = redResult.Position
@@ -271,19 +272,19 @@ func SimulateDogfightPosition(rating1 Rating, lastPosition1 DogfightPosition,
 	}
 
 	if dfdelta > 0 {
-		if dfdelta >= 7 {
+		if dfdelta >= 5 {
 			return DogfightPositionBehindEnemiesTailOptimal
-		} else if dfdelta >= 4 {
+		} else if dfdelta >= 3 {
 			return DogfightPositionBehindEnemiesTail
-		} else if dfdelta >= 2 {
+		} else if dfdelta >= 1 {
 			return DogfightPositionAdventage
 		}
 	} else {
-		if -dfdelta >= 7 {
+		if -dfdelta >= 5 {
 			return DogfightPositionEnemyAtMySixOptimal
-		} else if -dfdelta >= 4 {
+		} else if -dfdelta >= 3 {
 			return DogfightPositionEnemyAtMySix
-		} else if -dfdelta >= 2 {
+		} else if -dfdelta >= 1 {
 			return DogfightPositionDisadvantage
 		}
 	}

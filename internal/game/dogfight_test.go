@@ -129,10 +129,10 @@ func TestDogfight_DistributeAircraftsToGroupsMore(t *testing.T) {
 	assert.Nil(t, d.Groups[1].RedSupportId)
 }
 
-func TestDogfight_Execute(t *testing.T) {
-	assert.Nil(t, InitGame(3))
+func TestDogfight_Simulate(t *testing.T) {
+	assert.Nil(t, InitGame(0))
 	ds := NewDogfightSetup()
-	for i := 0; i < 4; i++ {
+	for i := 0; i < 400; i++ {
 		b := NewAircraft("F14", "Default", WarPartyIdUSA)
 		bpl := NewPilots(2, WarPartyIdUSA, nato.OF1)
 		b.FillSeatsWith(bpl)
@@ -144,8 +144,7 @@ func TestDogfight_Execute(t *testing.T) {
 	}
 	d := ds.CreateDogfight()
 	assert.True(t, d.DistributeAircraftsToGroups())
-	for round := 0; round < 20; round++ {
-		fmt.Printf("Round %d\n", round)
+	for round := 0; round < 40; round++ {
 		d.Simulate()
 	}
 }
