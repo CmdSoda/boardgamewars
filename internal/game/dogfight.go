@@ -131,7 +131,11 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 				dfr1.Hit = true
 				dt := ac2.DoDamageWith(bestws)
 				dfr1.DamageConflictedToEnemy = append(dfr1.DamageConflictedToEnemy, dt)
+			} else {
+				fmt.Print("not hit\n")
 			}
+		} else {
+			fmt.Print("not exist\n")
 		}
 	} else if -dfa1Pos >= DogfightPositionBehindEnemiesTail {
 		bestws, exist := ac2.GetBestDogfightingWeapon()
@@ -143,7 +147,11 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 				dfr2.Hit = true
 				dt := ac1.DoDamageWith(bestws)
 				dfr2.DamageConflictedToEnemy = append(dfr2.DamageConflictedToEnemy, dt)
+			} else {
+				fmt.Print("not hit\n")
 			}
+		} else {
+			fmt.Print("not exist\n")
 		}
 	}
 	return dfr1, dfr2

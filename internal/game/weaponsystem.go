@@ -28,12 +28,14 @@ func GetWeaponSystemsFrom(wsl []string) WeaponSystemList {
 	return WeaponSystemList{}
 }
 
-func GetWeaponSystemList(acId AircraftParametersId, configname string) WeaponSystemList {
+func CloneWeaponSystemList(acId AircraftParametersId, configname string) WeaponSystemList {
 	for _, parameters := range Globals.AllAircraftParameters {
 		if parameters.Id == acId {
 			for _, configuration := range parameters.Configurations {
 				if configuration.ConfigurationName == configname {
-					return configuration.WeaponSystems
+					wsl := make(WeaponSystemList, len(configuration.WeaponSystems))
+					copy(wsl, configuration.WeaponSystems)
+					return wsl
 				}
 			}
 		}

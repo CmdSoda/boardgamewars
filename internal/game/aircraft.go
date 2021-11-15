@@ -79,7 +79,7 @@ func NewAircraft(name string, configurationName string, warpartyid WarPartyId) A
 		ac.AircraftId = AircraftId(uuid.New())
 		ac.AircraftParametersId = acpid
 		ac.WarPartyId = warpartyid
-		ac.WeaponSystems = GetWeaponSystemList(acpid, configurationName)
+		ac.WeaponSystems = CloneWeaponSystemList(acpid, configurationName)
 		for i := 0; i < len(ac.WeaponSystems); i++ {
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
