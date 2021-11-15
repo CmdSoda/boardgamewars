@@ -132,8 +132,8 @@ func TestDogfight_DistributeAircraftsToGroups(t *testing.T) {
 	assert.Equal(t, 0, len(d.TeamBlueWaiting))
 	assert.Equal(t, 0, len(d.TeamRedWaiting))
 	assert.Equal(t, 1, len(d.Groups))
-	assert.Equal(t, b1.AircraftId, d.Groups[0].BlueFighter)
-	assert.Equal(t, r1.AircraftId, d.Groups[0].RedFighter)
+	assert.Equal(t, b1.AircraftId, d.Groups[0].BlueFighterId)
+	assert.Equal(t, r1.AircraftId, d.Groups[0].RedFighterId)
 }
 
 func TestDogfight_DistributeAircraftsToGroupsMore(t *testing.T) {
@@ -161,14 +161,14 @@ func TestDogfight_DistributeAircraftsToGroupsMore(t *testing.T) {
 	assert.Equal(t, b5.AircraftId, d.TeamBlueWaiting[0])
 	assert.Equal(t, 0, len(d.TeamRedWaiting))
 	assert.Equal(t, 2, len(d.Groups))
-	assert.Equal(t, b1.AircraftId, d.Groups[0].BlueFighter)
-	assert.Equal(t, b3.AircraftId, *d.Groups[0].BlueSupport)
-	assert.Equal(t, r1.AircraftId, d.Groups[0].RedFighter)
-	assert.Nil(t, d.Groups[0].RedSupport)
-	assert.Equal(t, b2.AircraftId, d.Groups[1].BlueFighter)
-	assert.Equal(t, b4.AircraftId, *d.Groups[1].BlueSupport)
-	assert.Equal(t, r2.AircraftId, d.Groups[1].RedFighter)
-	assert.Nil(t, d.Groups[1].RedSupport)
+	assert.Equal(t, b1.AircraftId, d.Groups[0].BlueFighterId)
+	assert.Equal(t, b3.AircraftId, *d.Groups[0].BlueSupportId)
+	assert.Equal(t, r1.AircraftId, d.Groups[0].RedFighterId)
+	assert.Nil(t, d.Groups[0].RedSupportId)
+	assert.Equal(t, b2.AircraftId, d.Groups[1].BlueFighterId)
+	assert.Equal(t, b4.AircraftId, *d.Groups[1].BlueSupportId)
+	assert.Equal(t, r2.AircraftId, d.Groups[1].RedFighterId)
+	assert.Nil(t, d.Groups[1].RedSupportId)
 }
 
 func TestDogfight_Execute(t *testing.T) {
@@ -179,5 +179,6 @@ func TestDogfight_Execute(t *testing.T) {
 	ds.AddBlue(b1.AircraftId)
 	ds.AddRed(r1.AircraftId)
 	d := ds.CreateDogfight()
-	d.Execute()
+	assert.True(t, d.DistributeAircraftsToGroups())
+	d.Simulate()
 }

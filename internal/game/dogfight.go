@@ -93,18 +93,62 @@ func (ds *DogfightSetup) AddBlue(id AircraftId) {
 // DogfightGroup wird aus dem struct Dogfight erstellt. Je mehr Flugzeuge in der Dogfight Warteliste sind, desto mehr
 // DogfightGroup-Objekte werden erzeugt.
 type DogfightGroup struct {
-	BlueFighter AircraftId
+	BlueFighterId           AircraftId
 	BlueFighterLastPosition DogfightPosition
-	BlueSupport *AircraftId // optional
-	RedFighter  AircraftId
-	RedFighterLastPosition DogfightPosition
-	RedSupport  *AircraftId // optional
+	BlueSupportId           *AircraftId // optional
+	RedFighterId            AircraftId
+	RedFighterLastPosition  DogfightPosition
+	RedSupportId            *AircraftId // optional
+}
+
+func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
+	var dfr1 DogfightResult
+	var dfr2 DogfightResult
+	ac1 := Globals.AllAircrafts[dg.BlueFighterId]
+	ac2 := Globals.AllAircrafts[dg.RedFighterId]
+	ap1 := ac1.GetParameters()
+	ap2 := ac2.GetParameters()
+
+	// In FloatPosition setzen
+	// Flugzeuge mit grösseren Dogfighting-Rating haben höhere Chance.
+	// 1) Kampf um die FloatPosition => Endet in einer FloatPosition
+	dfa1Pos := SimulateDogfightPosition(ap1.Dogfighting, dg.BlueFighterLastPosition, ap2.Dogfighting, dg.RedFighterLastPosition)
+	dfr1.Position = dfa1Pos
+	dfr2.Position = -dfa1Pos
+
+	// SRMs (Short-Range-Missles) gegeneinander einsetzen
+	// 2) Abschuss der SRM
+	// Falls keine SRM => Einsatz der Gun
+	if dfa1Pos >= DogfightPositionBehindEnemiesTail {
+		bestws, exist := ac1.GetBestDogfightingWeapon()
+		dfr1.WeaponUsed = &bestws
+		if exist {
+			ac1.DepleteWeapon(bestws)
+			if bestws.Hit(dg.RedFighterId, dfa1Pos) {
+				dfr1.Hit = true
+				dt := ac2.DoDamageWith(bestws)
+				dfr1.DamageConflicted = append(dfr1.DamageConflicted, dt)
+			}
+		}
+	} else if -dfa1Pos >= DogfightPositionBehindEnemiesTail {
+		bestws, exist := ac2.GetBestDogfightingWeapon()
+		dfr2.WeaponUsed = &bestws
+		if exist {
+			ac2.DepleteWeapon(bestws)
+			if bestws.Hit(dg.BlueFighterId, -dfa1Pos) {
+				dfr2.Hit = true
+				dt := ac1.DoDamageWith(bestws)
+				dfr2.DamageConflicted = append(dfr2.DamageConflicted, dt)
+			}
+		}
+	}
+	return dfr1, dfr2
 }
 
 func NewDogfightGroup(blue AircraftId, red AircraftId) DogfightGroup {
 	dg := DogfightGroup{
-		BlueFighter: blue,
-		RedFighter:  red,
+		BlueFighterId: blue,
+		RedFighterId:  red,
 	}
 	dg.BlueFighterLastPosition = DogfightPositionTossup
 	dg.RedFighterLastPosition = DogfightPositionTossup
@@ -135,7 +179,7 @@ func (dgl *DogfightGroupList) AssignBlueSupport(id AircraftId) bool {
 	for i, group := range *dgl {
 		// Erste gefundene Gruppe mit freiem Support belegen und dann raus hier.
 		if group.HasBlueSupport() == false {
-			(*dgl)[i].BlueSupport = &id
+			(*dgl)[i].BlueSupportId = &id
 			return true
 		}
 	}
@@ -146,7 +190,7 @@ func (dgl *DogfightGroupList) AssignRedSupport(id AircraftId) bool {
 	for _, group := range *dgl {
 		// Erste gefundene Gruppe mit freiem Support belegen und dann raus hier.
 		if group.HasRedSupport() == false {
-			group.RedSupport = &id
+			group.RedSupportId = &id
 			return true
 		}
 	}
@@ -154,11 +198,11 @@ func (dgl *DogfightGroupList) AssignRedSupport(id AircraftId) bool {
 }
 
 func (dg DogfightGroup) HasBlueSupport() bool {
-	return dg.BlueSupport != nil
+	return dg.BlueSupportId != nil
 }
 
 func (dg DogfightGroup) HasRedSupport() bool {
-	return dg.RedSupport != nil
+	return dg.RedSupportId != nil
 }
 
 // Dogfight wird aus einem DogfightSetup initialisiert. Während des Kampfes werden so viele DogfightGroup erstellt, wie
@@ -169,8 +213,12 @@ type Dogfight struct {
 	TeamRedWaiting  AircraftIdList
 }
 
-func (d *Dogfight) Execute() {
-
+func (d *Dogfight) Simulate() {
+	for i, _ := range d.Groups {
+		blueResult, redResult := d.Groups[i].Simulate()
+		d.Groups[i].BlueFighterLastPosition = blueResult.Position
+		d.Groups[i].RedFighterLastPosition = redResult.Position
+	}
 }
 
 // DistributeAircraftsToGroups verteilt wartende Aircrafts auf die Gruppen. Liefert true, wenn min. ein
