@@ -97,9 +97,6 @@ func TestDogfightSetup_CreateDogfight(t *testing.T) {
 	assert.Equal(t, 0, len(d.Groups))
 	assert.Equal(t, b1.AircraftId, d.TeamBlueWaiting[0])
 	assert.Equal(t, r1.AircraftId, d.TeamRedWaiting[0])
-
-	d.DistributeAircraftsToGroups()
-
 }
 
 func TestRemoveElementTest(t *testing.T) {
@@ -119,4 +116,22 @@ func TestAircraftIdListRemoval(t *testing.T) {
 	assert.Equal(t, 2, len(aidl))
 	assert.Equal(t, aid1, aidl[0])
 	assert.Equal(t, aid2, aidl[1])
+}
+
+func TestDogfight_DistributeAircraftsToGroups(t *testing.T) {
+	assert.Nil(t, InitGame())
+
+	b1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	r1 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
+	ds := NewDogfightSetup()
+	ds.AddBlue(b1.AircraftId)
+	ds.AddRed(r1.AircraftId)
+	d := ds.CreateDogfight()
+	d.DistributeAircraftsToGroups()
+
+	assert.Equal(t, 0, len(d.TeamBlueWaiting))
+	assert.Equal(t, 0, len(d.TeamRedWaiting))
+	assert.Equal(t, 1, len(d.Groups))
+	assert.Equal(t, b1.AircraftId, d.Groups[0].BlueFighter)
+	assert.Equal(t, r1.AircraftId, d.Groups[0].RedFighter)
 }

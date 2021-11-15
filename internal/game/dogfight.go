@@ -93,9 +93,9 @@ func (ds *DogfightSetup) AddBlue(id AircraftId) {
 // DogfightGroup wird aus dem struct Dogfight erstellt. Je mehr Flugzeuge in der Dogfight Warteliste sind, desto mehr
 // DogfightGroup-Objekte werden erzeugt.
 type DogfightGroup struct {
-	BlueFighter *AircraftId
+	BlueFighter AircraftId
 	BlueSupport *AircraftId // optional
-	RedFighter  *AircraftId
+	RedFighter  AircraftId
 	RedSupport  *AircraftId // optional
 }
 
@@ -114,8 +114,13 @@ func (al *AircraftIdList) RemoveLast() AircraftId {
 }
 
 func (d *Dogfight) DistributeAircraftsToGroups() {
-	if len(d.TeamBlueWaiting) > 0 && len(d.TeamRedWaiting) > 0 {
-
+	for len(d.TeamBlueWaiting) > 0 && len(d.TeamRedWaiting) > 0 {
+		b := d.TeamBlueWaiting.RemoveLast()
+		r := d.TeamRedWaiting.RemoveLast()
+		d.Groups = append(d.Groups, DogfightGroup{
+			BlueFighter: b,
+			RedFighter:  r,
+		})
 	}
 }
 
