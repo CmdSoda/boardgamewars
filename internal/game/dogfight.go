@@ -62,12 +62,25 @@ func NewDogfightSetup() DogfightSetup {
 	return ds
 }
 
+func (ds *DogfightSetup) AddRed(id AircraftId) {
+	ds.TeamRed = append(ds.TeamRed, id)
+}
+
+func (ds *DogfightSetup) AddBlue(id AircraftId) {
+	ds.TeamBlue = append(ds.TeamBlue, id)
+}
+
+
 // Dogfight wird aus einem DogfightSetup initialisiert. Während des Kampfes werden so viele DogfightGroup erstellt, wie
 // es möglich ist.
 type Dogfight struct {
 	Groups          []DogfightGroup
 	TeamBlueWaiting AircraftIdList
 	TeamRedWaiting  AircraftIdList
+}
+
+func (d *Dogfight) DistributeAircraftsToGroups() {
+
 }
 
 // DogfightGroup wird aus dem struct Dogfight erstellt. Je mehr Flugzeuge in der Dogfight Warteliste sind, desto mehr
@@ -80,15 +93,15 @@ type DogfightGroup struct {
 }
 
 //goland:noinspection ALL
-func (d DogfightResult) String() string {
+func (dr DogfightResult) String() string {
 	var sb strings.Builder
-	fmt.Fprintf(&sb, "%d.ExecuteDogfight Result: ", d.Round)
-	fmt.Fprintf(&sb, "%s", d.Position)
-	if d.WeaponUsed != nil {
-		fmt.Fprintf(&sb, ", HitWith: %s", d.WeaponUsed.WeaponSystemName)
-		if len(d.DamageConflicted) > 0 {
+	fmt.Fprintf(&sb, "%dr.ExecuteDogfight Result: ", dr.Round)
+	fmt.Fprintf(&sb, "%s", dr.Position)
+	if dr.WeaponUsed != nil {
+		fmt.Fprintf(&sb, ", HitWith: %s", dr.WeaponUsed.WeaponSystemName)
+		if len(dr.DamageConflicted) > 0 {
 			fmt.Fprint(&sb, ", DamageConflicted: ")
-			for _, dt := range d.DamageConflicted {
+			for _, dt := range dr.DamageConflicted {
 				fmt.Fprintf(&sb, "%s, ", dt.String())
 			}
 		} else {
@@ -141,10 +154,6 @@ func (ds DogfightSetup) CreateDogfight() Dogfight {
 	d.TeamBlueWaiting = make(AircraftIdList, len(ds.TeamBlue))
 	copy(d.TeamBlueWaiting, ds.TeamBlue)
 	return d
-}
-
-func (df *Dogfight) DistributeAircraftsToGroups() {
-
 }
 
 // ExecuteDogfight Eine Runde im Luftkampf. Etwa 10 Sekunden dauer.

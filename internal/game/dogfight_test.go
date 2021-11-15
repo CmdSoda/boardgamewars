@@ -85,10 +85,18 @@ func TestDogfightSetup_CreateDogfight(t *testing.T) {
 	r1 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
 
 	ds := NewDogfightSetup()
-	ds.TeamBlue = append(ds.TeamBlue, b1.AircraftId)
-	ds.TeamRed = append(ds.TeamRed, r1.AircraftId)
+	ds.AddBlue(b1.AircraftId)
+	ds.AddRed(r1.AircraftId)
+
+	assert.Equal(t, b1.AircraftId, ds.TeamBlue[0])
+	assert.Equal(t, r1.AircraftId, ds.TeamRed[0])
 
 	d := ds.CreateDogfight()
+
+	assert.Equal(t, 0, len(d.Groups))
+	assert.Equal(t, b1.AircraftId, d.TeamBlueWaiting[0])
+	assert.Equal(t, r1.AircraftId, d.TeamRedWaiting[0])
+
 	d.DistributeAircraftsToGroups()
 
 }
