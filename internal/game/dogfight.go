@@ -55,13 +55,11 @@ type DogfightSetup struct {
 	TeamRed  AircraftIdList
 }
 
-// DogfightGroup wird aus dem struct Dogfight erstellt. Je mehr Flugzeuge in der Dogfight Warteliste sind, desto mehr
-// DogfightGroup-Objekte werden erzeugt.
-type DogfightGroup struct {
-	BlueFighter *AircraftId
-	BlueSupport *AircraftId // optional
-	RedFighter  *AircraftId
-	RedSupport  *AircraftId // optional
+func NewDogfightSetup() DogfightSetup {
+	ds := DogfightSetup{}
+	ds.TeamBlue = []AircraftId{}
+	ds.TeamRed = []AircraftId{}
+	return ds
 }
 
 // Dogfight wird aus einem DogfightSetup initialisiert. Während des Kampfes werden so viele DogfightGroup erstellt, wie
@@ -70,6 +68,15 @@ type Dogfight struct {
 	Groups          []DogfightGroup
 	TeamBlueWaiting AircraftIdList
 	TeamRedWaiting  AircraftIdList
+}
+
+// DogfightGroup wird aus dem struct Dogfight erstellt. Je mehr Flugzeuge in der Dogfight Warteliste sind, desto mehr
+// DogfightGroup-Objekte werden erzeugt.
+type DogfightGroup struct {
+	BlueFighter *AircraftId
+	BlueSupport *AircraftId // optional
+	RedFighter  *AircraftId
+	RedSupport  *AircraftId // optional
 }
 
 //goland:noinspection ALL
@@ -126,11 +133,17 @@ func SimulateDogfightPosition(rating1 Rating, lastPosition1 DogfightPosition,
 	return DogfightPositionTossup
 }
 
-func (ds DogfightSetup) CreateDogfith() Dogfight {
-	return Dogfight{}
+func (ds DogfightSetup) CreateDogfight() Dogfight {
+	d := Dogfight{}
+	d.Groups = []DogfightGroup{}
+	d.TeamRedWaiting = make(AircraftIdList, len(ds.TeamRed))
+	copy(d.TeamRedWaiting, ds.TeamRed)
+	d.TeamBlueWaiting = make(AircraftIdList, len(ds.TeamBlue))
+	copy(d.TeamBlueWaiting, ds.TeamBlue)
+	return d
 }
 
-func (df *Dogfight) PrepateDogfight() {
+func (df *Dogfight) DistributeAircraftsToGroups() {
 
 }
 

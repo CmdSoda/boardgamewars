@@ -8,7 +8,7 @@ import (
 
 type AircraftId uuid.UUID
 
-type AircraftIdList []*AircraftId
+type AircraftIdList []AircraftId
 
 type AircraftsMap map[AircraftId]Aircraft
 

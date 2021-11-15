@@ -19,8 +19,8 @@ func CreateSetup() DogfightSetup {
 	}
 
 	return DogfightSetup{
-		TeamBlue: AircraftIdList{&blue[0].AircraftId, &blue[1].AircraftId},
-		TeamRed:  AircraftIdList{&red[0].AircraftId, &red[1].AircraftId},
+		TeamBlue: AircraftIdList{blue[0].AircraftId, blue[1].AircraftId},
+		TeamRed:  AircraftIdList{red[0].AircraftId, red[1].AircraftId},
 	}
 }
 
@@ -76,4 +76,19 @@ func TestMoreRounds(t *testing.T) {
 
 	fmt.Println(drl1)
 	fmt.Println(drl2)
+}
+
+func TestDogfightSetup_CreateDogfight(t *testing.T) {
+	assert.Nil(t, InitGame())
+
+	b1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	r1 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
+
+	ds := NewDogfightSetup()
+	ds.TeamBlue = append(ds.TeamBlue, b1.AircraftId)
+	ds.TeamRed = append(ds.TeamRed, r1.AircraftId)
+
+	d := ds.CreateDogfight()
+	d.DistributeAircraftsToGroups()
+
 }
