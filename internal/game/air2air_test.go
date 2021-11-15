@@ -49,7 +49,7 @@ func TestLoadAir2AirLibrary(t *testing.T) {
 }
 
 func TestGetAir2AirWeaponParametersFromName(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 	a2awp, exist := GetAir2AirWeaponParametersFromName("ubekannt")
 	assert.False(t, exist)
 	assert.Equal(t, Air2AirWeaponParameters{}, a2awp)

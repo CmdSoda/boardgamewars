@@ -9,7 +9,7 @@ import (
 )
 
 func TestAircraftPilots(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 	ac := NewAircraft("F14", "Default", WarPartyIdUK)
 	fmt.Println(ac)
 	ac = NewAircraft("F14", "Default", WarPartyIdGermany)
@@ -21,7 +21,7 @@ func TestAircraftPilots(t *testing.T) {
 }
 
 func TestAssign(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 	wrongid := AirbaseId(uuid.New())
 	ac := NewAircraft("F14", "Default", WarPartyIdUK)
 	assert.Equal(t, false, ac.AssignToAB(wrongid))
@@ -30,7 +30,7 @@ func TestAssign(t *testing.T) {
 }
 
 func TestAircraftMap(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 	ab := NewAirbase("Carrier", WarPartyIdUK, FloatPosition{4, 6})
 	ac := NewAircraft("F14", "Default", WarPartyIdUK)
 	p1 := NewPilot(WarPartyIdUK, nato.OF1)
@@ -43,14 +43,14 @@ func TestAircraftMap(t *testing.T) {
 }
 
 func TestAircraftId(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 	ac := NewAircraft("F14", "Default", WarPartyIdUK)
 	_, exist := Globals.AllAircrafts[ac.AircraftId]
 	assert.True(t, exist)
 }
 
 func TestAircraft_AssignToAB(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 	ab := NewAirbase("Carrier", WarPartyIdUK, FloatPosition{4, 6})
 	ac := NewAircraft("F14", "Default", WarPartyIdUK)
 	ac.AssignToAB(ab.AirbaseId)

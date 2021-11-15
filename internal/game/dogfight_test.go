@@ -26,19 +26,19 @@ func CreateSetup() DogfightSetup {
 }
 
 func TestDogfightSetup1(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 	dfs := CreateSetup()
 	fmt.Println(dfs)
 }
 
 func TestDeriveSituations(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 	dfs := CreateSetup()
 	fmt.Println(dfs)
 }
 
 func TestDogfight(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 
 	fighter1 := NewAircraft("F14", "Default", WarPartyIdUK)
 	fighter2 := NewAircraft("MiG-29", "Default", WarPartyIdUK)
@@ -56,7 +56,7 @@ func TestDogfight(t *testing.T) {
 }
 
 func TestMoreRounds(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 
 	fighter1 := NewAircraft("F14", "Default", WarPartyIdUK)
 	pl1 := NewPilots(fighter1.GetParameters().Seats, WarPartyIdUK, nato.OF1)
@@ -80,7 +80,7 @@ func TestMoreRounds(t *testing.T) {
 }
 
 func TestDogfightSetup_CreateDogfight(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 
 	b1 := NewAircraft("F14", "Default", WarPartyIdUSA)
 	r1 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
@@ -119,7 +119,7 @@ func TestAircraftIdListRemoval(t *testing.T) {
 }
 
 func TestDogfight_DistributeAircraftsToGroups(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 
 	b1 := NewAircraft("F14", "Default", WarPartyIdUSA)
 	r1 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
@@ -137,7 +137,7 @@ func TestDogfight_DistributeAircraftsToGroups(t *testing.T) {
 }
 
 func TestDogfight_DistributeAircraftsToGroupsMore(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 
 	b1 := NewAircraft("F14", "Default", WarPartyIdUSA)
 	b2 := NewAircraft("F14", "Default", WarPartyIdUSA)
@@ -172,7 +172,7 @@ func TestDogfight_DistributeAircraftsToGroupsMore(t *testing.T) {
 }
 
 func TestDogfight_Execute(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 	b1 := NewAircraft("F14", "Default", WarPartyIdUSA)
 	r1 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
 	ds := NewDogfightSetup()

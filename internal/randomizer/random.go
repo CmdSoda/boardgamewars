@@ -5,8 +5,12 @@ import (
 	"time"
 )
 
-func Init() {
-	rand.Seed(time.Now().UnixNano())
+func Init(seed int64) {
+	if seed == 0 {
+		rand.Seed(time.Now().UnixNano())
+	} else {
+		rand.Seed(seed)
+	}
 }
 
 // Roll1D10 würfel einen 10-seitigen Würfel.

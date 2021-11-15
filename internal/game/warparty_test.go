@@ -9,7 +9,7 @@ import (
 )
 
 func Test(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 	wp := NewWarParty("USA", countrycodes.USA, Blue)
 	ac := NewAircraft("F14", "Default", wp.WarPartyId)
 	pl := NewPilots(ac.GetParameters().Seats, wp.WarPartyId, nato.OF1)
@@ -65,7 +65,7 @@ func TestList(t *testing.T) {
 }
 
 func TestNewWarParty(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 	wp := NewWarParty("NeueParty", countrycodes.USA, Blue)
 	fmt.Println(wp)
 	ab := NewAirbase("Parkhaus", wp.WarPartyId, FloatPosition{1, 1})
@@ -76,6 +76,7 @@ func TestNewWarParty(t *testing.T) {
 }
 
 func TestBlueRed(t *testing.T) {
+	assert.Nil(t, InitGame(0))
 	wp1 := NewWarParty("NeueParty", countrycodes.USA, Blue)
 	wp2 := NewWarParty("NeueParty2", countrycodes.Russia, Red)
 	wp3 := NewWarParty("NeueParty3", countrycodes.Russia, 99)

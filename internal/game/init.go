@@ -57,13 +57,15 @@ func CreateWarParties() {
 	Globals.AllWarParties[WarPartyIdGermany] = wpGermany
 }
 
-func InitGame() error {
+// InitGame initialisiert das Spiel mit dem angegebenen seed. Wird 0 angegeben, wird ein seed basierend auf
+// der Systemzeit benutzt.
+func InitGame(seed int64) error {
 	var err error
 	Globals.AllWarParties = map[WarPartyId]WarParty{}
 	Globals.AllAircrafts = map[AircraftId]Aircraft{}
 	CreateWarParties()
 	Globals.AllAirbases = map[AirbaseId]Airbase{}
-	randomizer.Init()
+	randomizer.Init(seed)
 	if err = LoadAircraftParameters(); err != nil {
 		return err
 	}

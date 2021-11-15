@@ -17,7 +17,7 @@ func TestCounterType_String(t *testing.T) {
 }
 
 func Test2(t *testing.T) {
-	assert.Nil(t, InitGame())
+	assert.Nil(t, InitGame(0))
 	ac := NewAircraft("F14", "Default", WarPartyIdUSA)
 	c := NewCounter(CounterTypeAircraft, ac)
 	assert.Equal(t, "Aircraft", c.Type.String())
