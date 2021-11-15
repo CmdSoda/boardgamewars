@@ -3,6 +3,7 @@ package game
 import (
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -99,4 +100,23 @@ func TestDogfightSetup_CreateDogfight(t *testing.T) {
 
 	d.DistributeAircraftsToGroups()
 
+}
+
+func TestRemoveElementTest(t *testing.T) {
+	il := []int{1, 2, 3, 4, 5, 6, 7}
+	assert.Equal(t, 7, len(il))
+	il = append(il[:len(il)-1])
+	assert.Equal(t, 6, len(il))
+}
+
+func TestAircraftIdListRemoval(t *testing.T) {
+	aid1 := AircraftId(uuid.New())
+	aid2 := AircraftId(uuid.New())
+	aid3 := AircraftId(uuid.New())
+	aidl := AircraftIdList([]AircraftId{aid1, aid2, aid3})
+	id := aidl.RemoveLast()
+	assert.Equal(t, aid3, id)
+	assert.Equal(t, 2, len(aidl))
+	assert.Equal(t, aid1, aidl[0])
+	assert.Equal(t, aid2, aidl[1])
 }

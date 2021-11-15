@@ -49,6 +49,26 @@ type DogfightResult struct {
 	DamageConflicted []DamageType
 }
 
+//goland:noinspection ALL
+func (dr DogfightResult) String() string {
+	var sb strings.Builder
+	fmt.Fprintf(&sb, "%dr.ExecuteDogfight Result: ", dr.Round)
+	fmt.Fprintf(&sb, "%s", dr.Position)
+	if dr.WeaponUsed != nil {
+		fmt.Fprintf(&sb, ", HitWith: %s", dr.WeaponUsed.WeaponSystemName)
+		if len(dr.DamageConflicted) > 0 {
+			fmt.Fprint(&sb, ", DamageConflicted: ")
+			for _, dt := range dr.DamageConflicted {
+				fmt.Fprintf(&sb, "%s, ", dt.String())
+			}
+		} else {
+			fmt.Fprint(&sb, ", no damage")
+		}
+	}
+	fmt.Fprint(&sb, "\n")
+	return sb.String()
+}
+
 // DogfightSetup wird initial für einen Kampf benötigt. Aus diesem struct entsteht dann Dogfight.
 type DogfightSetup struct {
 	TeamBlue AircraftIdList
@@ -70,19 +90,6 @@ func (ds *DogfightSetup) AddBlue(id AircraftId) {
 	ds.TeamBlue = append(ds.TeamBlue, id)
 }
 
-
-// Dogfight wird aus einem DogfightSetup initialisiert. Während des Kampfes werden so viele DogfightGroup erstellt, wie
-// es möglich ist.
-type Dogfight struct {
-	Groups          []DogfightGroup
-	TeamBlueWaiting AircraftIdList
-	TeamRedWaiting  AircraftIdList
-}
-
-func (d *Dogfight) DistributeAircraftsToGroups() {
-
-}
-
 // DogfightGroup wird aus dem struct Dogfight erstellt. Je mehr Flugzeuge in der Dogfight Warteliste sind, desto mehr
 // DogfightGroup-Objekte werden erzeugt.
 type DogfightGroup struct {
@@ -92,24 +99,24 @@ type DogfightGroup struct {
 	RedSupport  *AircraftId // optional
 }
 
-//goland:noinspection ALL
-func (dr DogfightResult) String() string {
-	var sb strings.Builder
-	fmt.Fprintf(&sb, "%dr.ExecuteDogfight Result: ", dr.Round)
-	fmt.Fprintf(&sb, "%s", dr.Position)
-	if dr.WeaponUsed != nil {
-		fmt.Fprintf(&sb, ", HitWith: %s", dr.WeaponUsed.WeaponSystemName)
-		if len(dr.DamageConflicted) > 0 {
-			fmt.Fprint(&sb, ", DamageConflicted: ")
-			for _, dt := range dr.DamageConflicted {
-				fmt.Fprintf(&sb, "%s, ", dt.String())
-			}
-		} else {
-			fmt.Fprint(&sb, ", no damage")
-		}
+// Dogfight wird aus einem DogfightSetup initialisiert. Während des Kampfes werden so viele DogfightGroup erstellt, wie
+// es möglich ist.
+type Dogfight struct {
+	Groups          []DogfightGroup
+	TeamBlueWaiting AircraftIdList
+	TeamRedWaiting  AircraftIdList
+}
+
+func (al *AircraftIdList) RemoveLast() AircraftId {
+	id := (*al)[len(*al)-1]
+	*al = append((*al)[:len(*al)-1])
+	return id
+}
+
+func (d *Dogfight) DistributeAircraftsToGroups() {
+	if len(d.TeamBlueWaiting) > 0 && len(d.TeamRedWaiting) > 0 {
+
 	}
-	fmt.Fprint(&sb, "\n")
-	return sb.String()
 }
 
 func SimulateDogfightPosition(rating1 Rating, lastPosition1 DogfightPosition,
