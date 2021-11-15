@@ -94,9 +94,21 @@ func (ds *DogfightSetup) AddBlue(id AircraftId) {
 // DogfightGroup-Objekte werden erzeugt.
 type DogfightGroup struct {
 	BlueFighter AircraftId
+	BlueFighterLastPosition DogfightPosition
 	BlueSupport *AircraftId // optional
 	RedFighter  AircraftId
+	RedFighterLastPosition DogfightPosition
 	RedSupport  *AircraftId // optional
+}
+
+func NewDogfightGroup(blue AircraftId, red AircraftId) DogfightGroup {
+	dg := DogfightGroup{
+		BlueFighter: blue,
+		RedFighter:  red,
+	}
+	dg.BlueFighterLastPosition = DogfightPositionTossup
+	dg.RedFighterLastPosition = DogfightPositionTossup
+	return dg
 }
 
 type DogfightGroupList []DogfightGroup
@@ -157,10 +169,8 @@ type Dogfight struct {
 	TeamRedWaiting  AircraftIdList
 }
 
-func (al *AircraftIdList) PullFirst() AircraftId {
-	id := (*al)[0]
-	*al = append((*al)[1:])
-	return id
+func (d *Dogfight) Execute() {
+
 }
 
 // DistributeAircraftsToGroups verteilt wartende Aircrafts auf die Gruppen. Liefert true, wenn min. ein
@@ -171,10 +181,7 @@ func (d *Dogfight) DistributeAircraftsToGroups() bool {
 	for len(d.TeamBlueWaiting) > 0 && len(d.TeamRedWaiting) > 0 {
 		b := d.TeamBlueWaiting.PullFirst()
 		r := d.TeamRedWaiting.PullFirst()
-		d.Groups = append(d.Groups, DogfightGroup{
-			BlueFighter: b,
-			RedFighter:  r,
-		})
+		d.Groups = append(d.Groups, NewDogfightGroup(b, r))
 		distributionHappened = true
 	}
 

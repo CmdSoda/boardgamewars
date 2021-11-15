@@ -10,6 +10,12 @@ type AircraftId uuid.UUID
 
 type AircraftIdList []AircraftId
 
+func (al *AircraftIdList) PullFirst() AircraftId {
+	id := (*al)[0]
+	*al = append((*al)[1:])
+	return id
+}
+
 type AircraftsMap map[AircraftId]Aircraft
 
 type Aircraft struct {

@@ -157,7 +157,6 @@ func TestDogfight_DistributeAircraftsToGroupsMore(t *testing.T) {
 	d := ds.CreateDogfight()
 	assert.True(t, d.DistributeAircraftsToGroups())
 	assert.False(t, d.DistributeAircraftsToGroups())
-
 	assert.Equal(t, 1, len(d.TeamBlueWaiting))
 	assert.Equal(t, b5.AircraftId, d.TeamBlueWaiting[0])
 	assert.Equal(t, 0, len(d.TeamRedWaiting))
@@ -170,4 +169,15 @@ func TestDogfight_DistributeAircraftsToGroupsMore(t *testing.T) {
 	assert.Equal(t, b4.AircraftId, *d.Groups[1].BlueSupport)
 	assert.Equal(t, r2.AircraftId, d.Groups[1].RedFighter)
 	assert.Nil(t, d.Groups[1].RedSupport)
+}
+
+func TestDogfight_Execute(t *testing.T) {
+	assert.Nil(t, InitGame())
+	b1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	r1 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
+	ds := NewDogfightSetup()
+	ds.AddBlue(b1.AircraftId)
+	ds.AddRed(r1.AircraftId)
+	d := ds.CreateDogfight()
+	d.Execute()
 }
