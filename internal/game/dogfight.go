@@ -99,29 +99,103 @@ type DogfightGroup struct {
 	RedSupport  *AircraftId // optional
 }
 
+type DogfightGroupList []DogfightGroup
+
+func (dgl DogfightGroupList) BlueHasFreeSupportSlot() bool {
+	for _, group := range dgl {
+		if group.HasBlueSupport() == false {
+			return true
+		}
+	}
+	return false
+}
+
+func (dgl DogfightGroupList) RedHasFreeSupportSlot() bool {
+	for _, group := range dgl {
+		if group.HasRedSupport() == false {
+			return true
+		}
+	}
+	return false
+}
+
+func (dgl *DogfightGroupList) AssignBlueSupport(id AircraftId) bool {
+	for i, group := range *dgl {
+		// Erste gefundene Gruppe mit freiem Support belegen und dann raus hier.
+		if group.HasBlueSupport() == false {
+			(*dgl)[i].BlueSupport = &id
+			return true
+		}
+	}
+	return false
+}
+
+func (dgl *DogfightGroupList) AssignRedSupport(id AircraftId) bool {
+	for _, group := range *dgl {
+		// Erste gefundene Gruppe mit freiem Support belegen und dann raus hier.
+		if group.HasRedSupport() == false {
+			group.RedSupport = &id
+			return true
+		}
+	}
+	return false
+}
+
+func (dg DogfightGroup) HasBlueSupport() bool {
+	return dg.BlueSupport != nil
+}
+
+func (dg DogfightGroup) HasRedSupport() bool {
+	return dg.RedSupport != nil
+}
+
 // Dogfight wird aus einem DogfightSetup initialisiert. Während des Kampfes werden so viele DogfightGroup erstellt, wie
 // es möglich ist.
 type Dogfight struct {
-	Groups          []DogfightGroup
+	Groups          DogfightGroupList
 	TeamBlueWaiting AircraftIdList
 	TeamRedWaiting  AircraftIdList
 }
 
-func (al *AircraftIdList) RemoveLast() AircraftId {
-	id := (*al)[len(*al)-1]
-	*al = append((*al)[:len(*al)-1])
+func (al *AircraftIdList) PullFirst() AircraftId {
+	id := (*al)[0]
+	*al = append((*al)[1:])
 	return id
 }
 
-func (d *Dogfight) DistributeAircraftsToGroups() {
+// DistributeAircraftsToGroups verteilt wartende Aircrafts auf die Gruppen. Liefert true, wenn min. ein
+// Aircraft verteilt werden konnte, sonst false.
+func (d *Dogfight) DistributeAircraftsToGroups() bool {
+	distributionHappened := false
+	// 2er-Gruppen erzeugen
 	for len(d.TeamBlueWaiting) > 0 && len(d.TeamRedWaiting) > 0 {
-		b := d.TeamBlueWaiting.RemoveLast()
-		r := d.TeamRedWaiting.RemoveLast()
+		b := d.TeamBlueWaiting.PullFirst()
+		r := d.TeamRedWaiting.PullFirst()
 		d.Groups = append(d.Groups, DogfightGroup{
 			BlueFighter: b,
 			RedFighter:  r,
 		})
+		distributionHappened = true
 	}
+
+	if len(d.Groups) > 0 {
+		// Vorhandene Gruppen mit restlichen Aircrafts auffüllen.
+		for len(d.TeamBlueWaiting) > 0 && d.Groups.BlueHasFreeSupportSlot() {
+			b := d.TeamBlueWaiting.PullFirst()
+			if d.Groups.AssignBlueSupport(b) == false {
+				panic("error while finding free slot for support")
+			}
+			distributionHappened = true
+		}
+		for len(d.TeamRedWaiting) > 0 && d.Groups.RedHasFreeSupportSlot() {
+			b := d.TeamRedWaiting.PullFirst()
+			if d.Groups.AssignRedSupport(b) == false {
+				panic("error while finding free slot for support")
+			}
+			distributionHappened = true
+		}
+	}
+	return distributionHappened
 }
 
 func SimulateDogfightPosition(rating1 Rating, lastPosition1 DogfightPosition,

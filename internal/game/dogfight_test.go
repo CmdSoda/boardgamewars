@@ -111,11 +111,11 @@ func TestAircraftIdListRemoval(t *testing.T) {
 	aid2 := AircraftId(uuid.New())
 	aid3 := AircraftId(uuid.New())
 	aidl := AircraftIdList([]AircraftId{aid1, aid2, aid3})
-	id := aidl.RemoveLast()
-	assert.Equal(t, aid3, id)
+	id := aidl.PullFirst()
+	assert.Equal(t, aid1, id)
 	assert.Equal(t, 2, len(aidl))
-	assert.Equal(t, aid1, aidl[0])
-	assert.Equal(t, aid2, aidl[1])
+	assert.Equal(t, aid2, aidl[0])
+	assert.Equal(t, aid3, aidl[1])
 }
 
 func TestDogfight_DistributeAircraftsToGroups(t *testing.T) {
@@ -134,4 +134,40 @@ func TestDogfight_DistributeAircraftsToGroups(t *testing.T) {
 	assert.Equal(t, 1, len(d.Groups))
 	assert.Equal(t, b1.AircraftId, d.Groups[0].BlueFighter)
 	assert.Equal(t, r1.AircraftId, d.Groups[0].RedFighter)
+}
+
+func TestDogfight_DistributeAircraftsToGroupsMore(t *testing.T) {
+	assert.Nil(t, InitGame())
+
+	b1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	b2 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	b3 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	b4 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	b5 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	r1 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
+	r2 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
+	ds := NewDogfightSetup()
+	ds.AddBlue(b1.AircraftId)
+	ds.AddBlue(b2.AircraftId)
+	ds.AddBlue(b3.AircraftId)
+	ds.AddBlue(b4.AircraftId)
+	ds.AddBlue(b5.AircraftId)
+	ds.AddRed(r1.AircraftId)
+	ds.AddRed(r2.AircraftId)
+	d := ds.CreateDogfight()
+	assert.True(t, d.DistributeAircraftsToGroups())
+	assert.False(t, d.DistributeAircraftsToGroups())
+
+	assert.Equal(t, 1, len(d.TeamBlueWaiting))
+	assert.Equal(t, b5.AircraftId, d.TeamBlueWaiting[0])
+	assert.Equal(t, 0, len(d.TeamRedWaiting))
+	assert.Equal(t, 2, len(d.Groups))
+	assert.Equal(t, b1.AircraftId, d.Groups[0].BlueFighter)
+	assert.Equal(t, b3.AircraftId, *d.Groups[0].BlueSupport)
+	assert.Equal(t, r1.AircraftId, d.Groups[0].RedFighter)
+	assert.Nil(t, d.Groups[0].RedSupport)
+	assert.Equal(t, b2.AircraftId, d.Groups[1].BlueFighter)
+	assert.Equal(t, b4.AircraftId, *d.Groups[1].BlueSupport)
+	assert.Equal(t, r2.AircraftId, d.Groups[1].RedFighter)
+	assert.Nil(t, d.Groups[1].RedSupport)
 }
