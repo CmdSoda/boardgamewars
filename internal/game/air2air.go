@@ -2,6 +2,7 @@ package game
 
 import (
 	"encoding/json"
+	"github.com/CmdSoda/boardgamewars/internal/logging"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"github.com/google/uuid"
 	"io/ioutil"
@@ -24,25 +25,29 @@ type Air2AirWeaponLibrary []Air2AirWeaponParameters
 
 func LoadAir2AirWeapons() error {
 	var err error
-	file, err := os.Open("data/air2air.json")
+	filename := Globals.Configuration.DataPath + "/air2air.json"
+	file, err := os.Open(filename)
 	if err != nil {
+		logging.Log.Errorf("%s not found\n", filename)
 		return err
 	}
 	bytes, err := ioutil.ReadAll(file)
 	if err != nil {
+		logging.Log.Errorf("%s while reading\n", filename)
 		return err
 	}
 	a2al := Air2AirWeaponLibrary{}
 	err = json.Unmarshal(bytes, &a2al)
 	if err != nil {
+		logging.Log.Errorf("%s while unmarshaling\n", filename)
 		return err
 	}
-	Globals.Air2AirWeaponLibrary = a2al
+	Globals.Air2AirWeapons = a2al
 	return nil
 }
 
 func GetAir2AirWeaponParametersFromName(name string) (Air2AirWeaponParameters, bool) {
-	for _, parameters := range Globals.Air2AirWeaponLibrary {
+	for _, parameters := range Globals.Air2AirWeapons {
 		if parameters.Name == name {
 			return parameters, true
 		}

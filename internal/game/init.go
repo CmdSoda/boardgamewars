@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
+	"github.com/CmdSoda/boardgamewars/internal/logging"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"github.com/google/uuid"
 )
@@ -61,6 +62,11 @@ func CreateWarParties() {
 // der Systemzeit benutzt.
 func InitGame(seed int64) error {
 	var err error
+	logging.InitLogger()
+	logging.Log.Info("game engine is starting...\n")
+	if Globals.Configuration, err = LoadConfig("config.json"); err != nil {
+		return err
+	}
 	Globals.AllWarParties = map[WarPartyId]WarParty{}
 	Globals.AllAircrafts = map[AircraftId]Aircraft{}
 	CreateWarParties()

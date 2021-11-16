@@ -2,6 +2,7 @@ package game
 
 import (
 	"encoding/json"
+	"github.com/CmdSoda/boardgamewars/internal/logging"
 	"github.com/google/uuid"
 	"io/ioutil"
 	"os"
@@ -39,17 +40,21 @@ type AircraftLibraryFile []AircraftParameters
 
 func LoadAircraftParameters() error {
 	var err error
-	file, err := os.Open("data/aircraftparameters.json")
+	filename := Globals.Configuration.DataPath + "/aircraftparameters.json"
+	file, err := os.Open(filename)
 	if err != nil {
+		logging.Log.Errorf("%s not found\n", filename)
 		return err
 	}
 	bytes, err := ioutil.ReadAll(file)
 	if err != nil {
+		logging.Log.Errorf("%s while reading\n", filename)
 		return err
 	}
 	al := AircraftLibraryFile{}
 	err = json.Unmarshal(bytes, &al)
 	if err != nil {
+		logging.Log.Errorf("%s while unmarshaling\n", filename)
 		return err
 	}
 	Globals.AllAircraftParameters = AircraftParametersMap{}
