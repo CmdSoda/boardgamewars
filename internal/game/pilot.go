@@ -64,6 +64,10 @@ func (p Pilot) String() string {
 		p.Background.HomeAirBase)
 }
 
+func (p Pilot) Short() string {
+	return p.Name
+}
+
 // RollAge
 // https://www.operationmilitarykids.org/air-force-age-limits/
 func RollAge(ofc nato.Code) int {
@@ -120,6 +124,7 @@ func NewPilot(warpartyid WarPartyId, ofc nato.Code) PilotId {
 
 	m := append(Globals.AllWarParties[warpartyid].Pilots, np.PilotId)
 	wp.Pilots = m
+	Log.Infof("new pilot created: %s", np.Short())
 	return np.PilotId
 }
 

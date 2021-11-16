@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/game"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
 )
@@ -9,7 +8,7 @@ import (
 func main() {
 	err := game.InitGame(0)
 	if err != nil {
-		panic("Could not init game")
+		panic("Could not init game: " + err.Error())
 		return
 	}
 	ds := game.NewDogfightSetup()
@@ -17,11 +16,13 @@ func main() {
 		b := game.NewAircraft("F14", "Default", game.WarPartyIdUSA)
 		bpl := game.NewPilots(2, game.WarPartyIdUSA, nato.OF1)
 		b.FillSeatsWith(bpl)
-		fmt.Println(b)
 		ds.AddBlue(b.AircraftId)
 		r := game.NewAircraft("F14", "Default", game.WarPartyIdRussia)
 		rpl := game.NewPilots(2, game.WarPartyIdRussia, nato.OF1)
 		r.FillSeatsWith(rpl)
 		ds.AddRed(r.AircraftId)
 	}
+	d := ds.CreateDogfight()
+	d.DistributeAircraftsToGroups()
+	d.Simulate()
 }

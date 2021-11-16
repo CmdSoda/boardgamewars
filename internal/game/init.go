@@ -2,9 +2,9 @@ package game
 
 import (
 	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
-	"github.com/CmdSoda/boardgamewars/internal/logging"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
 )
 
 var WarPartyIdUSA = WarPartyId(uuid.MustParse("92432884-3974-11ec-8d3d-0242ac130003"))
@@ -62,8 +62,8 @@ func CreateWarParties() {
 // der Systemzeit benutzt.
 func InitGame(seed int64) error {
 	var err error
-	logging.InitLogger()
-	logging.Log.Info("game engine is starting...\n")
+	Log = logrus.New()
+	Log.Info("game engine is starting...\n")
 	if Globals.Configuration, err = LoadConfig("config.json"); err != nil {
 		return err
 	}

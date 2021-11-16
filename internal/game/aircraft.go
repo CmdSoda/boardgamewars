@@ -85,6 +85,7 @@ func NewAircraft(name string, configurationName string, warpartyid WarPartyId) A
 		}
 		ac.Damage = make([]DamageType, 0)
 		Globals.AllAircrafts[ac.AircraftId] = ac
+		Log.Infof("new aircraft created: %s (%d)", name, ac.ShortId)
 		return ac
 	}
 	return ac
@@ -167,4 +168,5 @@ func (a *Aircraft) FillSeatsWith(pl []PilotId) {
 	for _, pilotid := range pl {
 		a.Pilots = append(a.Pilots, pilotid)
 	}
+
 }

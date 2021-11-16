@@ -127,15 +127,10 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 		if exist {
 			ac1.DepleteWeapon(bestws)
 			if bestws.Hit(dg.RedFighterId, dfa1Pos) {
-				fmt.Printf("AC%d hits AC%d\n", ac1.ShortId, ac2.ShortId)
 				dfr1.Hit = true
 				dt := ac2.DoDamageWith(bestws)
 				dfr1.DamageConflictedToEnemy = append(dfr1.DamageConflictedToEnemy, dt)
-			} else {
-				fmt.Print("not hit\n")
 			}
-		} else {
-			fmt.Print("not exist\n")
 		}
 	} else if -dfa1Pos >= DogfightPositionBehindEnemiesTail {
 		bestws, exist := ac2.GetBestDogfightingWeapon()
@@ -143,15 +138,10 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 		if exist {
 			ac2.DepleteWeapon(bestws)
 			if bestws.Hit(dg.BlueFighterId, -dfa1Pos) {
-				fmt.Printf("AC%d hits AC%d\n", ac2.ShortId, ac1.ShortId)
 				dfr2.Hit = true
 				dt := ac1.DoDamageWith(bestws)
 				dfr2.DamageConflictedToEnemy = append(dfr2.DamageConflictedToEnemy, dt)
-			} else {
-				fmt.Print("not hit\n")
 			}
-		} else {
-			fmt.Print("not exist\n")
 		}
 	}
 	return dfr1, dfr2
@@ -226,6 +216,7 @@ type Dogfight struct {
 }
 
 func (d *Dogfight) Simulate() {
+	Log.Infof("starting a dogfight simulation with %d groups", len(d.Groups))
 	for i, _ := range d.Groups {
 		blueResult, redResult := d.Groups[i].Simulate()
 		d.Groups[i].BlueFighterLastPosition = blueResult.Position
@@ -236,14 +227,20 @@ func (d *Dogfight) Simulate() {
 // DistributeAircraftsToGroups verteilt wartende Aircrafts auf die Gruppen. Liefert true, wenn min. ein
 // Aircraft verteilt werden konnte, sonst false.
 func (d *Dogfight) DistributeAircraftsToGroups() bool {
+	groupsAdded := 0
+	aircraftsCount := len(d.TeamBlueWaiting) + len(d.TeamRedWaiting)
 	distributionHappened := false
 	// 2er-Gruppen erzeugen
 	for len(d.TeamBlueWaiting) > 0 && len(d.TeamRedWaiting) > 0 {
 		b := d.TeamBlueWaiting.PullFirst()
 		r := d.TeamRedWaiting.PullFirst()
 		d.Groups = append(d.Groups, NewDogfightGroup(b, r))
+		groupsAdded = groupsAdded + 1
 		distributionHappened = true
 	}
+
+	Log.Infof("distributed %d aircrafts to %d new dogfight groups",
+		aircraftsCount, groupsAdded)
 
 	if len(d.Groups) > 0 {
 		// Vorhandene Gruppen mit restlichen Aircrafts auffüllen.
