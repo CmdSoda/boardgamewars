@@ -29,7 +29,7 @@ func TestLoadAir2AirLibrary(t *testing.T) {
 	var file *os.File
 	var bytes []byte
 
-	file, err = os.Open("data/air2air.json")
+	file, err = os.Open("../../data/air2air.json")
 	if err != nil {
 		t.FailNow()
 	}
