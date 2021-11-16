@@ -1,3 +1,4 @@
 {
-  "DataPath": "../../data"
+  "DataPath": "../../data",
+  "LogLevel": "info"
 }

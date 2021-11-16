@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	DataPath string
+	LogLevel string
 }
 
 func LoadConfig(filename string) (Config, error) {

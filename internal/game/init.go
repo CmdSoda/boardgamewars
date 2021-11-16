@@ -62,11 +62,17 @@ func CreateWarParties() {
 // der Systemzeit benutzt.
 func InitGame(seed int64) error {
 	var err error
+	var lvl logrus.Level
 	Log = logrus.New()
-	Log.Info("game engine is starting...\n")
 	if Globals.Configuration, err = LoadConfig("config.json"); err != nil {
 		return err
 	}
+	lvl, err = logrus.ParseLevel(Globals.Configuration.LogLevel)
+	if err != nil {
+		Log.Panicf("error while parsing log level: %s", err.Error())
+	}
+	Log.SetLevel(lvl)
+	Log.Info("game engine is starting...\n")
 	Globals.AllWarParties = map[WarPartyId]WarParty{}
 	Globals.AllAircrafts = map[AircraftId]Aircraft{}
 	CreateWarParties()
