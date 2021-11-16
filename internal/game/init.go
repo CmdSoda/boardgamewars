@@ -69,7 +69,7 @@ func InitGame(seed int64) error {
 	}
 	lvl, err = logrus.ParseLevel(Globals.Configuration.LogLevel)
 	if err != nil {
-		Log.Panicf("error while parsing log level: %s", err.Error())
+		Log.Errorf("error while parsing log level: %s", err.Error())
 	}
 	Log.SetLevel(lvl)
 	Log.Info("game engine is starting...\n")

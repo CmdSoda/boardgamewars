@@ -56,7 +56,7 @@ func (a Aircraft) String() string {
 
 func (a *Aircraft) AddPilot(id PilotId) {
 	if len(a.Pilots) >= a.GetParameters().Seats {
-		panic("too many pilots in aircraft")
+		Log.Errorf("too many pilots in aircraft %d", a.ShortId)
 	}
 	a.Pilots = append(a.Pilots, id)
 }
@@ -97,7 +97,7 @@ func GetAircraftParametersIdByName(name string) (AircraftParametersId, bool) {
 			return parameters.Id, true
 		}
 	}
-	panic("unkown aircraft name: " + name)
+	Log.Errorf("unkown aircraft name: %s", name)
 	return InvalidAircraftParametersId, false
 }
 
