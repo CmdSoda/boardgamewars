@@ -227,7 +227,7 @@ func (dg DogfightGroup) String() string {
 	}
 	rid := strconv.Itoa(int(Globals.AllAircrafts[dg.RedFighterId].ShortId))
 	rsid := "<empty>"
-	if dg.BlueSupportId != nil {
+	if dg.RedSupportId != nil {
 		rsid = strconv.Itoa(int(Globals.AllAircrafts[*dg.RedSupportId].ShortId))
 	}
 	return fmt.Sprintf("Dogfight: Blue=%s (alive=%t) BlueSupport=%s, Red=%s (alive=%t) RedSupport=%s",
@@ -307,7 +307,7 @@ func (d *Dogfight) DistributeAircraftsToGroups() bool {
 			// Das gleiche auch für Red
 			if Globals.AllAircrafts[d.Groups[i].RedFighterId].Destroyed && d.Groups[i].RedSupportId == nil {
 				if Globals.AllAircrafts[d.Groups[i].BlueFighterId].Destroyed == false {
-					d.TeamRedWaiting = append(d.TeamBlueWaiting, d.Groups[i].BlueFighterId)
+					d.TeamBlueWaiting = append(d.TeamBlueWaiting, d.Groups[i].BlueFighterId)
 					// Gruppe i löschen
 					d.Groups = append(d.Groups[:i], d.Groups[i+1:]...)
 					// Wir haben ein Element gelöscht und müssen die for-Schleife von vorn starten, sonst

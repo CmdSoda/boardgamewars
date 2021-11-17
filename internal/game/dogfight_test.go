@@ -183,10 +183,17 @@ func TestDistributeReshuffle(t *testing.T) {
 
 	d := NewDogfight(ds)
 	d.DistributeAircraftsToGroups()
+	assert.Equal(t, 3, len(d.Groups))
+	assert.Equal(t, 0, len(d.TeamRedWaiting))
+	assert.Equal(t, 0, len(d.TeamBlueWaiting))
 	fmt.Println(d.String())
+
 	Globals.AllAircrafts[r1.AircraftId].Destroyed = true
 	d.DistributeAircraftsToGroups()
 	fmt.Println(d.String())
 	assert.Equal(t, 2, len(d.Groups))
-	
+	assert.Equal(t, 0, len(d.TeamRedWaiting))
+	assert.Equal(t, 0, len(d.TeamBlueWaiting))
+
+
 }
