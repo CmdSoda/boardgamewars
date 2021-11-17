@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -50,7 +51,7 @@ func TestDogfightSetup_CreateDogfight(t *testing.T) {
 	assert.Equal(t, b1.AircraftId, ds.TeamBlue[0])
 	assert.Equal(t, r1.AircraftId, ds.TeamRed[0])
 
-	d := ds.CreateDogfight()
+	d := NewDogfight(ds)
 
 	assert.Equal(t, 0, len(d.Groups))
 	assert.Equal(t, b1.AircraftId, d.TeamBlueWaiting[0])
@@ -84,7 +85,7 @@ func TestDogfight_DistributeAircraftsToGroups(t *testing.T) {
 	ds := NewDogfightSetup()
 	ds.AddBlue(b1.AircraftId)
 	ds.AddRed(r1.AircraftId)
-	d := ds.CreateDogfight()
+	d := NewDogfight(ds)
 	d.DistributeAircraftsToGroups()
 
 	assert.Equal(t, 0, len(d.TeamBlueWaiting))
@@ -112,7 +113,7 @@ func TestDogfight_DistributeAircraftsToGroupsMore(t *testing.T) {
 	ds.AddBlue(b5.AircraftId)
 	ds.AddRed(r1.AircraftId)
 	ds.AddRed(r2.AircraftId)
-	d := ds.CreateDogfight()
+	d := NewDogfight(ds)
 	assert.True(t, d.DistributeAircraftsToGroups())
 	assert.False(t, d.DistributeAircraftsToGroups())
 	assert.Equal(t, 1, len(d.TeamBlueWaiting))
@@ -142,9 +143,50 @@ func TestDogfight_Simulate(t *testing.T) {
 		r.FillSeatsWith(rpl)
 		ds.AddRed(r.AircraftId)
 	}
-	d := ds.CreateDogfight()
+	d := NewDogfight(ds)
 	assert.True(t, d.DistributeAircraftsToGroups())
 	for round := 0; round < 10; round++ {
 		d.Simulate()
 	}
+}
+
+func TestDistributeReshuffle(t *testing.T) {
+	assert.Nil(t, InitGameWithLogLevel(0, logrus.ErrorLevel))
+	Log.SetLevel(logrus.ErrorLevel)
+	ds := NewDogfightSetup()
+
+	b1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	bpl1 := NewPilots(2, WarPartyIdUSA, nato.OF1)
+	b1.FillSeatsWith(bpl1)
+	ds.AddBlue(b1.AircraftId)
+	b2 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	bpl2 := NewPilots(2, WarPartyIdUSA, nato.OF1)
+	b2.FillSeatsWith(bpl2)
+	ds.AddBlue(b2.AircraftId)
+	b3 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	bpl3 := NewPilots(2, WarPartyIdUSA, nato.OF1)
+	b3.FillSeatsWith(bpl3)
+	ds.AddBlue(b3.AircraftId)
+
+	r1 := NewAircraft("F14", "Default", WarPartyIdRussia)
+	rpl1 := NewPilots(2, WarPartyIdRussia, nato.OF1)
+	r1.FillSeatsWith(rpl1)
+	ds.AddRed(r1.AircraftId)
+	r2 := NewAircraft("F14", "Default", WarPartyIdRussia)
+	rpl2 := NewPilots(2, WarPartyIdRussia, nato.OF1)
+	r2.FillSeatsWith(rpl2)
+	ds.AddRed(r2.AircraftId)
+	r3 := NewAircraft("F14", "Default", WarPartyIdRussia)
+	rpl3 := NewPilots(2, WarPartyIdRussia, nato.OF1)
+	r3.FillSeatsWith(rpl3)
+	ds.AddRed(r3.AircraftId)
+
+	d := NewDogfight(ds)
+	d.DistributeAircraftsToGroups()
+	fmt.Println(d.String())
+	Globals.AllAircrafts[r1.AircraftId].Destroyed = true
+	d.DistributeAircraftsToGroups()
+	fmt.Println(d.String())
+	assert.Equal(t, 2, len(d.Groups))
+	
 }

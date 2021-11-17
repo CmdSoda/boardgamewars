@@ -16,7 +16,7 @@ func (al *AircraftIdList) PullFirst() AircraftId {
 	return id
 }
 
-type AircraftsMap map[AircraftId]Aircraft
+type AircraftsMap map[AircraftId]*Aircraft
 
 type ShortId int
 var currentShortId ShortId = 0
@@ -84,7 +84,7 @@ func NewAircraft(name string, configurationName string, warpartyid WarPartyId) A
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
 		ac.Damage = make([]DamageType, 0)
-		Globals.AllAircrafts[ac.AircraftId] = ac
+		Globals.AllAircrafts[ac.AircraftId] = &ac
 		Log.Infof("new aircraft created: %s (%d)", name, ac.ShortId)
 		return ac
 	}

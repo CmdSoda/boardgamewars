@@ -58,23 +58,19 @@ func CreateWarParties() {
 	Globals.AllWarParties[WarPartyIdGermany] = wpGermany
 }
 
-// InitGame initialisiert das Spiel mit dem angegebenen seed. Wird 0 angegeben, wird ein seed basierend auf
-// der Systemzeit benutzt.
-func InitGame(seed int64) error {
+func loadconfig() error {
 	var err error
-	var lvl logrus.Level
-	Log = logrus.New()
 	if Globals.Configuration, err = LoadConfig("config.json"); err != nil {
 		return err
 	}
-	lvl, err = logrus.ParseLevel(Globals.Configuration.LogLevel)
-	if err != nil {
-		Log.Errorf("error while parsing log level: %s", err.Error())
-	}
-	Log.SetLevel(lvl)
+	return nil
+}
+
+func initgame(seed int64) error {
+	var err error
 	Log.Info("game engine is starting...\n")
 	Globals.AllWarParties = map[WarPartyId]WarParty{}
-	Globals.AllAircrafts = map[AircraftId]Aircraft{}
+	Globals.AllAircrafts = map[AircraftId]*Aircraft{}
 	CreateWarParties()
 	Globals.AllAirbases = map[AirbaseId]Airbase{}
 	randomizer.Init(seed)
@@ -85,4 +81,30 @@ func InitGame(seed int64) error {
 		return err
 	}
 	return nil
+}
+
+// InitGame initialisiert das Spiel mit dem angegebenen seed. Wird 0 angegeben, wird ein seed basierend auf
+// der Systemzeit benutzt.
+func InitGame(seed int64) error {
+	var err error
+	var lvl logrus.Level
+	Log = logrus.New()
+	if err = loadconfig(); err != nil {
+		return err
+	}
+	lvl, err = logrus.ParseLevel(Globals.Configuration.LogLevel)
+	if err != nil {
+		Log.Errorf("error while parsing log level: %s", err.Error())
+	}
+	Log.SetLevel(lvl)
+	return initgame(seed)
+}
+
+func InitGameWithLogLevel(seed int64, level logrus.Level) error {
+	Log = logrus.New()
+	Log.SetLevel(level)
+	if err := loadconfig(); err != nil {
+		return err
+	}
+	return initgame(seed)
 }

@@ -3,6 +3,7 @@ package game
 import (
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
+	"strconv"
 	"strings"
 )
 
@@ -147,6 +148,17 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 	return dfr1, dfr2
 }
 
+// HasAircraftsOnBothSides liefert true, solange Aircrafts auf beiden Seiten der WarPartys vorhanden sind.
+func (dg DogfightGroup) HasAircraftsOnBothSides() bool {
+	b := Globals.AllAircrafts[dg.BlueFighterId]
+	bAvailable := b.Destroyed == false
+	bsAvailable := dg.BlueSupportId != nil
+	r := Globals.AllAircrafts[dg.RedFighterId]
+	rAvailable := r.Destroyed == false
+	rsAvailable := dg.RedSupportId != nil
+	return bAvailable || bsAvailable && rAvailable || rsAvailable
+}
+
 func NewDogfightGroup(blue AircraftId, red AircraftId) DogfightGroup {
 	dg := DogfightGroup{
 		BlueFighterId: blue,
@@ -207,12 +219,43 @@ func (dg DogfightGroup) HasRedSupport() bool {
 	return dg.RedSupportId != nil
 }
 
+func (dg DogfightGroup) String() string {
+	bid := strconv.Itoa(int(Globals.AllAircrafts[dg.BlueFighterId].ShortId))
+	bsid := "<empty>"
+	if dg.BlueSupportId != nil {
+		bsid = strconv.Itoa(int(Globals.AllAircrafts[*dg.BlueSupportId].ShortId))
+	}
+	rid := strconv.Itoa(int(Globals.AllAircrafts[dg.RedFighterId].ShortId))
+	rsid := "<empty>"
+	if dg.BlueSupportId != nil {
+		rsid = strconv.Itoa(int(Globals.AllAircrafts[*dg.RedSupportId].ShortId))
+	}
+	return fmt.Sprintf("Dogfight: Blue=%s (alive=%t) BlueSupport=%s, Red=%s (alive=%t) RedSupport=%s",
+		bid, !Globals.AllAircrafts[dg.BlueFighterId].Destroyed, bsid,
+		rid, !Globals.AllAircrafts[dg.RedFighterId].Destroyed, rsid)
+}
+
 // Dogfight wird aus einem DogfightSetup initialisiert. Während des Kampfes werden so viele DogfightGroup erstellt, wie
 // es möglich ist.
 type Dogfight struct {
 	Groups          DogfightGroupList
 	TeamBlueWaiting AircraftIdList
 	TeamRedWaiting  AircraftIdList
+}
+
+func (d Dogfight) String() string {
+	var b strings.Builder
+	fmt.Fprintf(&b, "Groups: len=%d ", len(d.Groups))
+	if len(d.Groups) == 0 {
+		fmt.Fprint(&b, "<empty>\n")
+		return b.String()
+	} else {
+		fmt.Fprintf(&b, "\n")
+		for _, group := range d.Groups {
+			fmt.Fprintf(&b, "%s\n", group.String())
+		}
+	}
+	return b.String()
 }
 
 func (d *Dogfight) Simulate() {
@@ -230,6 +273,52 @@ func (d *Dogfight) DistributeAircraftsToGroups() bool {
 	groupsAdded := 0
 	aircraftsCount := len(d.TeamBlueWaiting) + len(d.TeamRedWaiting)
 	distributionHappened := false
+
+	restart := true
+
+	for restart {
+		restart = false
+		// Vorhandene Gruppen aufräumen
+		for i, _ := range d.Groups {
+			// Wenn BlueFighter zerstört wurde, muss er durch den Support ersetzt werden.
+			if Globals.AllAircrafts[d.Groups[i].BlueFighterId].Destroyed && d.Groups[i].BlueSupportId != nil {
+				d.Groups[i].BlueFighterId = *d.Groups[i].BlueSupportId
+				d.Groups[i].BlueSupportId = nil
+			}
+			// Das gleiche gilt für Red
+			if Globals.AllAircrafts[d.Groups[i].RedFighterId].Destroyed && d.Groups[i].RedSupportId != nil {
+				d.Groups[i].RedFighterId = *d.Groups[i].RedSupportId
+				d.Groups[i].RedSupportId = nil
+			}
+
+			// Sollte Blue komplett ausgelöscht werden sein, wird Red wieder in die Warteliste getragen und
+			// ist bereit für andere Dogfights.
+			if Globals.AllAircrafts[d.Groups[i].BlueFighterId].Destroyed && d.Groups[i].BlueSupportId == nil {
+				if Globals.AllAircrafts[d.Groups[i].RedFighterId].Destroyed == false {
+					d.TeamRedWaiting = append(d.TeamRedWaiting, d.Groups[i].RedFighterId)
+					// Gruppe i löschen
+					d.Groups = append(d.Groups[:i], d.Groups[i+1:]...)
+					// Wir haben ein Element gelöscht und müssen die for-Schleife von vorn starten, sonst
+					// gibt es einen Index-Fehler
+					restart = true
+					break
+				}
+			}
+			// Das gleiche auch für Red
+			if Globals.AllAircrafts[d.Groups[i].RedFighterId].Destroyed && d.Groups[i].RedSupportId == nil {
+				if Globals.AllAircrafts[d.Groups[i].BlueFighterId].Destroyed == false {
+					d.TeamRedWaiting = append(d.TeamBlueWaiting, d.Groups[i].BlueFighterId)
+					// Gruppe i löschen
+					d.Groups = append(d.Groups[:i], d.Groups[i+1:]...)
+					// Wir haben ein Element gelöscht und müssen die for-Schleife von vorn starten, sonst
+					// gibt es einen Index-Fehler
+					restart = true
+					break
+				}
+			}
+		}
+	}
+
 	// 2er-Gruppen erzeugen
 	for len(d.TeamBlueWaiting) > 0 && len(d.TeamRedWaiting) > 0 {
 		b := d.TeamBlueWaiting.PullFirst()
@@ -296,7 +385,7 @@ func SimulateDogfightPosition(rating1 Rating, lastPosition1 DogfightPosition,
 	return DogfightPositionTossup
 }
 
-func (ds DogfightSetup) CreateDogfight() Dogfight {
+func NewDogfight(ds DogfightSetup) Dogfight {
 	d := Dogfight{}
 	d.Groups = []DogfightGroup{}
 	d.TeamRedWaiting = make(AircraftIdList, len(ds.TeamRed))
