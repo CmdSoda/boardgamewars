@@ -18,8 +18,7 @@ func (al *AircraftIdList) PullFirst() AircraftId {
 
 type AircraftsMap map[AircraftId]*Aircraft
 
-type ShortId int
-var currentShortId ShortId = 0
+var currentAircraftShortId ShortId = 0
 
 type Aircraft struct {
 	AircraftId
@@ -72,8 +71,8 @@ func (a *Aircraft) AssignToAB(id AirbaseId) bool {
 
 func NewAircraft(name string, configurationName string, warpartyid WarPartyId) Aircraft {
 	ac := Aircraft{}
-	ac.ShortId = currentShortId
-	currentShortId = currentShortId + 1
+	ac.ShortId = currentAircraftShortId
+	currentAircraftShortId = currentAircraftShortId + 1
 	acpid, exist := GetAircraftParametersIdByName(name)
 	if exist {
 		ac.AircraftId = AircraftId(uuid.New())
@@ -169,4 +168,9 @@ func (a *Aircraft) FillSeatsWith(pl []PilotId) {
 		a.Pilots = append(a.Pilots, pilotid)
 	}
 
+}
+
+func (a *Aircraft) Destroy() {
+	Log.Infof("AC%d destroyed", a.ShortId)
+	a.Destroyed = true
 }

@@ -43,9 +43,9 @@ func (dp DogfightPosition) String() string {
 // DogfightResult wird nach einem Dogfight zurückgegeben und beinhaltet die Schäden, die an einem Flugzeug verursacht
 // wurden.
 type DogfightResult struct {
-	Round            int
-	Position         DogfightPosition
-	WeaponUsed       *WeaponSystem
+	Round                   int
+	Position                DogfightPosition
+	WeaponUsed              *WeaponSystem
 	Hit                     bool
 	DamageConflictedToEnemy []DamageType
 }
@@ -91,9 +91,12 @@ func (ds *DogfightSetup) AddBlue(id AircraftId) {
 	ds.TeamBlue = append(ds.TeamBlue, id)
 }
 
+var currentDogfightGroupShortId ShortId = 0
+
 // DogfightGroup wird aus dem struct Dogfight erstellt. Je mehr Flugzeuge in der Dogfight Warteliste sind, desto mehr
 // DogfightGroup-Objekte werden erzeugt.
 type DogfightGroup struct {
+	ShortId                 ShortId
 	BlueFighterId           AircraftId
 	BlueFighterLastPosition DogfightPosition
 	BlueSupportId           *AircraftId // optional
@@ -166,6 +169,8 @@ func NewDogfightGroup(blue AircraftId, red AircraftId) DogfightGroup {
 	}
 	dg.BlueFighterLastPosition = DogfightPositionTossup
 	dg.RedFighterLastPosition = DogfightPositionTossup
+	dg.ShortId = currentDogfightGroupShortId
+	currentDogfightGroupShortId = currentDogfightGroupShortId + 1
 	return dg
 }
 
@@ -194,6 +199,8 @@ func (dgl *DogfightGroupList) AssignBlueSupport(id AircraftId) bool {
 		// Erste gefundene Gruppe mit freiem Support belegen und dann raus hier.
 		if group.HasBlueSupport() == false {
 			(*dgl)[i].BlueSupportId = &id
+			Log.Infof("distribute: blue AC%d assigned to group DG%d",
+				Globals.AllAircrafts[id].ShortId, group.ShortId)
 			return true
 		}
 	}
@@ -201,10 +208,12 @@ func (dgl *DogfightGroupList) AssignBlueSupport(id AircraftId) bool {
 }
 
 func (dgl *DogfightGroupList) AssignRedSupport(id AircraftId) bool {
-	for _, group := range *dgl {
+	for i, group := range *dgl {
 		// Erste gefundene Gruppe mit freiem Support belegen und dann raus hier.
 		if group.HasRedSupport() == false {
-			group.RedSupportId = &id
+			(*dgl)[i].RedSupportId = &id
+			Log.Infof("distribute: red AC%d assigned to group DG%d",
+				Globals.AllAircrafts[id].ShortId, group.ShortId)
 			return true
 		}
 	}
@@ -230,7 +239,8 @@ func (dg DogfightGroup) String() string {
 	if dg.RedSupportId != nil {
 		rsid = strconv.Itoa(int(Globals.AllAircrafts[*dg.RedSupportId].ShortId))
 	}
-	return fmt.Sprintf("Dogfight: Blue=%s (alive=%t) BlueSupport=%s, Red=%s (alive=%t) RedSupport=%s",
+	return fmt.Sprintf("DogfightGroup(DG%d): Blue=AC%s (alive=%t) BlueSupport=AC%s, Red=AC%s (alive=%t) RedSupport=AC%s",
+		dg.ShortId,
 		bid, !Globals.AllAircrafts[dg.BlueFighterId].Destroyed, bsid,
 		rid, !Globals.AllAircrafts[dg.RedFighterId].Destroyed, rsid)
 }
@@ -272,6 +282,7 @@ func (d *Dogfight) Simulate() {
 func (d *Dogfight) DistributeAircraftsToGroups() bool {
 	groupsAdded := 0
 	aircraftsCount := len(d.TeamBlueWaiting) + len(d.TeamRedWaiting)
+	sendToWaitCount := 0
 	distributionHappened := false
 
 	restart := true
@@ -284,11 +295,15 @@ func (d *Dogfight) DistributeAircraftsToGroups() bool {
 			if Globals.AllAircrafts[d.Groups[i].BlueFighterId].Destroyed && d.Groups[i].BlueSupportId != nil {
 				d.Groups[i].BlueFighterId = *d.Groups[i].BlueSupportId
 				d.Groups[i].BlueSupportId = nil
+				Log.Infof("distribute: blue support AC%d is now lead in the group",
+					Globals.AllAircrafts[d.Groups[i].BlueFighterId].ShortId)
 			}
 			// Das gleiche gilt für Red
 			if Globals.AllAircrafts[d.Groups[i].RedFighterId].Destroyed && d.Groups[i].RedSupportId != nil {
 				d.Groups[i].RedFighterId = *d.Groups[i].RedSupportId
 				d.Groups[i].RedSupportId = nil
+				Log.Infof("distribute: red support AC%d is now lead in the group",
+					Globals.AllAircrafts[d.Groups[i].RedFighterId].ShortId)
 			}
 
 			// Sollte Blue komplett ausgelöscht werden sein, wird Red wieder in die Warteliste getragen und
@@ -296,7 +311,11 @@ func (d *Dogfight) DistributeAircraftsToGroups() bool {
 			if Globals.AllAircrafts[d.Groups[i].BlueFighterId].Destroyed && d.Groups[i].BlueSupportId == nil {
 				if Globals.AllAircrafts[d.Groups[i].RedFighterId].Destroyed == false {
 					d.TeamRedWaiting = append(d.TeamRedWaiting, d.Groups[i].RedFighterId)
+					Log.Infof("distribute: red AC%d send to waiting queue",
+						Globals.AllAircrafts[d.Groups[i].RedFighterId].ShortId)
+					sendToWaitCount = sendToWaitCount + 1
 					// Gruppe i löschen
+					Log.Infof("distribute: removing DG%d", d.Groups[i].ShortId)
 					d.Groups = append(d.Groups[:i], d.Groups[i+1:]...)
 					// Wir haben ein Element gelöscht und müssen die for-Schleife von vorn starten, sonst
 					// gibt es einen Index-Fehler
@@ -308,7 +327,11 @@ func (d *Dogfight) DistributeAircraftsToGroups() bool {
 			if Globals.AllAircrafts[d.Groups[i].RedFighterId].Destroyed && d.Groups[i].RedSupportId == nil {
 				if Globals.AllAircrafts[d.Groups[i].BlueFighterId].Destroyed == false {
 					d.TeamBlueWaiting = append(d.TeamBlueWaiting, d.Groups[i].BlueFighterId)
+					Log.Infof("distribute: blue AC%d send to waiting queue",
+						Globals.AllAircrafts[d.Groups[i].BlueFighterId].ShortId)
+					sendToWaitCount = sendToWaitCount + 1
 					// Gruppe i löschen
+					Log.Infof("distribute: removing DG%d", d.Groups[i].ShortId)
 					d.Groups = append(d.Groups[:i], d.Groups[i+1:]...)
 					// Wir haben ein Element gelöscht und müssen die for-Schleife von vorn starten, sonst
 					// gibt es einen Index-Fehler
@@ -326,24 +349,27 @@ func (d *Dogfight) DistributeAircraftsToGroups() bool {
 		d.Groups = append(d.Groups, NewDogfightGroup(b, r))
 		groupsAdded = groupsAdded + 1
 		distributionHappened = true
+		Log.Infof("distribute: blue AC%d and red AC%d forming a new group",
+			Globals.AllAircrafts[b].ShortId,
+			Globals.AllAircrafts[r].ShortId)
 	}
 
-	Log.Infof("distributed %d aircrafts to %d new dogfight groups",
-		aircraftsCount, groupsAdded)
+	Log.Infof("distribute: distributed %d aircrafts to %d new dogfight groups, sent %d AC to wait queue",
+		aircraftsCount, groupsAdded, sendToWaitCount)
 
 	if len(d.Groups) > 0 {
 		// Vorhandene Gruppen mit restlichen Aircrafts auffüllen.
 		for len(d.TeamBlueWaiting) > 0 && d.Groups.BlueHasFreeSupportSlot() {
 			b := d.TeamBlueWaiting.PullFirst()
 			if d.Groups.AssignBlueSupport(b) == false {
-				panic("error while finding free slot for support")
+				panic("distribute: error while finding free slot for support")
 			}
 			distributionHappened = true
 		}
 		for len(d.TeamRedWaiting) > 0 && d.Groups.RedHasFreeSupportSlot() {
 			b := d.TeamRedWaiting.PullFirst()
 			if d.Groups.AssignRedSupport(b) == false {
-				panic("error while finding free slot for support")
+				panic("distribute: error while finding free slot for support")
 			}
 			distributionHappened = true
 		}

@@ -16,5 +16,5 @@ type AltitudeBand uint
 
 type Hitpoints uint
 type EquipmentId uint
+type ShortId int
 
-const ()
