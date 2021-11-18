@@ -60,7 +60,7 @@ func CreateWarParties() {
 
 func loadconfig() error {
 	var err error
-	if Globals.Configuration, err = LoadConfig("config.json"); err != nil {
+	if Globals.Configuration, err = LoadConfig("gameconfig.json"); err != nil {
 		return err
 	}
 	return nil
