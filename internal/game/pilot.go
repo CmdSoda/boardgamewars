@@ -86,7 +86,7 @@ func RollAge(ofc nato.Code) int {
 	return 0
 }
 
-func NewPilot(warpartyid WarPartyId, ofc nato.Code) PilotId {
+func NewPilot(warpartyid WarPartyId, ofc nato.Code) *Pilot {
 	var g Gender
 
 	wp, exist := Globals.AllWarParties[warpartyid]
@@ -125,14 +125,14 @@ func NewPilot(warpartyid WarPartyId, ofc nato.Code) PilotId {
 	Globals.AllWarParties[warpartyid].Pilots = append(Globals.AllWarParties[warpartyid].Pilots, np.PilotId)
 	Globals.AllPilots[np.PilotId] = &np
 	Log.Infof("new pilot created: %s", np.Short())
-	return np.PilotId
+	return &np
 }
 
 func NewPilots(count int, warpartyid WarPartyId, ofc nato.Code) []PilotId {
 	var pilots []PilotId
 	for i := 0; i < count; i++ {
 		np := NewPilot(warpartyid, ofc)
-		pilots = append(pilots, np)
+		pilots = append(pilots, np.PilotId)
 	}
 	return pilots
 }

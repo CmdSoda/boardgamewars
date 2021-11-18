@@ -2,7 +2,6 @@ package game
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -10,14 +9,15 @@ import (
 
 func TestNewPilot(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	wp := NewWarParty("USA", countrycodes.Germany, Blue)
-	p := NewPilot(wp.WarPartyId, nato.OF5)
+	p := NewPilot(WarPartyIdUSA, nato.OF5)
 	fmt.Println(p)
+	p2, exist := Globals.AllPilots[p.PilotId]
+	assert.True(t, exist)
+	assert.Equal(t, p2, p)
 }
 
 func TestNewPilots(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	wp := NewWarParty("USA", countrycodes.Russia, Blue)
-	pl := NewPilots(3, wp.WarPartyId, nato.OF1)
+	pl := NewPilots(3, WarPartyIdUSA, nato.OF1)
 	fmt.Println(pl)
 }
