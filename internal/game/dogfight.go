@@ -96,7 +96,7 @@ var currentDogfightGroupShortId ShortId = 0
 // DogfightGroup wird aus dem struct Dogfight erstellt. Je mehr Flugzeuge in der Dogfight Warteliste sind, desto mehr
 // DogfightGroup-Objekte werden erzeugt.
 type DogfightGroup struct {
-	ShortId                 ShortId
+	ShortId
 	BlueFighterId           AircraftId
 	BlueFighterLastPosition DogfightPosition
 	BlueSupportId           *AircraftId // optional
@@ -239,30 +239,46 @@ func (dg DogfightGroup) String() string {
 	if dg.RedSupportId != nil {
 		rsid = strconv.Itoa(int(Globals.AllAircrafts[*dg.RedSupportId].ShortId))
 	}
-	return fmt.Sprintf("DogfightGroup(DG%d): Blue=AC%s (alive=%t) BlueSupport=AC%s, Red=AC%s (alive=%t) RedSupport=AC%s",
+	return fmt.Sprintf("DogfightGroup(DG%d):\n  Blue=AC%s (alive=%t) Support=AC%s\n  Red=AC%s (alive=%t) Support=AC%s",
 		dg.ShortId,
 		bid, !Globals.AllAircrafts[dg.BlueFighterId].Destroyed, bsid,
 		rid, !Globals.AllAircrafts[dg.RedFighterId].Destroyed, rsid)
 }
 
+var currentDogfightShortId ShortId = 0
+
 // Dogfight wird aus einem DogfightSetup initialisiert. Während des Kampfes werden so viele DogfightGroup erstellt, wie
 // es möglich ist.
 type Dogfight struct {
+	ShortId
 	Groups          DogfightGroupList
 	TeamBlueWaiting AircraftIdList
 	TeamRedWaiting  AircraftIdList
 }
 
+func NewDogfight(ds DogfightSetup) Dogfight {
+	d := Dogfight{}
+	d.ShortId = currentDogfightShortId
+	currentDogfightShortId = currentDogfightShortId + 1
+	d.Groups = []DogfightGroup{}
+	d.TeamRedWaiting = make(AircraftIdList, len(ds.TeamRed))
+	copy(d.TeamRedWaiting, ds.TeamRed)
+	d.TeamBlueWaiting = make(AircraftIdList, len(ds.TeamBlue))
+	copy(d.TeamBlueWaiting, ds.TeamBlue)
+	return d
+}
+
 func (d Dogfight) String() string {
 	var b strings.Builder
-	fmt.Fprintf(&b, "Groups: len=%d ", len(d.Groups))
+	fmt.Fprintf(&b, "Dogfight (DF%d):\n", d.ShortId)
+	fmt.Fprintf(&b, "  Groups: len=%d ", len(d.Groups))
 	if len(d.Groups) == 0 {
 		fmt.Fprint(&b, "<empty>\n")
 		return b.String()
 	} else {
 		fmt.Fprintf(&b, "\n")
 		for _, group := range d.Groups {
-			fmt.Fprintf(&b, "%s\n", group.String())
+			fmt.Fprintf(&b, "  %s\n", group.String())
 		}
 	}
 	return b.String()
@@ -411,12 +427,3 @@ func SimulateDogfightPosition(rating1 Rating, lastPosition1 DogfightPosition,
 	return DogfightPositionTossup
 }
 
-func NewDogfight(ds DogfightSetup) Dogfight {
-	d := Dogfight{}
-	d.Groups = []DogfightGroup{}
-	d.TeamRedWaiting = make(AircraftIdList, len(ds.TeamRed))
-	copy(d.TeamRedWaiting, ds.TeamRed)
-	d.TeamBlueWaiting = make(AircraftIdList, len(ds.TeamBlue))
-	copy(d.TeamBlueWaiting, ds.TeamBlue)
-	return d
-}

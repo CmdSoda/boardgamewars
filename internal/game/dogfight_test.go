@@ -151,7 +151,7 @@ func TestDogfight_Simulate(t *testing.T) {
 }
 
 func TestDistributeReshuffle(t *testing.T) {
-	assert.Nil(t, InitGameWithLogLevel(0, logrus.InfoLevel))
+	assert.Nil(t, InitGameWithLogLevel(0, logrus.ErrorLevel))
 	ds := NewDogfightSetup()
 
 	b1 := NewAircraft("F14", "Default", WarPartyIdUSA)

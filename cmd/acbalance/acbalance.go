@@ -1,12 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/game"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
-	err := game.InitGame(0)
+	err := game.InitGameWithLogLevel(0, logrus.ErrorLevel)
 	if err != nil {
 		panic("Could not init game: " + err.Error())
 		return
@@ -22,7 +24,8 @@ func main() {
 		r.FillSeatsWith(rpl)
 		ds.AddRed(r.AircraftId)
 	}
-	d := ds.CreateDogfight()
+	d := game.NewDogfight(ds)
 	d.DistributeAircraftsToGroups()
 	d.Simulate()
+	fmt.Println(d)
 }
