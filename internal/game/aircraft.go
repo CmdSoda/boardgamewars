@@ -53,6 +53,21 @@ func (a Aircraft) String() string {
 	return b.String()
 }
 
+func (a *Aircraft) Repair() {
+	a.Damage = []DamageType{}
+}
+
+func (a *Aircraft) ReviveAndRepair() {
+	a.Damage = []DamageType{}
+	a.Destroyed = false
+}
+
+func (a *Aircraft) Rearm() {
+	for i, _ := range a.WeaponSystems {
+		a.WeaponSystems[i].Depleted = false
+	}
+}
+
 func (a *Aircraft) AddPilot(id PilotId) {
 	if len(a.Pilots) >= a.GetParameters().Seats {
 		Log.Errorf("too many pilots in aircraft %d", a.ShortId)

@@ -8,24 +8,36 @@ import (
 )
 
 func main() {
-	err := game.InitGameWithLogLevel(0, logrus.InfoLevel)
+	err := game.InitGameWithLogLevel(0, logrus.WarnLevel)
 	if err != nil {
 		panic("Could not init game: " + err.Error())
 		return
 	}
-	ds := game.NewDogfightSetup()
+	for _, parameters := range game.Globals.AllAircraftParameters {
+		acblue := game.NewAircraft(parameters.Name, "Default", game.WarPartyIdUSA)
+		acblue.FillSeatsWithNewPilots(nato.OF1)
+		fmt.Println(acblue)
+		for _, parameters2 := range game.Globals.AllAircraftParameters {
+			if parameters.Name != parameters2.Name {
+				ds := game.NewDogfightSetup()
 
-	b := game.NewAircraft("F14", "Default", game.WarPartyIdUSA)
-	b.FillSeatsWithNewPilots(nato.OF1)
-	fmt.Println(b)
-	ds.AddBlue(b.AircraftId)
-	r := game.NewAircraft("MiG-29", "Default", game.WarPartyIdRussia)
-	r.FillSeatsWithNewPilots(nato.OF1)
-	fmt.Println(r)
-	ds.AddRed(r.AircraftId)
-	d := game.NewDogfight(ds)
-	d.DistributeAircraftsToGroups()
-	d.Simulate()
-	fmt.Println(d)
-	fmt.Println(d)
+				// Blau reparieren und bewaffnen
+				acblue.ReviveAndRepair()
+				acblue.Rearm()
+				ds.AddBlue(acblue.AircraftId)
+
+				// Rot erstellen
+				acred := game.NewAircraft(parameters2.Name, "Default", game.WarPartyIdRussia)
+				acred.FillSeatsWithNewPilots(nato.OF1)
+				fmt.Println(acred)
+				ds.AddRed(acred.AircraftId)
+
+				// Simulation
+				d := game.NewDogfight(ds)
+				d.DistributeAircraftsToGroups()
+				fmt.Println(d)
+				d.Simulate()
+			}
+		}
+	}
 }
