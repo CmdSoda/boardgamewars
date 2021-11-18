@@ -60,7 +60,7 @@ func CreateWarParties() {
 
 func loadconfig() error {
 	var err error
-	if Globals.Configuration, err = LoadConfig("gameconfig.json"); err != nil {
+	if Globals.Config, err = LoadConfig("gameconfig.json"); err != nil {
 		return err
 	}
 	return nil
@@ -93,7 +93,7 @@ func InitGame(seed int64) error {
 	if err = loadconfig(); err != nil {
 		return err
 	}
-	lvl, err = logrus.ParseLevel(Globals.Configuration.LogLevel)
+	lvl, err = logrus.ParseLevel(Globals.Config.LogLevel)
 	if err != nil {
 		Log.Errorf("error while parsing log level: %s", err.Error())
 	}

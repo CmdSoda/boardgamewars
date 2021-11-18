@@ -1,7 +1,7 @@
 package game
 
-type Context struct {
-	Configuration         Config
+type Data struct {
+	Config
 	AllAirbases           AirbasesMap
 	AllAircraftParameters AircraftParametersMap
 	Air2AirWeapons        Air2AirWeaponLibrary
@@ -9,6 +9,7 @@ type Context struct {
 	AllAircrafts          AircraftsMap
 	AllPilots             PilotsMap
 	AllCounters           CounterList
+	Statistics
 }
 
-var Globals = Context{}
+var Globals = Data{}
