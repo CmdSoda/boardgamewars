@@ -3,6 +3,7 @@
     "IdAsString": "e3b4031e-369a-11ec-8d3d-0242ac130003",
     "Name": "F14",
     "Nickname": "Tomcat",
+    "Role": "Interceptor",
     "FirstFlight": 1970,
     "Introduction": 1974,
     "CombatSpeed": 10,
@@ -50,9 +51,49 @@
     "Seats": 2
   },
   {
+    "IdAsString": "3e0c63d9-600c-47f5-9ae6-5eeeea4b759c",
+    "Name": "F5",
+    "Nickname": "Tiger II",
+    "Role": "Light Fighter",
+    "FirstFlight": 1959,
+    "Introduction": 1962,
+    "CombatSpeed": 10,
+    "CruiseSpeed": 4,
+    "CombatFuelConsumption": 4,
+    "CruiseFuelConsumption": 0,
+    "Fuel": 20,
+    "MaxAltitude": 5,
+    "Dogfighting": 5,
+    "Configurations": [
+      {
+        "ConfigurationName": "Default",
+        "WeaponSystems": [
+          {
+            "WeaponSystemName": "Tank500",
+            "Category": "DropTank"
+          },
+          {
+            "WeaponSystemName": "Aim-9",
+            "Category": "A2A"
+          },
+          {
+            "WeaponSystemName": "Aim-9",
+            "Category": "A2A"
+          }
+        ]
+      }
+    ],
+    "MaintenanceTime": 5,
+    "StructuralDefense": 0,
+    "MaxHitpoints": 500,
+    "MaxDamagePoints": 2,
+    "Seats": 2
+  },
+  {
     "IdAsString": "f0645118-369a-11ec-8d3d-0242ac130003",
     "Name": "MiG-29",
     "Nickname": "Fulcrum",
+    "Role": "Fighter",
     "FirstFlight": 1970,
     "Introduction": 1974,
     "CombatSpeed": 10,

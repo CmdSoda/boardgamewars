@@ -16,6 +16,7 @@ type AircraftParameters struct {
 	IdAsString            string
 	Name                  string
 	Nickname              string
+	Role                  string
 	FirstFlight           Year
 	Introduction          Year
 	CombatSpeed           Rating
