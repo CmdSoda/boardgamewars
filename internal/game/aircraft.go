@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
 	"strings"
 )
@@ -37,13 +38,15 @@ type Aircraft struct {
 
 func (a Aircraft) String() string {
 	var b strings.Builder
-	fmt.Fprintf(&b, "Aircraft %d\n", a.ShortId)
-	fmt.Fprintf(&b, "%s\nPilots: ", a.GetParameters().Name)
+	fmt.Fprintf(&b, "Aircraft(AC%d): %s\n", a.ShortId, a.GetParameters().Name)
 	for _, pilotid := range a.Pilots {
 		p := Globals.AllPilots[pilotid]
-		fmt.Fprintf(&b, p.String()+" ")
+		fmt.Fprintf(&b, "  Pilot: %s\n", p)
 	}
-	fmt.Fprint(&b, "\nDamage: ")
+	fmt.Fprint(&b, "  Damage: ")
+	if len(a.Damage) == 0 {
+		fmt.Fprint(&b, "<no damage>")
+	}
 	for _, d := range a.Damage {
 		fmt.Fprintf(&b, d.String()+" ")
 	}
@@ -168,6 +171,11 @@ func (a *Aircraft) FillSeatsWith(pl []PilotId) {
 		a.Pilots = append(a.Pilots, pilotid)
 	}
 
+}
+
+func (a *Aircraft) FillSeatsWithNewPilots(nc nato.Code) {
+	pl := NewPilots(Globals.AllAircraftParameters[a.AircraftParametersId].Seats, a.WarPartyId, nc)
+	a.FillSeatsWith(pl)
 }
 
 func (a *Aircraft) Destroy() {

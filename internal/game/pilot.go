@@ -27,7 +27,7 @@ func (g Gender) String() string {
 
 type PilotId uuid.UUID
 
-type PilotsMap map[PilotId]Pilot
+type PilotsMap map[PilotId]*Pilot
 
 type Pilot struct {
 	PilotId
@@ -122,8 +122,8 @@ func NewPilot(warpartyid WarPartyId, ofc nato.Code) PilotId {
 		FlightRank: military.NewRank(wp.Country, ofc),
 	}
 
-	m := append(Globals.AllWarParties[warpartyid].Pilots, np.PilotId)
-	wp.Pilots = m
+	Globals.AllWarParties[warpartyid].Pilots = append(Globals.AllWarParties[warpartyid].Pilots, np.PilotId)
+	Globals.AllPilots[np.PilotId] = &np
 	Log.Infof("new pilot created: %s", np.Short())
 	return np.PilotId
 }

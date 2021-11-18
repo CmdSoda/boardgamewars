@@ -22,7 +22,7 @@ func CreateWarParties() {
 		Pilots:        []PilotId{},
 		Aircrafts:     []AircraftId{},
 	}
-	Globals.AllWarParties[WarPartyIdUSA] = wpUSA
+	Globals.AllWarParties[WarPartyIdUSA] = &wpUSA
 
 	// Russia
 	wpRussia := WarParty{
@@ -33,7 +33,7 @@ func CreateWarParties() {
 		Pilots:        []PilotId{},
 		Aircrafts:     []AircraftId{},
 	}
-	Globals.AllWarParties[WarPartyIdRussia] = wpRussia
+	Globals.AllWarParties[WarPartyIdRussia] = &wpRussia
 
 	// UK
 	wpUK := WarParty{
@@ -44,7 +44,7 @@ func CreateWarParties() {
 		Pilots:        []PilotId{},
 		Aircrafts:     []AircraftId{},
 	}
-	Globals.AllWarParties[WarPartyIdUK] = wpUK
+	Globals.AllWarParties[WarPartyIdUK] = &wpUK
 
 	// Germany
 	wpGermany := WarParty{
@@ -55,7 +55,7 @@ func CreateWarParties() {
 		Pilots:        []PilotId{},
 		Aircrafts:     []AircraftId{},
 	}
-	Globals.AllWarParties[WarPartyIdGermany] = wpGermany
+	Globals.AllWarParties[WarPartyIdGermany] = &wpGermany
 }
 
 func loadconfig() error {
@@ -69,8 +69,9 @@ func loadconfig() error {
 func initgame(seed int64) error {
 	var err error
 	Log.Info("game engine is starting...\n")
-	Globals.AllWarParties = map[WarPartyId]WarParty{}
+	Globals.AllWarParties = map[WarPartyId]*WarParty{}
 	Globals.AllAircrafts = map[AircraftId]*Aircraft{}
+	Globals.AllPilots = map[PilotId]*Pilot{}
 	CreateWarParties()
 	Globals.AllAirbases = map[AirbaseId]Airbase{}
 	randomizer.Init(seed)

@@ -39,7 +39,7 @@ func (w WarParty) String() string {
 	return fmt.Sprintf("%s [%s]\nAircrafts: %d", w.Name, w.WarPartyColor.String(), len(w.Aircrafts))
 }
 
-type WarPartyMap map[WarPartyId]WarParty
+type WarPartyMap map[WarPartyId]*WarParty
 
 func NewWarParty(name string, code countrycodes.Code, side WarPartyColor) WarParty {
 	wp := WarParty{}
@@ -50,6 +50,6 @@ func NewWarParty(name string, code countrycodes.Code, side WarPartyColor) WarPar
 	wp.Pilots = []PilotId{}
 	wp.Aircrafts = []AircraftId{}
 	wp.Airbases = map[AirbaseId]struct{}{}
-	Globals.AllWarParties[wp.WarPartyId] = wp
+	Globals.AllWarParties[wp.WarPartyId] = &wp
 	return wp
 }
