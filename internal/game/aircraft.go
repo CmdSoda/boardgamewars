@@ -30,6 +30,7 @@ type Aircraft struct {
 	CurrentPosition    FloatPosition
 	NextTargetLocation FloatPosition // Das ist die FloatPosition, die das Flugzeug jetzt ansteuert.
 	WeaponSystems      WeaponSystemList
+	WeaponsConfigName  string
 	Damage             []DamageType // Eine Liste von Schäden
 	Destroyed          bool
 	Pilots             []PilotId
@@ -84,7 +85,7 @@ func (a *Aircraft) AssignToAB(id AirbaseId) bool {
 	return false
 }
 
-func NewAircraft(name string, configurationName string, warpartyid WarPartyId) *Aircraft {
+func NewAircraft(name string, weaponConfigName string, warpartyid WarPartyId) *Aircraft {
 	ac := Aircraft{}
 	ac.ShortId = currentAircraftShortId
 	currentAircraftShortId = currentAircraftShortId + 1
@@ -93,7 +94,8 @@ func NewAircraft(name string, configurationName string, warpartyid WarPartyId) *
 		ac.AircraftId = AircraftId(uuid.New())
 		ac.AircraftParametersId = acpid
 		ac.WarPartyId = warpartyid
-		ac.WeaponSystems = CloneWeaponSystemList(acpid, configurationName)
+		ac.WeaponSystems = CloneWeaponSystemList(acpid, weaponConfigName)
+		ac.WeaponsConfigName = weaponConfigName
 		for i := 0; i < len(ac.WeaponSystems); i++ {
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
