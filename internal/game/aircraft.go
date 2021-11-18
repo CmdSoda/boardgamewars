@@ -50,9 +50,6 @@ func (a Aircraft) String() string {
 	for _, d := range a.Damage {
 		fmt.Fprintf(&b, d.String()+" ")
 	}
-	if len(a.Damage) == 0 {
-		fmt.Fprint(&b, "\n")
-	}
 	return b.String()
 }
 
@@ -72,7 +69,7 @@ func (a *Aircraft) AssignToAB(id AirbaseId) bool {
 	return false
 }
 
-func NewAircraft(name string, configurationName string, warpartyid WarPartyId) Aircraft {
+func NewAircraft(name string, configurationName string, warpartyid WarPartyId) *Aircraft {
 	ac := Aircraft{}
 	ac.ShortId = currentAircraftShortId
 	currentAircraftShortId = currentAircraftShortId + 1
@@ -88,9 +85,9 @@ func NewAircraft(name string, configurationName string, warpartyid WarPartyId) A
 		ac.Damage = make([]DamageType, 0)
 		Globals.AllAircrafts[ac.AircraftId] = &ac
 		Log.Infof("new aircraft created: %s (%d)", name, ac.ShortId)
-		return ac
+		return &ac
 	}
-	return ac
+	return &ac
 }
 
 func GetAircraftParametersIdByName(name string) (AircraftParametersId, bool) {

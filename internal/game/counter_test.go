@@ -21,6 +21,6 @@ func Test2(t *testing.T) {
 	ac := NewAircraft("F14", "Default", WarPartyIdUSA)
 	c := NewCounter(CounterTypeAircraft, ac)
 	assert.Equal(t, "Aircraft", c.Type.String())
-	ac2 := c.Object.(Aircraft)
+	ac2 := c.Object.(*Aircraft)
 	assert.Equal(t, ac.AircraftId, ac2.AircraftId)
 }

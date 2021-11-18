@@ -8,12 +8,13 @@ import (
 )
 
 func main() {
-	err := game.InitGameWithLogLevel(0, logrus.ErrorLevel)
+	err := game.InitGameWithLogLevel(0, logrus.InfoLevel)
 	if err != nil {
 		panic("Could not init game: " + err.Error())
 		return
 	}
 	ds := game.NewDogfightSetup()
+
 	b := game.NewAircraft("F14", "Default", game.WarPartyIdUSA)
 	b.FillSeatsWithNewPilots(nato.OF1)
 	fmt.Println(b)
@@ -25,5 +26,6 @@ func main() {
 	d := game.NewDogfight(ds)
 	d.DistributeAircraftsToGroups()
 	d.Simulate()
+	fmt.Println(d)
 	fmt.Println(d)
 }

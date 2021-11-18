@@ -115,6 +115,13 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 	ac2 := Globals.AllAircrafts[dg.RedFighterId]
 	ap2 := ac2.GetParameters() // AircraftParameters
 
+	if len(ac1.Pilots) < ap1.Seats {
+		Log.Warnf("blue AC%d has not enough pilots", ac1.ShortId)
+	}
+	if len(ac2.Pilots) < ap2.Seats {
+		Log.Warnf("blue AC%d has not enough pilots", ac2.ShortId)
+	}
+
 	// In FloatPosition setzen
 	// Flugzeuge mit grösseren Dogfighting-Rating haben höhere Chance.
 	// 1) Kampf um die FloatPosition => Endet in einer FloatPosition
@@ -278,7 +285,7 @@ func (d Dogfight) String() string {
 	} else {
 		fmt.Fprintf(&b, "\n")
 		for _, group := range d.Groups {
-			fmt.Fprintf(&b, "  %s\n", group.String())
+			fmt.Fprintf(&b, "  %s", group.String())
 		}
 	}
 	return b.String()
