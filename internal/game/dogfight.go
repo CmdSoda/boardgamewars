@@ -144,7 +144,7 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 				if destroyed {
 					Globals.Statistics.WVsA.Win(ac1.AircraftId, ac2.AircraftId, WinTypeWon)
 				}
-				dfr1.DamageConflictedToEnemy = append(dfr1.DamageConflictedToEnemy, dt)
+				dfr1.DamageConflictedToEnemy = append(dfr1.DamageConflictedToEnemy, dt...)
 			} else {
 				Globals.Statistics.W2A2C.NotHit(bestws.Name, dg.RedFighterId)
 			}
@@ -161,7 +161,7 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 				if destroyed {
 					Globals.Statistics.WVsA.Win(ac2.AircraftId, ac1.AircraftId, WinTypeWon)
 				}
-				dfr2.DamageConflictedToEnemy = append(dfr2.DamageConflictedToEnemy, dt)
+				dfr2.DamageConflictedToEnemy = append(dfr2.DamageConflictedToEnemy, dt...)
 			} else {
 				Globals.Statistics.W2A2C.NotHit(bestws.Name, dg.BlueFighterId)
 			}

@@ -156,6 +156,10 @@ func (a *Aircraft) AddLightDamage(dt DamageType) {
 	a.Damage = append(a.Damage, dt)
 }
 
+func (a *Aircraft) AddDamage(dtl []DamageType) {
+	a.Damage = append(a.Damage, dtl...)
+}
+
 func (a *Aircraft) DoDamageAssessment() {
 	if len(a.Damage) > a.GetParameters().MaxDamagePoints {
 		a.Destroyed = true
@@ -164,13 +168,14 @@ func (a *Aircraft) DoDamageAssessment() {
 	// Falls die Kanzel getroffen wurde => Pilot tot?
 }
 
-func (a *Aircraft) DoDamageWith(ws WeaponSystem) (DamageType, bool) {
+func (a *Aircraft) DoDamageWith(ws WeaponSystem) ([]DamageType, bool) {
 	if ws.Air2AirWeaponParameters != nil {
 		dhp := ws.Air2AirWeaponParameters.DoRandomDamage()
 		if dhp <= a.GetParameters().MaxHitpoints {
 			acp := Globals.AllAircraftParameters[a.AircraftParametersId]
-			rd := RollRandomDamage()
-			a.AddLightDamage(rd)
+			// TODO RollRandomDamage soll mehrere DamageType erzeugen können.
+			rd := RollRandomDamage(dhp, acp.MaxHitpoints)
+			a.AddDamage(rd)
 			if len(a.Damage) > acp.MaxDamagePoints {
 				a.Destroy()
 				return rd, true
@@ -178,7 +183,7 @@ func (a *Aircraft) DoDamageWith(ws WeaponSystem) (DamageType, bool) {
 			return rd, false
 		}
 	}
-	return DamageTypeNothing, false
+	return []DamageType{}, false
 }
 
 func (a *Aircraft) DepleteWeapon(ws WeaponSystem) {

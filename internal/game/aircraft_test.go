@@ -58,3 +58,14 @@ func TestAircraft_AssignToAB(t *testing.T) {
 	assert.True(t, exist)
 	assert.Equal(t, ab.AirbaseId, ac.StationedAt)
 }
+
+func TestAircraft_DoDamageWith(t *testing.T) {
+	assert.Nil(t, InitGame(0))
+	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	ac1.FillSeatsWithNewPilots(nato.OF1)
+	ac2 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
+	ac2.FillSeatsWithNewPilots(nato.OF1)
+	ws, _ := ac1.GetBestDogfightingWeapon()
+	ac2.DoDamageWith(ws)
+
+}
