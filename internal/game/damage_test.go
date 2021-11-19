@@ -13,3 +13,7 @@ func TestRollRandomDamage(t *testing.T) {
 	dtl3 := RollRandomDamage(100, 500)
 	assert.Equal(t, 1, len(dtl3))
 }
+
+func TestRollRandomDamage2(t *testing.T) {
+
+}

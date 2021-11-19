@@ -5,7 +5,6 @@ import "github.com/CmdSoda/boardgamewars/internal/randomizer"
 type DamageType int
 
 const (
-	DamageTypeNothing  DamageType = -1
 	DamageTypeFuselage DamageType = 0
 	DamageTypeWing     DamageType = 1
 	DamageTypeCockpit  DamageType = 2

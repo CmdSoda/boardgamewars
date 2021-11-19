@@ -69,12 +69,12 @@ func (awp Air2AirWeaponParameters) DoRandomDamage() Hitpoints {
 	if dr >= 9 {
 		return awp.Damage
 	} else if dr >= 7 {
-		return Hitpoints(float32(awp.Damage) * 0.50)
+		return Hitpoints(float32(awp.Damage) * 0.80)
 	} else if dr >= 5 {
-		return Hitpoints(float32(awp.Damage) * 0.25)
+		return Hitpoints(float32(awp.Damage) * 0.70)
 	} else if dr >= 3 {
-		return Hitpoints(float32(awp.Damage) * 0.10)
+		return Hitpoints(float32(awp.Damage) * 0.60)
 	} else {
-		return 0
+		return Hitpoints(float32(awp.Damage) * 0.50)
 	}
 }

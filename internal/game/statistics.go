@@ -41,15 +41,56 @@ type WinStatistics struct {
 	Draw      int
 }
 
+type DamageMap map[string]map[AircraftParametersId]*DamageStatistics
+
+type DamageStatistics struct {
+	Damage1 int
+	Damage2 int
+	Damage3 int
+}
+
+func (dm *DamageMap) Add(weaponname string, apid AircraftParametersId, dmg int) {
+	if _, exist := (*dm)[weaponname]; !exist {
+		(*dm)[weaponname] = map[AircraftParametersId]*DamageStatistics{}
+	}
+	if _, exist := (*dm)[weaponname][apid]; !exist {
+		(*dm)[weaponname][apid] = &DamageStatistics{0, 0, 0}
+	}
+	switch dmg {
+	case 1:
+		(*dm)[weaponname][apid].Damage1 = (*dm)[weaponname][apid].Damage1 + 1
+	case 2:
+		(*dm)[weaponname][apid].Damage2 = (*dm)[weaponname][apid].Damage2 + 1
+	case 3:
+		(*dm)[weaponname][apid].Damage3 = (*dm)[weaponname][apid].Damage3 + 1
+	}
+}
+
+func (dm *DamageMap) Dump() {
+	for weaponname, _ := range *dm {
+		fmt.Println(weaponname)
+		for apid, _ := range (*dm)[weaponname] {
+			acp := Globals.AllAircraftParameters[apid]
+			stats := (*dm)[weaponname][apid]
+			count := stats.Damage1 + stats.Damage2 + stats.Damage3
+			average := float32(stats.Damage1 + stats.Damage2 * 2 + stats.Damage3 * 3)/
+				float32(count)
+			fmt.Printf("  %s = %.2f (%d samples)\n", acp.Name, average, count)
+		}
+	}
+}
+
 type Statistics struct {
-	W2A2C WeaponNameVsAircraftParameterIdMap
-	WVsA  WinVsAircraftList
+	W2A2C  WeaponNameVsAircraftParameterIdMap
+	WVsA   WinVsAircraftList
+	DmgVsA DamageMap
 }
 
 func NewStatistics() Statistics {
 	s := Statistics{}
 	s.W2A2C = map[string]map[AircraftParametersId]map[string]*WeaponStatistics{}
 	s.WVsA = WinVsAircraftList{}
+	s.DmgVsA = map[string]map[AircraftParametersId]*DamageStatistics{}
 	return s
 }
 

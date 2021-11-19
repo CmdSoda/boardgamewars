@@ -175,6 +175,7 @@ func (a *Aircraft) DoDamageWith(ws WeaponSystem) ([]DamageType, bool) {
 			acp := Globals.AllAircraftParameters[a.AircraftParametersId]
 			// TODO RollRandomDamage soll mehrere DamageType erzeugen können.
 			rd := RollRandomDamage(dhp, acp.MaxHitpoints)
+			Globals.Statistics.DmgVsA.Add(ws.Name, a.AircraftParametersId, len(rd))
 			a.AddDamage(rd)
 			if len(a.Damage) > acp.MaxDamagePoints {
 				a.Destroy()

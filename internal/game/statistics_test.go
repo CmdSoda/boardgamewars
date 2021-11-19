@@ -82,3 +82,18 @@ func TestWin1(t *testing.T) {
 
 	s.WVsA.Dump()
 }
+
+func TestDamageMapAdd(t *testing.T) {
+	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
+	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	ac1.FillSeatsWithNewPilots(nato.OF1)
+	ac2 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
+	ac2.FillSeatsWithNewPilots(nato.OF1)
+	for i := 0; i < 1000; i++ {
+		ac1.Rearm()
+		wps, _ := ac1.GetBestDogfightingWeapon()
+		ac2.ReviveAndRepair()
+		ac2.DoDamageWith(wps)
+	}
+	Globals.Statistics.DmgVsA.Dump()
+}
