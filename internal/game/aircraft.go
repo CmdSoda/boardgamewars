@@ -54,6 +54,17 @@ func (a Aircraft) String() string {
 	return b.String()
 }
 
+func (a *Aircraft) GetHighestPilotRank() nato.Code {
+	highest := nato.OF0
+	for _, pid := range a.Pilots {
+		p := Globals.AllPilots[pid]
+		if p.Code > highest {
+			highest = p.Code
+		}
+	}
+	return highest
+}
+
 func (a *Aircraft) Repair() {
 	a.Damage = []DamageType{}
 }

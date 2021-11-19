@@ -26,6 +26,13 @@ type WinAircraftParameters struct {
 	PilotRank  nato.Code
 }
 
+type WinType int
+
+const (
+	WinTypeDraw WinType = 0
+	WinTypeWon  WinType = 1
+)
+
 type WinStatistics struct {
 	AC1Params WinAircraftParameters
 	AC2Params WinAircraftParameters
@@ -46,32 +53,40 @@ func NewStatistics() Statistics {
 	return s
 }
 
-func (w *WinVsAircraftList) Win(acid1 AircraftId, acid2 AircraftId) {
+func (w *WinVsAircraftList) Win(acid1 AircraftId, acid2 AircraftId, wtype WinType) {
 
 	ac1 := Globals.AllAircrafts[acid1]
-	acpilot1 := Globals.AllPilots[ac1.Pilots[0]]
 	ac2 := Globals.AllAircrafts[acid2]
-	acpilot2 := Globals.AllPilots[ac2.Pilots[0]]
 
 	wap1 := WinAircraftParameters{
 		AircraftParametersId: ac1.AircraftParametersId,
 		ConfigName:           ac1.WeaponsConfigName,
-		PilotRank:            acpilot1.Code,
+		PilotRank:            ac1.GetHighestPilotRank(),
 	}
 
 	wap2 := WinAircraftParameters{
 		AircraftParametersId: ac2.AircraftParametersId,
 		ConfigName:           ac2.WeaponsConfigName,
-		PilotRank:            acpilot2.Code,
+		PilotRank:            ac2.GetHighestPilotRank(),
 	}
 
 	// Die Möglichkeit besteht, dass es den Eintrag schon gibt. Suchen...
 	for i, _ := range *w {
 		if (*w)[i].AC1Params == wap1 && (*w)[i].AC2Params == wap2 {
-			(*w)[i].AC1Won = (*w)[i].AC1Won + 1
+			switch wtype {
+			case WinTypeDraw:
+				(*w)[i].Draw = (*w)[i].Draw + 1
+			case WinTypeWon:
+				(*w)[i].AC1Won = (*w)[i].AC1Won + 1
+			}
 			return
 		} else if (*w)[i].AC1Params == wap2 && (*w)[i].AC2Params == wap1 {
-			(*w)[i].AC2Won = (*w)[i].AC2Won + 1
+			switch wtype {
+			case WinTypeDraw:
+				(*w)[i].Draw = (*w)[i].Draw + 1
+			case WinTypeWon:
+				(*w)[i].AC2Won = (*w)[i].AC2Won + 1
+			}
 			return
 		}
 	}
@@ -79,9 +94,16 @@ func (w *WinVsAircraftList) Win(acid1 AircraftId, acid2 AircraftId) {
 	ws := WinStatistics{
 		AC1Params: wap1,
 		AC2Params: wap2,
-		AC1Won:    1,
+		AC1Won:    0,
 		AC2Won:    0,
 		Draw:      0,
+	}
+
+	switch wtype {
+	case WinTypeDraw:
+		ws.Draw = 1
+	case WinTypeWon:
+		ws.AC1Won = 1
 	}
 
 	// Diese Kombination gibt es noch nicht und es muss eine erstellt werden.

@@ -3,6 +3,7 @@ package nato
 type Code int
 
 const (
+	OF0 Code = 0
 	OF1 Code = 1
 	OF2 Code = 2
 	OF3 Code = 3
