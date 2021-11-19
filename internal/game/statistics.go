@@ -23,64 +23,53 @@ func NewStatistics() Statistics {
 	return s
 }
 
-func (wmap WeaponNameVsAircraftParameterIdMap) Dump() {
-	for wname := range wmap {
+func (w2a2c WeaponNameVsAircraftParameterIdMap) Dump() {
+	for wname := range w2a2c {
 		fmt.Println(wname)
-		for acid := range wmap[wname] {
+		for acid := range w2a2c[wname] {
 			acp := Globals.AllAircraftParameters[acid]
 			fmt.Println("  " + acp.Name)
-			for config := range wmap[wname][acid] {
-				hitpc := float32(wmap[wname][acid][config].Hit) /
-					(float32(wmap[wname][acid][config].Hit) + float32(wmap[wname][acid][config].NotHit)) * 100
-				fmt.Printf("    %s Hit%% %f\n", config, hitpc)
+			for config := range w2a2c[wname][acid] {
+				sum := w2a2c[wname][acid][config].Hit + w2a2c[wname][acid][config].NotHit
+				hitpc := float32(w2a2c[wname][acid][config].Hit) / float32(sum) * 100
+				fmt.Printf("    %s Hit %.1f%% (%d samples)\n", config, hitpc, sum)
 			}
 		}
 	}
 }
 
-func (s *Statistics) Hit(weaponName string, acid AircraftId) {
+func (w2a2c *WeaponNameVsAircraftParameterIdMap) createMaps(weaponName string, acid AircraftId) {
 	ac := Globals.AllAircrafts[acid]
 
-	_, wnexist := s.W2A2C[weaponName]
+	_, wnexist := (*w2a2c)[weaponName]
 	if !wnexist {
-		s.W2A2C[weaponName] = map[AircraftParametersId]map[string]*WeaponStatistics{}
+		(*w2a2c)[weaponName] = map[AircraftParametersId]map[string]*WeaponStatistics{}
 	}
 
-	_, apidexist := s.W2A2C[weaponName][ac.AircraftParametersId]
+	_, apidexist := (*w2a2c)[weaponName][ac.AircraftParametersId]
 	if !apidexist {
-		s.W2A2C[weaponName][ac.AircraftParametersId] = map[string]*WeaponStatistics{}
+		(*w2a2c)[weaponName][ac.AircraftParametersId] = map[string]*WeaponStatistics{}
 	}
 
-	_, cexist := s.W2A2C[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName]
+	_, cexist := (*w2a2c)[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName]
 	if !cexist {
-		s.W2A2C[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName] = &WeaponStatistics{}
+		(*w2a2c)[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName] = &WeaponStatistics{}
 	}
-
-	// Um 1 erhöhen.
-	s.W2A2C[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].Hit =
-		s.W2A2C[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].Hit +1
 }
 
-func (s *Statistics) NotHit(weaponName string, acid AircraftId) {
+func (w2a2c *WeaponNameVsAircraftParameterIdMap) Hit(weaponName string, acid AircraftId) {
+	w2a2c.createMaps(weaponName, acid)
 	ac := Globals.AllAircrafts[acid]
-
-	_, wnexist := s.W2A2C[weaponName]
-	if !wnexist {
-		s.W2A2C[weaponName] = map[AircraftParametersId]map[string]*WeaponStatistics{}
-	}
-
-	_, apidexist := s.W2A2C[weaponName][ac.AircraftParametersId]
-	if !apidexist {
-		s.W2A2C[weaponName][ac.AircraftParametersId] = map[string]*WeaponStatistics{}
-	}
-
-	_, cexist := s.W2A2C[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName]
-	if !cexist {
-		s.W2A2C[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName] = &WeaponStatistics{}
-	}
-
 	// Um 1 erhöhen.
-	s.W2A2C[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].NotHit =
-		s.W2A2C[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].NotHit +1
+	(*w2a2c)[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].Hit =
+		(*w2a2c)[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].Hit +1
+}
+
+func (w2a2c *WeaponNameVsAircraftParameterIdMap) NotHit(weaponName string, acid AircraftId) {
+	w2a2c.createMaps(weaponName, acid)
+	ac := Globals.AllAircrafts[acid]
+	// Um 1 erhöhen.
+	(*w2a2c)[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].NotHit =
+		(*w2a2c)[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].NotHit +1
 }
 

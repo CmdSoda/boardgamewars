@@ -74,6 +74,7 @@ func initgame(seed int64) error {
 	Globals.AllPilots = map[PilotId]*Pilot{}
 	CreateWarParties()
 	Globals.AllAirbases = map[AirbaseId]Airbase{}
+	Globals.Statistics = NewStatistics()
 	randomizer.Init(seed)
 	if err = LoadAircraftParameters(); err != nil {
 		return err

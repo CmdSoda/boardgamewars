@@ -138,9 +138,12 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 		if exist {
 			ac1.DepleteWeapon(bestws)
 			if bestws.Hit(dg.RedFighterId, dfa1Pos) {
+				Globals.Statistics.W2A2C.Hit(bestws.Name, dg.RedFighterId)
 				dfr1.Hit = true
 				dt := ac2.DoDamageWith(bestws)
 				dfr1.DamageConflictedToEnemy = append(dfr1.DamageConflictedToEnemy, dt)
+			} else {
+				Globals.Statistics.W2A2C.NotHit(bestws.Name, dg.RedFighterId)
 			}
 		}
 	} else if -dfa1Pos >= DogfightPositionBehindEnemiesTail {
@@ -149,9 +152,12 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 		if exist {
 			ac2.DepleteWeapon(bestws)
 			if bestws.Hit(dg.BlueFighterId, -dfa1Pos) {
+				Globals.Statistics.W2A2C.Hit(bestws.Name, dg.BlueFighterId)
 				dfr2.Hit = true
 				dt := ac1.DoDamageWith(bestws)
 				dfr2.DamageConflictedToEnemy = append(dfr2.DamageConflictedToEnemy, dt)
+			} else {
+				Globals.Statistics.W2A2C.NotHit(bestws.Name, dg.BlueFighterId)
 			}
 		}
 	}
