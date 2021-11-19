@@ -43,13 +43,13 @@ type WinStatistics struct {
 
 type Statistics struct {
 	W2A2C WeaponNameVsAircraftParameterIdMap
-	WVsA  *WinVsAircraftList
+	WVsA  WinVsAircraftList
 }
 
 func NewStatistics() Statistics {
 	s := Statistics{}
 	s.W2A2C = map[string]map[AircraftParametersId]map[string]*WeaponStatistics{}
-	s.WVsA = &WinVsAircraftList{}
+	s.WVsA = WinVsAircraftList{}
 	return s
 }
 
@@ -108,6 +108,27 @@ func (w *WinVsAircraftList) Win(acid1 AircraftId, acid2 AircraftId, wtype WinTyp
 
 	// Diese Kombination gibt es noch nicht und es muss eine erstellt werden.
 	*w = append(*w, &ws)
+}
+
+func (w *WinVsAircraftList) Dump() {
+	for _, wstat := range *w {
+		acp1 := Globals.AllAircraftParameters[wstat.AC1Params.AircraftParametersId]
+		acp2 := Globals.AllAircraftParameters[wstat.AC2Params.AircraftParametersId]
+		var acwr1 float32
+		var acwr2 float32
+		if wstat.AC1Won+wstat.AC1Won == 0 {
+			acwr1 = 0
+		} else {
+			acwr1 = float32(wstat.AC1Won) / float32(wstat.AC1Won+wstat.AC2Won) * 100
+		}
+		if wstat.AC1Won+wstat.AC2Won == 0 {
+			acwr2 = 0
+		} else {
+			acwr2 = float32(wstat.AC2Won) / float32(wstat.AC1Won+wstat.AC2Won) * 100
+		}
+		samples := wstat.AC1Won + wstat.AC2Won + wstat.Draw
+		fmt.Printf("%s(%.1f%%) vs %s(%.1f%%) (%d samples)\n", acp1.Name, acwr1, acp2.Name, acwr2, samples)
+	}
 }
 
 func (w2a2c WeaponNameVsAircraftParameterIdMap) Dump() {

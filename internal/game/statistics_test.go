@@ -40,6 +40,7 @@ func TestStatistics2(t *testing.T) {
 		d.Simulate()
 	}
 	Globals.Statistics.W2A2C.Dump()
+	Globals.Statistics.WVsA.Dump()
 }
 
 func TestWin1(t *testing.T) {
@@ -64,18 +65,20 @@ func TestWin1(t *testing.T) {
 	s.WVsA.Win(ac4.AircraftId, ac3.AircraftId, WinTypeDraw)
 	s.WVsA.Win(ac4.AircraftId, ac5.AircraftId, WinTypeDraw)
 	s.WVsA.Win(ac5.AircraftId, ac4.AircraftId, WinTypeDraw)
-	assert.Equal(t, 4, len(*s.WVsA))
-	assert.Equal(t, ac1.AircraftParametersId, (*s.WVsA)[0].AC1Params.AircraftParametersId)
-	assert.Equal(t, ac2.AircraftParametersId, (*s.WVsA)[0].AC2Params.AircraftParametersId)
+	assert.Equal(t, 4, len(s.WVsA))
+	assert.Equal(t, ac1.AircraftParametersId, s.WVsA[0].AC1Params.AircraftParametersId)
+	assert.Equal(t, ac2.AircraftParametersId, s.WVsA[0].AC2Params.AircraftParametersId)
 
-	assert.Equal(t, 2, (*s.WVsA)[0].AC1Won)
-	assert.Equal(t, 1, (*s.WVsA)[0].AC2Won)
-	assert.Equal(t, 0, (*s.WVsA)[0].Draw)
+	assert.Equal(t, 2, s.WVsA[0].AC1Won)
+	assert.Equal(t, 1, s.WVsA[0].AC2Won)
+	assert.Equal(t, 0, s.WVsA[0].Draw)
 
-	assert.Equal(t, 1, (*s.WVsA)[1].AC1Won)
-	assert.Equal(t, 1, (*s.WVsA)[1].Draw)
+	assert.Equal(t, 1, s.WVsA[1].AC1Won)
+	assert.Equal(t, 1, s.WVsA[1].Draw)
 
-	assert.Equal(t, 0, (*s.WVsA)[2].AC1Won)
-	assert.Equal(t, 0, (*s.WVsA)[2].AC2Won)
-	assert.Equal(t, 2, (*s.WVsA)[2].Draw)
+	assert.Equal(t, 0, s.WVsA[2].AC1Won)
+	assert.Equal(t, 0, s.WVsA[2].AC2Won)
+	assert.Equal(t, 2, s.WVsA[2].Draw)
+
+	s.WVsA.Dump()
 }

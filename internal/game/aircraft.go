@@ -164,16 +164,21 @@ func (a *Aircraft) DoDamageAssessment() {
 	// Falls die Kanzel getroffen wurde => Pilot tot?
 }
 
-func (a *Aircraft) DoDamageWith(ws WeaponSystem) DamageType {
+func (a *Aircraft) DoDamageWith(ws WeaponSystem) (DamageType, bool) {
 	if ws.Air2AirWeaponParameters != nil {
 		dhp := ws.Air2AirWeaponParameters.DoRandomDamage()
 		if dhp <= a.GetParameters().MaxHitpoints {
+			acp := Globals.AllAircraftParameters[a.AircraftParametersId]
 			rd := RollRandomDamage()
 			a.AddLightDamage(rd)
-			return rd
+			if len(a.Damage) > acp.MaxDamagePoints {
+				a.Destroy()
+				return rd, true
+			}
+			return rd, false
 		}
 	}
-	return DamageTypeNothing
+	return DamageTypeNothing, false
 }
 
 func (a *Aircraft) DepleteWeapon(ws WeaponSystem) {
