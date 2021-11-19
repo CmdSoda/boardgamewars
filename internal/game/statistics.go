@@ -1,6 +1,9 @@
 package game
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/CmdSoda/boardgamewars/internal/nato"
+)
 
 // WeaponNameVsAircraftParameterIdMap ist eine Map auf Waffensystem-Name auf AircraftParametersId auf Config-Name
 // Beispiel:
@@ -9,18 +12,80 @@ import "fmt"
 type WeaponNameVsAircraftParameterIdMap map[string]map[AircraftParametersId]map[string]*WeaponStatistics
 
 type WeaponStatistics struct {
-	Hit               int
-	NotHit            int
+	Hit    int
+	NotHit int
+}
+
+// WinVsAircraftList speichert Win-Statistiken:
+// m[acF14]["Default"][acMig29]["Default"] = WinStatistics{ Won: 23, Lost: 67, Draw: 6 }
+type WinVsAircraftList []*WinStatistics
+
+type WinAircraftParameters struct {
+	AircraftParametersId
+	ConfigName string
+	PilotRank  nato.Code
+}
+
+type WinStatistics struct {
+	AC1Params WinAircraftParameters
+	AC2Params WinAircraftParameters
+	AC1Won    int
+	AC2Won    int
+	Draw      int
 }
 
 type Statistics struct {
 	W2A2C WeaponNameVsAircraftParameterIdMap
+	WVsA  *WinVsAircraftList
 }
 
 func NewStatistics() Statistics {
 	s := Statistics{}
 	s.W2A2C = map[string]map[AircraftParametersId]map[string]*WeaponStatistics{}
+	s.WVsA = &WinVsAircraftList{}
 	return s
+}
+
+func (w *WinVsAircraftList) Win(acid1 AircraftId, acid2 AircraftId) {
+
+	ac1 := Globals.AllAircrafts[acid1]
+	acpilot1 := Globals.AllPilots[ac1.Pilots[0]]
+	ac2 := Globals.AllAircrafts[acid2]
+	acpilot2 := Globals.AllPilots[ac2.Pilots[0]]
+
+	wap1 := WinAircraftParameters{
+		AircraftParametersId: ac1.AircraftParametersId,
+		ConfigName:           ac1.WeaponsConfigName,
+		PilotRank:            acpilot1.Code,
+	}
+
+	wap2 := WinAircraftParameters{
+		AircraftParametersId: ac2.AircraftParametersId,
+		ConfigName:           ac2.WeaponsConfigName,
+		PilotRank:            acpilot2.Code,
+	}
+
+	// Die Möglichkeit besteht, dass es den Eintrag schon gibt. Suchen...
+	for i, _ := range *w {
+		if (*w)[i].AC1Params == wap1 && (*w)[i].AC2Params == wap2 {
+			(*w)[i].AC1Won = (*w)[i].AC1Won + 1
+			return
+		} else if (*w)[i].AC1Params == wap2 && (*w)[i].AC2Params == wap1 {
+			(*w)[i].AC2Won = (*w)[i].AC2Won + 1
+			return
+		}
+	}
+
+	ws := WinStatistics{
+		AC1Params: wap1,
+		AC2Params: wap2,
+		AC1Won:    1,
+		AC2Won:    0,
+		Draw:      0,
+	}
+
+	// Diese Kombination gibt es noch nicht und es muss eine erstellt werden.
+	*w = append(*w, &ws)
 }
 
 func (w2a2c WeaponNameVsAircraftParameterIdMap) Dump() {
@@ -62,7 +127,7 @@ func (w2a2c *WeaponNameVsAircraftParameterIdMap) Hit(weaponName string, acid Air
 	ac := Globals.AllAircrafts[acid]
 	// Um 1 erhöhen.
 	(*w2a2c)[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].Hit =
-		(*w2a2c)[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].Hit +1
+		(*w2a2c)[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].Hit + 1
 }
 
 func (w2a2c *WeaponNameVsAircraftParameterIdMap) NotHit(weaponName string, acid AircraftId) {
@@ -70,6 +135,5 @@ func (w2a2c *WeaponNameVsAircraftParameterIdMap) NotHit(weaponName string, acid 
 	ac := Globals.AllAircrafts[acid]
 	// Um 1 erhöhen.
 	(*w2a2c)[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].NotHit =
-		(*w2a2c)[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].NotHit +1
+		(*w2a2c)[weaponName][ac.AircraftParametersId][ac.WeaponsConfigName].NotHit + 1
 }
-
