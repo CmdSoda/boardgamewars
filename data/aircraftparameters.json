@@ -12,7 +12,7 @@
     "CruiseFuelConsumption": 0,
     "Fuel": 20,
     "MaxAltitude": 5,
-    "Dogfighting": 5,
+    "Dogfighting": 9,
     "Configurations": [
       {
         "ConfigurationName": "Default",
@@ -46,7 +46,7 @@
     ],
     "MaintenanceTime": 5,
     "StructuralDefense": 0,
-    "MaxHitpoints": 500,
+    "MaxHitpoints": 650,
     "MaxDamagePoints": 2,
     "Seats": 2
   },
@@ -63,7 +63,7 @@
     "CruiseFuelConsumption": 0,
     "Fuel": 20,
     "MaxAltitude": 5,
-    "Dogfighting": 5,
+    "Dogfighting": 9,
     "Configurations": [
       {
         "ConfigurationName": "Default",
@@ -85,7 +85,7 @@
     ],
     "MaintenanceTime": 5,
     "StructuralDefense": 0,
-    "MaxHitpoints": 500,
+    "MaxHitpoints": 350,
     "MaxDamagePoints": 2,
     "Seats": 1
   },

@@ -67,6 +67,7 @@ func (dm *DamageMap) Add(weaponname string, apid AircraftParametersId, dmg int) 
 }
 
 func (dm *DamageMap) Dump() {
+	fmt.Println("Statistics: Weapon vs Aircraft Damage Count")
 	for weaponname, _ := range *dm {
 		fmt.Println(weaponname)
 		for apid, _ := range (*dm)[weaponname] {
@@ -152,6 +153,7 @@ func (w *WinVsAircraftList) Win(acid1 AircraftId, acid2 AircraftId, wtype WinTyp
 }
 
 func (w *WinVsAircraftList) Dump() {
+	fmt.Println("Statistics: Aircraft vs Aircraft")
 	for _, wstat := range *w {
 		acp1 := Globals.AllAircraftParameters[wstat.AC1Params.AircraftParametersId]
 		acp2 := Globals.AllAircraftParameters[wstat.AC2Params.AircraftParametersId]
@@ -173,6 +175,7 @@ func (w *WinVsAircraftList) Dump() {
 }
 
 func (w2a2c WeaponNameVsAircraftParameterIdMap) Dump() {
+	fmt.Println("Statistics: Weapon vs Aircraft Hit%")
 	for wname := range w2a2c {
 		fmt.Println(wname)
 		for acid := range w2a2c[wname] {
