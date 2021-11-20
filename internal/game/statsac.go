@@ -12,20 +12,20 @@ const (
 	WinTypeWon  WinType = 1
 )
 
-type WinAircraftParameters struct {
+type AircraftPerformanceParameters struct {
 	AircraftParametersId
 	ConfigName string
 	PilotRank  nato.Code
 }
 
-type WinStatistics struct {
-	AC1Params WinAircraftParameters
-	AC2Params WinAircraftParameters
-	AC1Stats  WinAircraftStats
-	AC2Stats  WinAircraftStats
+type AircraftVersusStatistics struct {
+	AC1Params AircraftPerformanceParameters
+	AC2Params AircraftPerformanceParameters
+	AC1Stats  AircraftStatistics
+	AC2Stats  AircraftStatistics
 }
 
-type WinAircraftStats struct {
+type AircraftStatistics struct {
 	Won                      int
 	Draw                     int
 	Lost                     int
@@ -37,97 +37,97 @@ type WinAircraftStats struct {
 	EnemyAtMySixOptimalCount int
 }
 
-// AircraftVersusPerformanceList speichert Win-Statistiken:
-// m[acF14]["Default"][acMig29]["Default"] = WinStatistics{ Won: 23, Lost: 67, Draw: 6 }
-type AircraftVersusPerformanceList []*WinStatistics
+// AircraftVersusStatisticsList speichert Win-Statistiken:
+// m[acF14]["Default"][acMig29]["Default"] = AircraftVersusStatistics{ Won: 23, Lost: 67, Draw: 6 }
+type AircraftVersusStatisticsList []*AircraftVersusStatistics
 
-func (w *AircraftVersusPerformanceList) Position(acid1 AircraftId, acid2 AircraftId, pos DogfightPosition) {
+func (avsl *AircraftVersusStatisticsList) Position(acid1 AircraftId, acid2 AircraftId, pos DogfightPosition) {
 	ac1 := Globals.AllAircrafts[acid1]
 	ac2 := Globals.AllAircrafts[acid2]
-	wap1 := WinAircraftParameters{
+	wap1 := AircraftPerformanceParameters{
 		AircraftParametersId: ac1.AircraftParametersId,
 		ConfigName:           ac1.WeaponsConfigName,
 		PilotRank:            ac1.GetHighestPilotRank(),
 	}
-	wap2 := WinAircraftParameters{
+	wap2 := AircraftPerformanceParameters{
 		AircraftParametersId: ac2.AircraftParametersId,
 		ConfigName:           ac2.WeaponsConfigName,
 		PilotRank:            ac2.GetHighestPilotRank(),
 	}
 	// Die Möglichkeit besteht, dass es den Eintrag schon gibt. Suchen...
-	for i, _ := range *w {
-		if (*w)[i].AC1Params == wap1 && (*w)[i].AC2Params == wap2 {
+	for i := range *avsl {
+		if (*avsl)[i].AC1Params == wap1 && (*avsl)[i].AC2Params == wap2 {
 			switch pos {
 			case DogfightPositionAdventage:
-				(*w)[i].AC1Stats.AdvantageCount = (*w)[i].AC1Stats.AdvantageCount + 1
-				(*w)[i].AC2Stats.DisadvantageCount = (*w)[i].AC2Stats.DisadvantageCount + 1
+				(*avsl)[i].AC1Stats.AdvantageCount = (*avsl)[i].AC1Stats.AdvantageCount + 1
+				(*avsl)[i].AC2Stats.DisadvantageCount = (*avsl)[i].AC2Stats.DisadvantageCount + 1
 			case DogfightPositionBehindEnemiesTail:
-				(*w)[i].AC1Stats.BehindEnemyCount = (*w)[i].AC1Stats.BehindEnemyCount + 1
-				(*w)[i].AC2Stats.EnemyAtMySixCount = (*w)[i].AC2Stats.EnemyAtMySixCount + 1
+				(*avsl)[i].AC1Stats.BehindEnemyCount = (*avsl)[i].AC1Stats.BehindEnemyCount + 1
+				(*avsl)[i].AC2Stats.EnemyAtMySixCount = (*avsl)[i].AC2Stats.EnemyAtMySixCount + 1
 			case DogfightPositionBehindEnemiesTailOptimal:
-				(*w)[i].AC1Stats.BehindEnemyOptimalCount = (*w)[i].AC1Stats.BehindEnemyOptimalCount + 1
-				(*w)[i].AC2Stats.EnemyAtMySixOptimalCount = (*w)[i].AC2Stats.EnemyAtMySixOptimalCount + 1
+				(*avsl)[i].AC1Stats.BehindEnemyOptimalCount = (*avsl)[i].AC1Stats.BehindEnemyOptimalCount + 1
+				(*avsl)[i].AC2Stats.EnemyAtMySixOptimalCount = (*avsl)[i].AC2Stats.EnemyAtMySixOptimalCount + 1
 			}
 			return
-		} else if (*w)[i].AC1Params == wap2 && (*w)[i].AC2Params == wap1 {
+		} else if (*avsl)[i].AC1Params == wap2 && (*avsl)[i].AC2Params == wap1 {
 			switch pos {
 			case DogfightPositionAdventage:
-				(*w)[i].AC2Stats.AdvantageCount = (*w)[i].AC2Stats.AdvantageCount + 1
-				(*w)[i].AC1Stats.DisadvantageCount = (*w)[i].AC1Stats.DisadvantageCount + 1
+				(*avsl)[i].AC2Stats.AdvantageCount = (*avsl)[i].AC2Stats.AdvantageCount + 1
+				(*avsl)[i].AC1Stats.DisadvantageCount = (*avsl)[i].AC1Stats.DisadvantageCount + 1
 			case DogfightPositionBehindEnemiesTail:
-				(*w)[i].AC2Stats.BehindEnemyCount = (*w)[i].AC2Stats.BehindEnemyCount + 1
-				(*w)[i].AC1Stats.EnemyAtMySixCount = (*w)[i].AC1Stats.EnemyAtMySixCount + 1
+				(*avsl)[i].AC2Stats.BehindEnemyCount = (*avsl)[i].AC2Stats.BehindEnemyCount + 1
+				(*avsl)[i].AC1Stats.EnemyAtMySixCount = (*avsl)[i].AC1Stats.EnemyAtMySixCount + 1
 			case DogfightPositionBehindEnemiesTailOptimal:
-				(*w)[i].AC2Stats.BehindEnemyOptimalCount = (*w)[i].AC2Stats.BehindEnemyOptimalCount + 1
-				(*w)[i].AC1Stats.EnemyAtMySixOptimalCount = (*w)[i].AC1Stats.EnemyAtMySixOptimalCount + 1
+				(*avsl)[i].AC2Stats.BehindEnemyOptimalCount = (*avsl)[i].AC2Stats.BehindEnemyOptimalCount + 1
+				(*avsl)[i].AC1Stats.EnemyAtMySixOptimalCount = (*avsl)[i].AC1Stats.EnemyAtMySixOptimalCount + 1
 			}
 			return
 		}
 	}
 }
 
-func (w *AircraftVersusPerformanceList) Win(acid1 AircraftId, acid2 AircraftId, wtype WinType) {
+func (avsl *AircraftVersusStatisticsList) Win(acid1 AircraftId, acid2 AircraftId, wtype WinType) {
 	ac1 := Globals.AllAircrafts[acid1]
 	ac2 := Globals.AllAircrafts[acid2]
-	wap1 := WinAircraftParameters{
+	wap1 := AircraftPerformanceParameters{
 		AircraftParametersId: ac1.AircraftParametersId,
 		ConfigName:           ac1.WeaponsConfigName,
 		PilotRank:            ac1.GetHighestPilotRank(),
 	}
-	wap2 := WinAircraftParameters{
+	wap2 := AircraftPerformanceParameters{
 		AircraftParametersId: ac2.AircraftParametersId,
 		ConfigName:           ac2.WeaponsConfigName,
 		PilotRank:            ac2.GetHighestPilotRank(),
 	}
 	// Die Möglichkeit besteht, dass es den Eintrag schon gibt. Suchen...
-	for i, _ := range *w {
-		if (*w)[i].AC1Params == wap1 && (*w)[i].AC2Params == wap2 {
+	for i := range *avsl {
+		if (*avsl)[i].AC1Params == wap1 && (*avsl)[i].AC2Params == wap2 {
 			switch wtype {
 			case WinTypeDraw:
-				(*w)[i].AC1Stats.Draw = (*w)[i].AC1Stats.Draw + 1
-				(*w)[i].AC2Stats.Draw = (*w)[i].AC2Stats.Draw + 1
+				(*avsl)[i].AC1Stats.Draw = (*avsl)[i].AC1Stats.Draw + 1
+				(*avsl)[i].AC2Stats.Draw = (*avsl)[i].AC2Stats.Draw + 1
 			case WinTypeWon:
-				(*w)[i].AC1Stats.Won = (*w)[i].AC1Stats.Won + 1
-				(*w)[i].AC2Stats.Lost = (*w)[i].AC2Stats.Lost + 1
+				(*avsl)[i].AC1Stats.Won = (*avsl)[i].AC1Stats.Won + 1
+				(*avsl)[i].AC2Stats.Lost = (*avsl)[i].AC2Stats.Lost + 1
 			}
 			return
-		} else if (*w)[i].AC1Params == wap2 && (*w)[i].AC2Params == wap1 {
+		} else if (*avsl)[i].AC1Params == wap2 && (*avsl)[i].AC2Params == wap1 {
 			switch wtype {
 			case WinTypeDraw:
-				(*w)[i].AC1Stats.Draw = (*w)[i].AC1Stats.Draw + 1
-				(*w)[i].AC2Stats.Draw = (*w)[i].AC2Stats.Draw + 1
+				(*avsl)[i].AC1Stats.Draw = (*avsl)[i].AC1Stats.Draw + 1
+				(*avsl)[i].AC2Stats.Draw = (*avsl)[i].AC2Stats.Draw + 1
 			case WinTypeWon:
-				(*w)[i].AC2Stats.Won = (*w)[i].AC2Stats.Won + 1
-				(*w)[i].AC1Stats.Lost = (*w)[i].AC1Stats.Lost + 1
+				(*avsl)[i].AC2Stats.Won = (*avsl)[i].AC2Stats.Won + 1
+				(*avsl)[i].AC1Stats.Lost = (*avsl)[i].AC1Stats.Lost + 1
 			}
 			return
 		}
 	}
 
-	ws := WinStatistics{
+	ws := AircraftVersusStatistics{
 		AC1Params: wap1,
 		AC2Params: wap2,
-		AC1Stats: WinAircraftStats{
+		AC1Stats: AircraftStatistics{
 			Won:                     0,
 			Draw:                    0,
 			Lost:                    0,
@@ -135,7 +135,7 @@ func (w *AircraftVersusPerformanceList) Win(acid1 AircraftId, acid2 AircraftId, 
 			BehindEnemyCount:        0,
 			BehindEnemyOptimalCount: 0,
 		},
-		AC2Stats: WinAircraftStats{
+		AC2Stats: AircraftStatistics{
 			Won:                     0,
 			Draw:                    0,
 			Lost:                    0,
@@ -147,7 +147,7 @@ func (w *AircraftVersusPerformanceList) Win(acid1 AircraftId, acid2 AircraftId, 
 
 	switch wtype {
 	case WinTypeDraw:
-		ws.AC1Stats = WinAircraftStats{
+		ws.AC1Stats = AircraftStatistics{
 			Won:                     0,
 			Draw:                    1,
 			Lost:                    0,
@@ -155,7 +155,7 @@ func (w *AircraftVersusPerformanceList) Win(acid1 AircraftId, acid2 AircraftId, 
 			BehindEnemyCount:        0,
 			BehindEnemyOptimalCount: 0,
 		}
-		ws.AC2Stats = WinAircraftStats{
+		ws.AC2Stats = AircraftStatistics{
 			Won:                     0,
 			Draw:                    1,
 			Lost:                    0,
@@ -164,7 +164,7 @@ func (w *AircraftVersusPerformanceList) Win(acid1 AircraftId, acid2 AircraftId, 
 			BehindEnemyOptimalCount: 0,
 		}
 	case WinTypeWon:
-		ws.AC1Stats = WinAircraftStats{
+		ws.AC1Stats = AircraftStatistics{
 			Won:                     1,
 			Draw:                    0,
 			Lost:                    0,
@@ -172,7 +172,7 @@ func (w *AircraftVersusPerformanceList) Win(acid1 AircraftId, acid2 AircraftId, 
 			BehindEnemyCount:        0,
 			BehindEnemyOptimalCount: 0,
 		}
-		ws.AC2Stats = WinAircraftStats{
+		ws.AC2Stats = AircraftStatistics{
 			Won:                     0,
 			Draw:                    0,
 			Lost:                    1,
@@ -183,12 +183,12 @@ func (w *AircraftVersusPerformanceList) Win(acid1 AircraftId, acid2 AircraftId, 
 	}
 
 	// Diese Kombination gibt es noch nicht und es muss eine erstellt werden.
-	*w = append(*w, &ws)
+	*avsl = append(*avsl, &ws)
 }
 
-func (w *AircraftVersusPerformanceList) Dump() {
+func (avsl *AircraftVersusStatisticsList) Dump() {
 	fmt.Println("Statistics: Aircraft vs Aircraft")
-	for _, wstat := range *w {
+	for _, wstat := range *avsl {
 		acp1 := Globals.AllAircraftParameters[wstat.AC1Params.AircraftParametersId]
 		acp2 := Globals.AllAircraftParameters[wstat.AC2Params.AircraftParametersId]
 		var acwr1 float32
@@ -207,4 +207,3 @@ func (w *AircraftVersusPerformanceList) Dump() {
 		fmt.Printf("%s(%.1f%%) vs %s(%.1f%%) (%d samples)\n", acp1.Name, acwr1, acp2.Name, acwr2, samples)
 	}
 }
-
