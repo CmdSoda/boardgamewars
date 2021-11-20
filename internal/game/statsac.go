@@ -204,6 +204,16 @@ func (avsl *AircraftVersusStatisticsList) Dump() {
 			acwr2 = float32(wstat.AC2Stats.Won) / float32(wstat.AC1Stats.Won+wstat.AC2Stats.Won) * 100
 		}
 		samples := wstat.AC1Stats.Won + wstat.AC1Stats.Lost + wstat.AC1Stats.Draw
-		fmt.Printf("%s(%.1f%%) vs %s(%.1f%%) (%d samples)\n", acp1.Name, acwr1, acp2.Name, acwr2, samples)
+		fmt.Printf("%s(%.1f%%)\tvs\t%s(%.1f%%) (%d samples)\n", acp1.Name, acwr1, acp2.Name, acwr2, samples)
+		overallcount := wstat.AC1Stats.AdvantageCount + wstat.AC1Stats.BehindEnemyCount + wstat.AC1Stats.BehindEnemyOptimalCount
+		fmt.Printf("\t%.1f%%\tvs\t%.1f%%\tAdvantage\n",
+			float32(wstat.AC1Stats.AdvantageCount)/float32(overallcount)*100,
+			float32(wstat.AC2Stats.AdvantageCount)/float32(overallcount)*100)
+		fmt.Printf("\t%.1f%%\tvs\t%.1f%%\tBehindEnemy\n",
+			float32(wstat.AC1Stats.BehindEnemyCount)/float32(overallcount)*100,
+			float32(wstat.AC2Stats.BehindEnemyCount)/float32(overallcount)*100)
+		fmt.Printf("\t%.1f%%\tvs\t%.1f%%\tBehindEnemyOptimal\n",
+			float32(wstat.AC1Stats.BehindEnemyOptimalCount)/float32(overallcount)*100,
+			float32(wstat.AC2Stats.BehindEnemyOptimalCount)/float32(overallcount)*100)
 	}
 }
