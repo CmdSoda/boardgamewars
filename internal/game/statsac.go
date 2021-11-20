@@ -58,6 +58,15 @@ func (avsl *AircraftVersusStatisticsList) Position(acid1 AircraftId, acid2 Aircr
 	for i := range *avsl {
 		if (*avsl)[i].AC1Params == wap1 && (*avsl)[i].AC2Params == wap2 {
 			switch pos {
+			case DogfightPositionEnemyAtMySixOptimal:
+				(*avsl)[i].AC2Stats.BehindEnemyOptimalCount = (*avsl)[i].AC2Stats.BehindEnemyOptimalCount + 1
+				(*avsl)[i].AC1Stats.EnemyAtMySixOptimalCount = (*avsl)[i].AC1Stats.EnemyAtMySixOptimalCount + 1
+			case DogfightPositionEnemyAtMySix:
+				(*avsl)[i].AC2Stats.BehindEnemyCount = (*avsl)[i].AC2Stats.BehindEnemyCount + 1
+				(*avsl)[i].AC1Stats.EnemyAtMySixCount = (*avsl)[i].AC1Stats.EnemyAtMySixCount + 1
+			case DogfightPositionDisadvantage:
+				(*avsl)[i].AC2Stats.AdvantageCount = (*avsl)[i].AC2Stats.AdvantageCount + 1
+				(*avsl)[i].AC1Stats.DisadvantageCount = (*avsl)[i].AC1Stats.DisadvantageCount + 1
 			case DogfightPositionAdventage:
 				(*avsl)[i].AC1Stats.AdvantageCount = (*avsl)[i].AC1Stats.AdvantageCount + 1
 				(*avsl)[i].AC2Stats.DisadvantageCount = (*avsl)[i].AC2Stats.DisadvantageCount + 1
@@ -71,6 +80,15 @@ func (avsl *AircraftVersusStatisticsList) Position(acid1 AircraftId, acid2 Aircr
 			return
 		} else if (*avsl)[i].AC1Params == wap2 && (*avsl)[i].AC2Params == wap1 {
 			switch pos {
+			case DogfightPositionEnemyAtMySixOptimal:
+				(*avsl)[i].AC1Stats.BehindEnemyOptimalCount = (*avsl)[i].AC1Stats.BehindEnemyOptimalCount + 1
+				(*avsl)[i].AC2Stats.EnemyAtMySixOptimalCount = (*avsl)[i].AC2Stats.EnemyAtMySixOptimalCount + 1
+			case DogfightPositionEnemyAtMySix:
+				(*avsl)[i].AC1Stats.BehindEnemyCount = (*avsl)[i].AC1Stats.BehindEnemyCount + 1
+				(*avsl)[i].AC2Stats.EnemyAtMySixCount = (*avsl)[i].AC2Stats.EnemyAtMySixCount + 1
+			case DogfightPositionDisadvantage:
+				(*avsl)[i].AC1Stats.AdvantageCount = (*avsl)[i].AC1Stats.AdvantageCount + 1
+				(*avsl)[i].AC2Stats.DisadvantageCount = (*avsl)[i].AC2Stats.DisadvantageCount + 1
 			case DogfightPositionAdventage:
 				(*avsl)[i].AC2Stats.AdvantageCount = (*avsl)[i].AC2Stats.AdvantageCount + 1
 				(*avsl)[i].AC1Stats.DisadvantageCount = (*avsl)[i].AC1Stats.DisadvantageCount + 1
@@ -205,7 +223,12 @@ func (avsl *AircraftVersusStatisticsList) Dump() {
 		}
 		samples := wstat.AC1Stats.Won + wstat.AC1Stats.Lost + wstat.AC1Stats.Draw
 		fmt.Printf("%s(%.1f%%)\tvs\t%s(%.1f%%) (%d samples)\n", acp1.Name, acwr1, acp2.Name, acwr2, samples)
-		overallcount := wstat.AC1Stats.AdvantageCount + wstat.AC1Stats.BehindEnemyCount + wstat.AC1Stats.BehindEnemyOptimalCount
+		overallcount := wstat.AC1Stats.AdvantageCount +
+			wstat.AC1Stats.BehindEnemyCount +
+			wstat.AC1Stats.BehindEnemyOptimalCount +
+			wstat.AC1Stats.DisadvantageCount +
+			wstat.AC1Stats.EnemyAtMySixCount +
+			wstat.AC1Stats.EnemyAtMySixOptimalCount
 		fmt.Printf("\t%.1f%%\tvs\t%.1f%%\tAdvantage\n",
 			float32(wstat.AC1Stats.AdvantageCount)/float32(overallcount)*100,
 			float32(wstat.AC2Stats.AdvantageCount)/float32(overallcount)*100)
