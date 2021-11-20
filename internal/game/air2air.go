@@ -61,7 +61,12 @@ func (awp Air2AirWeaponParameters) Hit(target AircraftId, dfp DogfightPosition) 
 	}
 	targetac := Globals.AllAircrafts[target]
 	dfpw := SimulateDogfightPosition(wep, DogfightPositionIgnore, targetac.GetParameters().Dogfighting, DogfightPositionIgnore)
-	return dfpw > 0
+	if dfpw > 0 {
+		Globals.Statistics.WeaponPerformance.Hit(awp.Name, target)
+		return true
+	}
+	Globals.Statistics.WeaponPerformance.NotHit(awp.Name, target)
+	return false
 }
 
 func (awp Air2AirWeaponParameters) DoRandomDamage() Hitpoints {

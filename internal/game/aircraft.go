@@ -171,17 +171,14 @@ func (a *Aircraft) DoDamageAssessment() {
 func (a *Aircraft) DoDamageWith(ws WeaponSystem) ([]DamageType, bool) {
 	if ws.Air2AirWeaponParameters != nil {
 		dhp := ws.Air2AirWeaponParameters.DoRandomDamage()
-		if dhp <= a.GetParameters().MaxHitpoints {
-			acp := Globals.AllAircraftParameters[a.AircraftParametersId]
-			// TODO RollRandomDamage soll mehrere DamageType erzeugen können.
-			rd := RollRandomDamage(dhp, acp.MaxHitpoints)
-			Globals.Statistics.WeaponPerformance.Damage(ws.Name, a.AircraftId, len(rd))
-			a.AddDamage(rd)
-			if len(a.Damage) > acp.MaxDamagePoints {
-				a.Destroy()
-				return rd, true
-			}
-			return rd, false
+		acp := Globals.AllAircraftParameters[a.AircraftParametersId]
+		// TODO RollRandomDamage soll mehrere DamageType erzeugen können.
+		rd := RollRandomDamage(dhp, acp.MaxHitpoints)
+		Globals.Statistics.WeaponPerformance.Damage(ws.Name, a.AircraftId, len(rd))
+		a.AddDamage(rd)
+		if len(a.Damage) > acp.MaxDamagePoints {
+			a.Destroy()
+			return rd, true
 		}
 	}
 	return []DamageType{}, false
