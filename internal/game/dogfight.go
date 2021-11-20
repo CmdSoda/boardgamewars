@@ -409,32 +409,32 @@ func (d *Dogfight) DistributeAircraftsToGroups() bool {
 
 func SimulateDogfightPosition(rating1 Rating, lastPosition1 DogfightPosition,
 	rating2 Rating, lastPosition2 DogfightPosition) DogfightPosition {
-	dfr1 := randomizer.Roll1D10() + int(rating1)
-	dfr2 := randomizer.Roll1D10() + int(rating2)
+	dfr1 := randomizer.Roll1D100() + int(rating1)
+	dfr2 := randomizer.Roll1D100() + int(rating2)
 	dfdelta := dfr1 - dfr2
 
 	if lastPosition1 == DogfightPositionAdventage {
-		dfdelta = dfdelta + 3
+		dfdelta = dfdelta + 30
 	}
 
 	if lastPosition2 == DogfightPositionAdventage {
-		dfdelta = dfdelta - 3
+		dfdelta = dfdelta - 30
 	}
 
 	if dfdelta > 0 {
-		if dfdelta >= 5 {
+		if dfdelta >= 50 {
 			return DogfightPositionBehindEnemiesTailOptimal
-		} else if dfdelta >= 3 {
+		} else if dfdelta >= 30 {
 			return DogfightPositionBehindEnemiesTail
-		} else if dfdelta >= 1 {
+		} else if dfdelta >= 10 {
 			return DogfightPositionAdventage
 		}
 	} else {
-		if -dfdelta >= 5 {
+		if -dfdelta >= 50 {
 			return DogfightPositionEnemyAtMySixOptimal
-		} else if -dfdelta >= 3 {
+		} else if -dfdelta >= 30 {
 			return DogfightPositionEnemyAtMySix
-		} else if -dfdelta >= 1 {
+		} else if -dfdelta >= 10 {
 			return DogfightPositionDisadvantage
 		}
 	}

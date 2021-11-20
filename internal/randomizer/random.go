@@ -18,6 +18,10 @@ func Roll1D10() int {
 	return rand.Intn(10) + 1
 }
 
+func Roll1D100() int {
+	return rand.Intn(100) + 1
+}
+
 // Roll1DN würfelt einen N-seitigen Würfel.
 func Roll1DN(n int) int {
 	return rand.Intn(n) + 1

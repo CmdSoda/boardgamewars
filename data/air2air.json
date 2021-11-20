@@ -2,7 +2,7 @@
   {
     "Id": "34bca5fb-89a9-47b3-bb9f-a7bcaf569cfd",
     "Name": "Aim-7",
-    "Dogfighting": 7,
+    "Dogfighting": 70,
     "BVR": 0,
     "Speed": 9,
     "Range": 25,
@@ -13,11 +13,11 @@
   {
     "Id": "3699bee4-369a-11ec-8d3d-0242ac130003",
     "Name": "Aim-9",
-    "Dogfighting": 12,
+    "Dogfighting": 120,
     "BVR": 0,
     "Speed": 9,
     "Range": 10,
-    "Damage": 500,
+    "Damage": 200,
     "OrdenanceWeight": 4,
     "Tags": [ "AllAspect" ]
   }
