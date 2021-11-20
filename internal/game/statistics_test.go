@@ -97,3 +97,10 @@ func TestDamageMapAdd(t *testing.T) {
 	}
 	Globals.Statistics.WeaponPerformance.Dump()
 }
+
+func TestFreeForAll(t *testing.T) {
+	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
+	FreeForAll()
+	Globals.Statistics.AircraftVsAircraft.Dump()
+	Globals.Statistics.WeaponPerformance.Dump()
+}
