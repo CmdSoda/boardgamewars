@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"github.com/CmdSoda/boardgamewars/internal/hexagon"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
 	"strings"
@@ -37,26 +38,13 @@ type Aircraft struct {
 	StationedAt        AirbaseId
 }
 
-func (a Aircraft) String() string {
-	var b strings.Builder
-	fmt.Fprintf(&b, "Aircraft(AC%d): %s\n", a.ShortId, a.GetParameters().Name)
-	for _, pilotid := range a.Pilots {
-		p := Globals.AllPilots[pilotid]
-		fmt.Fprintf(&b, "  Pilot: %s\n", p)
-	}
-	fmt.Fprint(&b, "  Damage: ")
-	if len(a.Damage) == 0 {
-		fmt.Fprint(&b, "<no damage>")
-	}
-	for _, d := range a.Damage {
-		fmt.Fprintf(&b, d.String()+" ")
-	}
-	return b.String()
+func (ac *Aircraft) GetHexPosition() hexagon.HexPosition {
+	return hexagon.HexPosition{}
 }
 
-func (a *Aircraft) GetHighestPilotRank() nato.Code {
+func (ac *Aircraft) GetHighestPilotRank() nato.Code {
 	highest := nato.OF0
-	for _, pid := range a.Pilots {
+	for _, pid := range ac.Pilots {
 		p := Globals.AllPilots[pid]
 		if p.Code > highest {
 			highest = p.Code
@@ -65,32 +53,32 @@ func (a *Aircraft) GetHighestPilotRank() nato.Code {
 	return highest
 }
 
-func (a *Aircraft) Repair() {
-	a.Damage = []DamageType{}
+func (ac *Aircraft) Repair() {
+	ac.Damage = []DamageType{}
 }
 
-func (a *Aircraft) ReviveAndRepair() {
-	a.Damage = []DamageType{}
-	a.Destroyed = false
+func (ac *Aircraft) ReviveAndRepair() {
+	ac.Damage = []DamageType{}
+	ac.Destroyed = false
 }
 
-func (a *Aircraft) Rearm() {
-	for i, _ := range a.WeaponSystems {
-		a.WeaponSystems[i].Depleted = false
+func (ac *Aircraft) Rearm() {
+	for i, _ := range ac.WeaponSystems {
+		ac.WeaponSystems[i].Depleted = false
 	}
 }
 
-func (a *Aircraft) AddPilot(id PilotId) {
-	if len(a.Pilots) >= a.GetParameters().Seats {
-		Log.Errorf("too many pilots in aircraft %d", a.ShortId)
+func (ac *Aircraft) AddPilot(id PilotId) {
+	if len(ac.Pilots) >= ac.GetParameters().Seats {
+		Log.Errorf("too many pilots in aircraft %d", ac.ShortId)
 	}
-	a.Pilots = append(a.Pilots, id)
+	ac.Pilots = append(ac.Pilots, id)
 }
 
-func (a *Aircraft) AssignToAB(id AirbaseId) bool {
+func (ac *Aircraft) AssignToAB(id AirbaseId) bool {
 	_, exist := Globals.AllAirbases[id]
 	if exist {
-		a.StationedAt = id
+		ac.StationedAt = id
 		return true
 	}
 	return false
@@ -128,19 +116,19 @@ func GetAircraftParametersIdByName(name string) (AircraftParametersId, bool) {
 	return InvalidAircraftParametersId, false
 }
 
-func (a Aircraft) GetParameters() AircraftParameters {
-	ap, _ := Globals.AllAircraftParameters[a.AircraftParametersId]
+func (ac Aircraft) GetParameters() AircraftParameters {
+	ap, _ := Globals.AllAircraftParameters[ac.AircraftParametersId]
 	return ap
 }
 
-func (a Aircraft) GetBestDogfightingWeapon() (WeaponSystem, bool) {
+func (ac Aircraft) GetBestDogfightingWeapon() (WeaponSystem, bool) {
 	var bestws WeaponSystem
 	var max = 0
 	exist := false
-	if a.WeaponSystems == nil {
+	if ac.WeaponSystems == nil {
 		panic("no weapon systems")
 	}
-	for _, system := range a.WeaponSystems {
+	for _, system := range ac.WeaponSystems {
 		if system.Depleted == false && system.Air2AirWeaponParameters != nil {
 			if int(system.Air2AirWeaponParameters.Dogfighting) > max {
 				bestws = system
@@ -152,66 +140,85 @@ func (a Aircraft) GetBestDogfightingWeapon() (WeaponSystem, bool) {
 	return bestws, exist
 }
 
-func (a *Aircraft) AddLightDamage(dt DamageType) {
-	a.Damage = append(a.Damage, dt)
+func (ac *Aircraft) AddLightDamage(dt DamageType) {
+	ac.Damage = append(ac.Damage, dt)
 }
 
-func (a *Aircraft) AddDamage(dtl []DamageType) {
-	a.Damage = append(a.Damage, dtl...)
+func (ac *Aircraft) AddDamage(dtl []DamageType) {
+	ac.Damage = append(ac.Damage, dtl...)
 }
 
-func (a *Aircraft) DoDamageAssessment() {
-	if len(a.Damage) > a.GetParameters().MaxDamagePoints {
-		a.Destroyed = true
+func (ac *Aircraft) DoDamageAssessment() {
+	if len(ac.Damage) > ac.GetParameters().MaxDamagePoints {
+		ac.Destroyed = true
 	}
 
 	// Falls die Kanzel getroffen wurde => Pilot tot?
 }
 
-func (a *Aircraft) DoDamageWith(ws WeaponSystem) ([]DamageType, bool) {
+func (ac *Aircraft) DoDamageWith(ws WeaponSystem) ([]DamageType, bool) {
 	if ws.Air2AirWeaponParameters != nil {
 		dhp := ws.Air2AirWeaponParameters.DoRandomDamage()
-		acp := Globals.AllAircraftParameters[a.AircraftParametersId]
+		acp := Globals.AllAircraftParameters[ac.AircraftParametersId]
 		// TODO RollRandomDamage soll mehrere DamageType erzeugen können.
 		rd := RollRandomDamage(dhp, acp.MaxHitpoints)
-		Globals.Statistics.WeaponPerformance.Damage(ws.Name, a.AircraftId, len(rd))
-		a.AddDamage(rd)
-		if len(a.Damage) > acp.MaxDamagePoints {
-			a.Destroy()
+		Globals.Statistics.WeaponPerformance.Damage(ws.Name, ac.AircraftId, len(rd))
+		ac.AddDamage(rd)
+		if len(ac.Damage) > acp.MaxDamagePoints {
+			ac.Destroy()
 			return rd, true
 		}
 	}
 	return []DamageType{}, false
 }
 
-func (a *Aircraft) DepleteWeapon(ws WeaponSystem) {
+func (ac *Aircraft) DepleteWeapon(ws WeaponSystem) {
 	if ws.Air2AirWeaponParameters != nil {
-		for i, system := range a.WeaponSystems {
+		for i, system := range ac.WeaponSystems {
 			if system.Depleted == false && system.Air2AirWeaponParameters != nil &&
 				ws.Air2AirWeaponParameters.Id == system.Air2AirWeaponParameters.Id {
-				a.WeaponSystems[i].Depleted = true
+				ac.WeaponSystems[i].Depleted = true
 				return
 			}
 		}
 	}
 }
 
-func (a *Aircraft) FillSeatsWith(pl []PilotId) {
-	if len(pl) > a.GetParameters().Seats {
+func (ac *Aircraft) FillSeatsWith(pl []PilotId) {
+	if len(pl) > ac.GetParameters().Seats {
 		panic("too many pilots")
 	}
 	for _, pilotid := range pl {
-		a.Pilots = append(a.Pilots, pilotid)
+		ac.Pilots = append(ac.Pilots, pilotid)
 	}
 
 }
 
-func (a *Aircraft) FillSeatsWithNewPilots(nc nato.Code) {
-	pl := NewPilots(Globals.AllAircraftParameters[a.AircraftParametersId].Seats, a.WarPartyId, nc)
-	a.FillSeatsWith(pl)
+func (ac *Aircraft) FillSeatsWithNewPilots(nc nato.Code) {
+	pl := NewPilots(Globals.AllAircraftParameters[ac.AircraftParametersId].Seats, ac.WarPartyId, nc)
+	ac.FillSeatsWith(pl)
 }
 
-func (a *Aircraft) Destroy() {
-	Log.Infof("AC%d destroyed", a.ShortId)
-	a.Destroyed = true
+func (ac *Aircraft) Destroy() {
+	Log.Infof("AC%d destroyed", ac.ShortId)
+	ac.Destroyed = true
 }
+
+//goland:noinspection GoUnhandledErrorResult
+func (ac Aircraft) String() string {
+	var b strings.Builder
+	fmt.Fprintf(&b, "Aircraft(AC%d): %s\n", ac.ShortId, ac.GetParameters().Name)
+	for _, pilotid := range ac.Pilots {
+		p := Globals.AllPilots[pilotid]
+		fmt.Fprintf(&b, "  Pilot: %s\n", p)
+	}
+	fmt.Fprint(&b, "  Damage: ")
+	if len(ac.Damage) == 0 {
+		fmt.Fprint(&b, "<no damage>")
+	}
+	for _, d := range ac.Damage {
+		fmt.Fprintf(&b, d.String()+" ")
+	}
+	return b.String()
+}
+

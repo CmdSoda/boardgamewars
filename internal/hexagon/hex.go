@@ -25,10 +25,6 @@ func NewHexagon(c int, r int) HexPosition {
 	}
 }
 
-func (h HexPosition) String() string {
-	return fmt.Sprintf("(%d, %d)", h.Column, h.Row)
-}
-
 // GetCenterCoordinates ermittelt den Mittelpunkt eines hexagons.
 func (h HexPosition) GetCenterCoordinates(useOffset bool) vector.Vector {
 	center := vector.Vector{}
@@ -187,3 +183,8 @@ func (poslist PositionList) String() string {
 	}
 	return ret
 }
+
+func (h HexPosition) String() string {
+	return fmt.Sprintf("(%d, %d)", h.Column, h.Row)
+}
+

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -67,5 +68,12 @@ func TestAircraft_DoDamageWith(t *testing.T) {
 	ac2.FillSeatsWithNewPilots(nato.OF1)
 	ws, _ := ac1.GetBestDogfightingWeapon()
 	ac2.DoDamageWith(ws)
+}
 
+func TestAircraft_GetHexPosition(t *testing.T) {
+	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
+	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	ac1.FillSeatsWithNewPilots(nato.OF1)
+	hp := ac1.GetHexPosition()
+	fmt.Println(hp)
 }
