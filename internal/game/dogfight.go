@@ -126,6 +126,7 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 	// Flugzeuge mit grösseren Dogfighting-Rating haben höhere Chance.
 	// 1) Kampf um die FloatPosition => Endet in einer FloatPosition
 	dfa1Pos := SimulateDogfightPosition(ap1.Dogfighting, dg.BlueFighterLastPosition, ap2.Dogfighting, dg.RedFighterLastPosition)
+	Globals.Statistics.AircraftVsAircraft.Position(ac1.AircraftId, ac2.AircraftId, dfa1Pos)
 	dfr1.Position = dfa1Pos
 	dfr2.Position = -dfa1Pos
 
