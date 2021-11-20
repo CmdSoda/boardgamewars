@@ -4,3 +4,4 @@ cmd/qttest/qtbox
 cmd/qttest/qttest
 cmd/acbalance/acbalance
 cmd/playground/playground
+cmd/tick/tick
