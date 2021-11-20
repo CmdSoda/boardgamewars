@@ -11,16 +11,16 @@ func TestStatistics_Hit(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
 	s := NewStatistics()
 	ac := NewAircraft("F14", "Default", WarPartyIdUSA)
-	s.WeaponHitPercentage.Hit("Aim-7", ac.AircraftId)
-	s.WeaponHitPercentage.Hit("Aim-7", ac.AircraftId)
-	s.WeaponHitPercentage.Hit("Aim-7", ac.AircraftId)
-	s.WeaponHitPercentage.NotHit("Aim-7", ac.AircraftId)
-	s.WeaponHitPercentage.Hit("Aim-9", ac.AircraftId)
-	assert.Equal(t, 3, s.WeaponHitPercentage["Aim-7"][ac.AircraftParametersId]["Default"].Hit)
-	assert.Equal(t, 1, s.WeaponHitPercentage["Aim-7"][ac.AircraftParametersId]["Default"].NotHit)
-	assert.Equal(t, 1, s.WeaponHitPercentage["Aim-9"][ac.AircraftParametersId]["Default"].Hit)
-	assert.Equal(t, 0, s.WeaponHitPercentage["Aim-9"][ac.AircraftParametersId]["Default"].NotHit)
-	s.WeaponHitPercentage.Dump()
+	s.WeaponPerformance.Hit("Aim-7", ac.AircraftId)
+	s.WeaponPerformance.Hit("Aim-7", ac.AircraftId)
+	s.WeaponPerformance.Hit("Aim-7", ac.AircraftId)
+	s.WeaponPerformance.NotHit("Aim-7", ac.AircraftId)
+	s.WeaponPerformance.Hit("Aim-9", ac.AircraftId)
+	assert.Equal(t, 3, s.WeaponPerformance["Aim-7"][ac.AircraftParametersId]["Default"].Hit)
+	assert.Equal(t, 1, s.WeaponPerformance["Aim-7"][ac.AircraftParametersId]["Default"].NotHit)
+	assert.Equal(t, 1, s.WeaponPerformance["Aim-9"][ac.AircraftParametersId]["Default"].Hit)
+	assert.Equal(t, 0, s.WeaponPerformance["Aim-9"][ac.AircraftParametersId]["Default"].NotHit)
+	s.WeaponPerformance.Dump()
 }
 
 func TestStatistics2(t *testing.T) {
@@ -39,7 +39,7 @@ func TestStatistics2(t *testing.T) {
 	for round := 0; round < 40; round++ {
 		d.Simulate()
 	}
-	Globals.Statistics.WeaponHitPercentage.Dump()
+	Globals.Statistics.WeaponPerformance.Dump()
 	Globals.Statistics.AircraftVsAircraft.Dump()
 }
 
@@ -69,16 +69,16 @@ func TestWin1(t *testing.T) {
 	assert.Equal(t, ac1.AircraftParametersId, s.AircraftVsAircraft[0].AC1Params.AircraftParametersId)
 	assert.Equal(t, ac2.AircraftParametersId, s.AircraftVsAircraft[0].AC2Params.AircraftParametersId)
 
-	assert.Equal(t, 2, s.AircraftVsAircraft[0].AC1Won)
-	assert.Equal(t, 1, s.AircraftVsAircraft[0].AC2Won)
-	assert.Equal(t, 0, s.AircraftVsAircraft[0].Draw)
+	assert.Equal(t, 2, s.AircraftVsAircraft[0].AC1Stats.Won)
+	assert.Equal(t, 1, s.AircraftVsAircraft[0].AC2Stats.Won)
+	assert.Equal(t, 0, s.AircraftVsAircraft[0].AC1Stats.Draw)
 
-	assert.Equal(t, 1, s.AircraftVsAircraft[1].AC1Won)
-	assert.Equal(t, 1, s.AircraftVsAircraft[1].Draw)
+	assert.Equal(t, 1, s.AircraftVsAircraft[1].AC1Stats.Won)
+	assert.Equal(t, 1, s.AircraftVsAircraft[1].AC1Stats.Draw)
 
-	assert.Equal(t, 0, s.AircraftVsAircraft[2].AC1Won)
-	assert.Equal(t, 0, s.AircraftVsAircraft[2].AC2Won)
-	assert.Equal(t, 2, s.AircraftVsAircraft[2].Draw)
+	assert.Equal(t, 0, s.AircraftVsAircraft[2].AC1Stats.Won)
+	assert.Equal(t, 0, s.AircraftVsAircraft[2].AC2Stats.Won)
+	assert.Equal(t, 2, s.AircraftVsAircraft[2].AC1Stats.Draw)
 
 	s.AircraftVsAircraft.Dump()
 }
@@ -95,5 +95,5 @@ func TestDamageMapAdd(t *testing.T) {
 		ac2.ReviveAndRepair()
 		ac2.DoDamageWith(wps)
 	}
-	Globals.Statistics.WeaponDmgCount.Dump()
+	Globals.Statistics.WeaponPerformance.Dump()
 }

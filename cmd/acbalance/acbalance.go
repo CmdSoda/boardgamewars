@@ -37,6 +37,6 @@ func main() {
 		}
 	}
 	game.Globals.Statistics.AircraftVsAircraft.Dump()
-	game.Globals.Statistics.WeaponHitPercentage.Dump()
+	game.Globals.Statistics.WeaponPerformance.Dump()
 	game.Globals.Statistics.WeaponDmgCount.Dump()
 }

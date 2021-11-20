@@ -207,3 +207,30 @@ func TestDistributeReshuffle(t *testing.T) {
 	assert.NotNil(t, d.Groups[0].BlueSupportId)
 	assert.Nil(t, d.Groups[1].BlueSupportId)
 }
+
+func TestF5Mystery(t *testing.T) {
+	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
+	acblue := NewAircraft("F5", "Default", WarPartyIdUSA)
+	acblue.FillSeatsWithNewPilots(nato.OF1)
+	acred := NewAircraft("F14", "Default", WarPartyIdRussia)
+	acred.FillSeatsWithNewPilots(nato.OF1)
+
+	for i := 0; i < 10000; i++ {
+		ds := NewDogfightSetup()
+		acblue.Rearm()
+		acblue.ReviveAndRepair()
+		acred.Rearm()
+		acred.ReviveAndRepair()
+		ds.AddBlue(acblue.AircraftId)
+		ds.AddRed(acred.AircraftId)
+		// Simulation
+		d := NewDogfight(ds)
+		d.DistributeAircraftsToGroups()
+		for i := 0; i < 30; i++ {
+			d.Simulate()
+		}
+	}
+
+	Globals.Statistics.AircraftVsAircraft.Dump()
+	Globals.Statistics.WeaponPerformance.Dump()
+}
