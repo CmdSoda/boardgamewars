@@ -11,16 +11,16 @@ func TestStatistics_Hit(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
 	s := NewStatistics()
 	ac := NewAircraft("F14", "Default", WarPartyIdUSA)
-	s.W2A2C.Hit("Aim-7", ac.AircraftId)
-	s.W2A2C.Hit("Aim-7", ac.AircraftId)
-	s.W2A2C.Hit("Aim-7", ac.AircraftId)
-	s.W2A2C.NotHit("Aim-7", ac.AircraftId)
-	s.W2A2C.Hit("Aim-9", ac.AircraftId)
-	assert.Equal(t, 3, s.W2A2C["Aim-7"][ac.AircraftParametersId]["Default"].Hit)
-	assert.Equal(t, 1, s.W2A2C["Aim-7"][ac.AircraftParametersId]["Default"].NotHit)
-	assert.Equal(t, 1, s.W2A2C["Aim-9"][ac.AircraftParametersId]["Default"].Hit)
-	assert.Equal(t, 0, s.W2A2C["Aim-9"][ac.AircraftParametersId]["Default"].NotHit)
-	s.W2A2C.Dump()
+	s.WeaponHitPercentage.Hit("Aim-7", ac.AircraftId)
+	s.WeaponHitPercentage.Hit("Aim-7", ac.AircraftId)
+	s.WeaponHitPercentage.Hit("Aim-7", ac.AircraftId)
+	s.WeaponHitPercentage.NotHit("Aim-7", ac.AircraftId)
+	s.WeaponHitPercentage.Hit("Aim-9", ac.AircraftId)
+	assert.Equal(t, 3, s.WeaponHitPercentage["Aim-7"][ac.AircraftParametersId]["Default"].Hit)
+	assert.Equal(t, 1, s.WeaponHitPercentage["Aim-7"][ac.AircraftParametersId]["Default"].NotHit)
+	assert.Equal(t, 1, s.WeaponHitPercentage["Aim-9"][ac.AircraftParametersId]["Default"].Hit)
+	assert.Equal(t, 0, s.WeaponHitPercentage["Aim-9"][ac.AircraftParametersId]["Default"].NotHit)
+	s.WeaponHitPercentage.Dump()
 }
 
 func TestStatistics2(t *testing.T) {
@@ -39,8 +39,8 @@ func TestStatistics2(t *testing.T) {
 	for round := 0; round < 40; round++ {
 		d.Simulate()
 	}
-	Globals.Statistics.W2A2C.Dump()
-	Globals.Statistics.WVsA.Dump()
+	Globals.Statistics.WeaponHitPercentage.Dump()
+	Globals.Statistics.AircraftVsAircraft.Dump()
 }
 
 func TestWin1(t *testing.T) {
@@ -56,31 +56,31 @@ func TestWin1(t *testing.T) {
 	ac4.FillSeatsWithNewPilots(nato.OF1)
 	ac5 := NewAircraft("F14", "Default", WarPartyIdRussia)
 	ac5.FillSeatsWithNewPilots(nato.OF1)
-	s.WVsA.Win(ac1.AircraftId, ac2.AircraftId, WinTypeWon)
-	s.WVsA.Win(ac1.AircraftId, ac2.AircraftId, WinTypeWon)
-	s.WVsA.Win(ac2.AircraftId, ac1.AircraftId, WinTypeWon)
-	s.WVsA.Win(ac2.AircraftId, ac3.AircraftId, WinTypeWon)
-	s.WVsA.Win(ac2.AircraftId, ac3.AircraftId, WinTypeDraw)
-	s.WVsA.Win(ac3.AircraftId, ac4.AircraftId, WinTypeDraw)
-	s.WVsA.Win(ac4.AircraftId, ac3.AircraftId, WinTypeDraw)
-	s.WVsA.Win(ac4.AircraftId, ac5.AircraftId, WinTypeDraw)
-	s.WVsA.Win(ac5.AircraftId, ac4.AircraftId, WinTypeDraw)
-	assert.Equal(t, 4, len(s.WVsA))
-	assert.Equal(t, ac1.AircraftParametersId, s.WVsA[0].AC1Params.AircraftParametersId)
-	assert.Equal(t, ac2.AircraftParametersId, s.WVsA[0].AC2Params.AircraftParametersId)
+	s.AircraftVsAircraft.Win(ac1.AircraftId, ac2.AircraftId, WinTypeWon)
+	s.AircraftVsAircraft.Win(ac1.AircraftId, ac2.AircraftId, WinTypeWon)
+	s.AircraftVsAircraft.Win(ac2.AircraftId, ac1.AircraftId, WinTypeWon)
+	s.AircraftVsAircraft.Win(ac2.AircraftId, ac3.AircraftId, WinTypeWon)
+	s.AircraftVsAircraft.Win(ac2.AircraftId, ac3.AircraftId, WinTypeDraw)
+	s.AircraftVsAircraft.Win(ac3.AircraftId, ac4.AircraftId, WinTypeDraw)
+	s.AircraftVsAircraft.Win(ac4.AircraftId, ac3.AircraftId, WinTypeDraw)
+	s.AircraftVsAircraft.Win(ac4.AircraftId, ac5.AircraftId, WinTypeDraw)
+	s.AircraftVsAircraft.Win(ac5.AircraftId, ac4.AircraftId, WinTypeDraw)
+	assert.Equal(t, 4, len(s.AircraftVsAircraft))
+	assert.Equal(t, ac1.AircraftParametersId, s.AircraftVsAircraft[0].AC1Params.AircraftParametersId)
+	assert.Equal(t, ac2.AircraftParametersId, s.AircraftVsAircraft[0].AC2Params.AircraftParametersId)
 
-	assert.Equal(t, 2, s.WVsA[0].AC1Won)
-	assert.Equal(t, 1, s.WVsA[0].AC2Won)
-	assert.Equal(t, 0, s.WVsA[0].Draw)
+	assert.Equal(t, 2, s.AircraftVsAircraft[0].AC1Won)
+	assert.Equal(t, 1, s.AircraftVsAircraft[0].AC2Won)
+	assert.Equal(t, 0, s.AircraftVsAircraft[0].Draw)
 
-	assert.Equal(t, 1, s.WVsA[1].AC1Won)
-	assert.Equal(t, 1, s.WVsA[1].Draw)
+	assert.Equal(t, 1, s.AircraftVsAircraft[1].AC1Won)
+	assert.Equal(t, 1, s.AircraftVsAircraft[1].Draw)
 
-	assert.Equal(t, 0, s.WVsA[2].AC1Won)
-	assert.Equal(t, 0, s.WVsA[2].AC2Won)
-	assert.Equal(t, 2, s.WVsA[2].Draw)
+	assert.Equal(t, 0, s.AircraftVsAircraft[2].AC1Won)
+	assert.Equal(t, 0, s.AircraftVsAircraft[2].AC2Won)
+	assert.Equal(t, 2, s.AircraftVsAircraft[2].Draw)
 
-	s.WVsA.Dump()
+	s.AircraftVsAircraft.Dump()
 }
 
 func TestDamageMapAdd(t *testing.T) {
@@ -95,5 +95,5 @@ func TestDamageMapAdd(t *testing.T) {
 		ac2.ReviveAndRepair()
 		ac2.DoDamageWith(wps)
 	}
-	Globals.Statistics.DmgVsA.Dump()
+	Globals.Statistics.WeaponDmgCount.Dump()
 }

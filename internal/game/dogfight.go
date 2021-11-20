@@ -138,15 +138,15 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 		if exist {
 			ac1.DepleteWeapon(bestws)
 			if bestws.Hit(dg.RedFighterId, dfa1Pos) {
-				Globals.Statistics.W2A2C.Hit(bestws.Name, dg.RedFighterId)
+				Globals.Statistics.WeaponHitPercentage.Hit(bestws.Name, dg.RedFighterId)
 				dfr1.Hit = true
 				dt, destroyed := ac2.DoDamageWith(bestws)
 				if destroyed {
-					Globals.Statistics.WVsA.Win(ac1.AircraftId, ac2.AircraftId, WinTypeWon)
+					Globals.Statistics.AircraftVsAircraft.Win(ac1.AircraftId, ac2.AircraftId, WinTypeWon)
 				}
 				dfr1.DamageConflictedToEnemy = append(dfr1.DamageConflictedToEnemy, dt...)
 			} else {
-				Globals.Statistics.W2A2C.NotHit(bestws.Name, dg.RedFighterId)
+				Globals.Statistics.WeaponHitPercentage.NotHit(bestws.Name, dg.RedFighterId)
 			}
 		}
 	} else if -dfa1Pos >= DogfightPositionBehindEnemiesTail {
@@ -155,15 +155,15 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 		if exist {
 			ac2.DepleteWeapon(bestws)
 			if bestws.Hit(dg.BlueFighterId, -dfa1Pos) {
-				Globals.Statistics.W2A2C.Hit(bestws.Name, dg.BlueFighterId)
+				Globals.Statistics.WeaponHitPercentage.Hit(bestws.Name, dg.BlueFighterId)
 				dfr2.Hit = true
 				dt, destroyed := ac1.DoDamageWith(bestws)
 				if destroyed {
-					Globals.Statistics.WVsA.Win(ac2.AircraftId, ac1.AircraftId, WinTypeWon)
+					Globals.Statistics.AircraftVsAircraft.Win(ac2.AircraftId, ac1.AircraftId, WinTypeWon)
 				}
 				dfr2.DamageConflictedToEnemy = append(dfr2.DamageConflictedToEnemy, dt...)
 			} else {
-				Globals.Statistics.W2A2C.NotHit(bestws.Name, dg.BlueFighterId)
+				Globals.Statistics.WeaponHitPercentage.NotHit(bestws.Name, dg.BlueFighterId)
 			}
 		}
 	}

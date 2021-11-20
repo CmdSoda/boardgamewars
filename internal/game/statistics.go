@@ -41,7 +41,7 @@ type WinStatistics struct {
 	Draw      int
 }
 
-type DamageMap map[string]map[AircraftParametersId]*DamageStatistics
+type WeaponNameToDamageMap map[string]map[AircraftParametersId]*DamageStatistics
 
 type DamageStatistics struct {
 	Damage1 int
@@ -49,7 +49,7 @@ type DamageStatistics struct {
 	Damage3 int
 }
 
-func (dm *DamageMap) Add(weaponname string, apid AircraftParametersId, dmg int) {
+func (dm *WeaponNameToDamageMap) Add(weaponname string, apid AircraftParametersId, dmg int) {
 	if _, exist := (*dm)[weaponname]; !exist {
 		(*dm)[weaponname] = map[AircraftParametersId]*DamageStatistics{}
 	}
@@ -66,15 +66,15 @@ func (dm *DamageMap) Add(weaponname string, apid AircraftParametersId, dmg int) 
 	}
 }
 
-func (dm *DamageMap) Dump() {
-	fmt.Println("Statistics: Weapon vs Aircraft Damage Count")
+func (dm *WeaponNameToDamageMap) Dump() {
+	fmt.Println("Statistics: Weapon Damage Count")
 	for weaponname, _ := range *dm {
 		fmt.Println(weaponname)
 		for apid, _ := range (*dm)[weaponname] {
 			acp := Globals.AllAircraftParameters[apid]
 			stats := (*dm)[weaponname][apid]
 			count := stats.Damage1 + stats.Damage2 + stats.Damage3
-			average := float32(stats.Damage1 + stats.Damage2 * 2 + stats.Damage3 * 3)/
+			average := float32(stats.Damage1+stats.Damage2*2+stats.Damage3*3) /
 				float32(count)
 			fmt.Printf("  %s = %.2f (%d samples)\n", acp.Name, average, count)
 		}
@@ -82,16 +82,16 @@ func (dm *DamageMap) Dump() {
 }
 
 type Statistics struct {
-	W2A2C  WeaponNameVsAircraftParameterIdMap
-	WVsA   WinVsAircraftList
-	DmgVsA DamageMap
+	WeaponHitPercentage WeaponNameVsAircraftParameterIdMap
+	AircraftVsAircraft  WinVsAircraftList
+	WeaponDmgCount      WeaponNameToDamageMap
 }
 
 func NewStatistics() Statistics {
 	s := Statistics{}
-	s.W2A2C = map[string]map[AircraftParametersId]map[string]*WeaponStatistics{}
-	s.WVsA = WinVsAircraftList{}
-	s.DmgVsA = map[string]map[AircraftParametersId]*DamageStatistics{}
+	s.WeaponHitPercentage = map[string]map[AircraftParametersId]map[string]*WeaponStatistics{}
+	s.AircraftVsAircraft = WinVsAircraftList{}
+	s.WeaponDmgCount = map[string]map[AircraftParametersId]*DamageStatistics{}
 	return s
 }
 
@@ -175,7 +175,7 @@ func (w *WinVsAircraftList) Dump() {
 }
 
 func (w2a2c WeaponNameVsAircraftParameterIdMap) Dump() {
-	fmt.Println("Statistics: Weapon vs Aircraft Hit%")
+	fmt.Println("Statistics: Weapon Hit Percentage")
 	for wname := range w2a2c {
 		fmt.Println(wname)
 		for acid := range w2a2c[wname] {

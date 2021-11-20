@@ -73,6 +73,18 @@
             "Category": "DropTank"
           },
           {
+            "WeaponSystemName": "Tank500",
+            "Category": "DropTank"
+          },
+          {
+            "WeaponSystemName": "Aim-7",
+            "Category": "A2A"
+          },
+          {
+            "WeaponSystemName": "Aim-7",
+            "Category": "A2A"
+          },
+          {
             "WeaponSystemName": "Aim-9",
             "Category": "A2A"
           },
@@ -137,6 +149,159 @@
     "MaintenanceTime": 5,
     "StructuralDefense": 0,
     "MaxHitpoints": 500,
+    "MaxDamagePoints": 2,
+    "Seats": 1
+  },
+  {
+    "IdAsString": "f0645118-369a-11ec-8d3d-0242ac130004",
+    "Name": "MiG-27",
+    "Nickname": "Fulcrum",
+    "Role": "Fighter",
+    "FirstFlight": 1970,
+    "Introduction": 1974,
+    "CombatSpeed": 10,
+    "CruiseSpeed": 4,
+    "CombatFuelConsumption": 4,
+    "CruiseFuelConsumption": 0,
+    "Fuel": 20,
+    "MaxAltitude": 5,
+    "Dogfighting": 9,
+    "Configurations": [
+      {
+        "ConfigurationName": "Default",
+        "WeaponSystems": [
+          {
+            "WeaponSystemName": "Tank500",
+            "Category": "DropTank"
+          },
+          {
+            "WeaponSystemName": "Tank500",
+            "Category": "DropTank"
+          },
+          {
+            "WeaponSystemName": "Aim-7",
+            "Category": "A2A"
+          },
+          {
+            "WeaponSystemName": "Aim-7",
+            "Category": "A2A"
+          },
+          {
+            "WeaponSystemName": "Aim-9",
+            "Category": "A2A"
+          },
+          {
+            "WeaponSystemName": "Aim-9",
+            "Category": "A2A"
+          }
+        ]
+      }
+    ],
+    "MaintenanceTime": 5,
+    "StructuralDefense": 0,
+    "MaxHitpoints": 500,
+    "MaxDamagePoints": 2,
+    "Seats": 1
+  },
+  {
+    "IdAsString": "f0645118-369a-11ec-8d3d-0242ac130007",
+    "Name": "MiG-21",
+    "Nickname": "Fulcrum",
+    "Role": "Fighter",
+    "FirstFlight": 1970,
+    "Introduction": 1974,
+    "CombatSpeed": 10,
+    "CruiseSpeed": 4,
+    "CombatFuelConsumption": 4,
+    "CruiseFuelConsumption": 0,
+    "Fuel": 20,
+    "MaxAltitude": 5,
+    "Dogfighting": 9,
+    "Configurations": [
+      {
+        "ConfigurationName": "Default",
+        "WeaponSystems": [
+          {
+            "WeaponSystemName": "Tank500",
+            "Category": "DropTank"
+          },
+          {
+            "WeaponSystemName": "Tank500",
+            "Category": "DropTank"
+          },
+          {
+            "WeaponSystemName": "Aim-7",
+            "Category": "A2A"
+          },
+          {
+            "WeaponSystemName": "Aim-7",
+            "Category": "A2A"
+          },
+          {
+            "WeaponSystemName": "Aim-9",
+            "Category": "A2A"
+          },
+          {
+            "WeaponSystemName": "Aim-9",
+            "Category": "A2A"
+          }
+        ]
+      }
+    ],
+    "MaintenanceTime": 5,
+    "StructuralDefense": 0,
+    "MaxHitpoints": 500,
+    "MaxDamagePoints": 2,
+    "Seats": 1
+  },
+  {
+    "IdAsString": "3e0c63d9-600c-47f5-9ae6-5eeeea4b759d",
+    "Name": "F5-2",
+    "Nickname": "Tiger II",
+    "Role": "Fighter",
+    "FirstFlight": 1970,
+    "Introduction": 1974,
+    "CombatSpeed": 10,
+    "CruiseSpeed": 4,
+    "CombatFuelConsumption": 4,
+    "CruiseFuelConsumption": 0,
+    "Fuel": 20,
+    "MaxAltitude": 5,
+    "Dogfighting": 9,
+    "Configurations": [
+      {
+        "ConfigurationName": "Default",
+        "WeaponSystems": [
+          {
+            "WeaponSystemName": "Tank500",
+            "Category": "DropTank"
+          },
+          {
+            "WeaponSystemName": "Tank500",
+            "Category": "DropTank"
+          },
+          {
+            "WeaponSystemName": "Aim-7",
+            "Category": "A2A"
+          },
+          {
+            "WeaponSystemName": "Aim-7",
+            "Category": "A2A"
+          },
+          {
+            "WeaponSystemName": "Aim-9",
+            "Category": "A2A"
+          },
+          {
+            "WeaponSystemName": "Aim-9",
+            "Category": "A2A"
+          }
+        ]
+      }
+    ],
+    "MaintenanceTime": 5,
+    "StructuralDefense": 0,
+    "MaxHitpoints": 350,
     "MaxDamagePoints": 2,
     "Seats": 1
   }
