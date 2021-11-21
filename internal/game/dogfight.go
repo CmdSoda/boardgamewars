@@ -282,6 +282,7 @@ func NewDogfight(ds DogfightSetup) Dogfight {
 	return d
 }
 
+//goland:noinspection GoUnhandledErrorResult
 func (d Dogfight) String() string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "Dogfight (DF%d):\n", d.ShortId)
@@ -300,7 +301,7 @@ func (d Dogfight) String() string {
 
 func (d *Dogfight) Simulate() {
 	Log.Infof("starting a dogfight simulation with %d groups", len(d.Groups))
-	for i, _ := range d.Groups {
+	for i := range d.Groups {
 		blueResult, redResult := d.Groups[i].Simulate()
 		d.Groups[i].BlueFighterLastPosition = blueResult.Position
 		d.Groups[i].RedFighterLastPosition = redResult.Position
@@ -320,7 +321,7 @@ func (d *Dogfight) DistributeAircraftsToGroups() bool {
 	for restart {
 		restart = false
 		// Vorhandene Gruppen aufräumen
-		for i, _ := range d.Groups {
+		for i := range d.Groups {
 			// Wenn BlueFighter zerstört wurde, muss er durch den Support ersetzt werden.
 			if Globals.AllAircrafts[d.Groups[i].BlueFighterId].Destroyed && d.Groups[i].BlueSupportId != nil {
 				d.Groups[i].BlueFighterId = *d.Groups[i].BlueSupportId
@@ -440,4 +441,3 @@ func SimulateDogfightPosition(rating1 Rating, lastPosition1 DogfightPosition,
 	}
 	return DogfightPositionTossup
 }
-

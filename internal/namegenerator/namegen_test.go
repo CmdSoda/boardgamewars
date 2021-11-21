@@ -9,7 +9,7 @@ import (
 )
 
 func TestFullname(t *testing.T) {
-	randomizer.Init()
+	randomizer.Init(0)
 	fn := CreateMaleFullName(countrycodes.UK)
 	fmt.Println(fn)
 	fn = CreateFemaleFullName(countrycodes.UK)

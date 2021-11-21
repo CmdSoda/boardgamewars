@@ -26,6 +26,7 @@ func main() {
 	}
 }
 
+//goland:noinspection GoUnhandledErrorResult
 func layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
 	if v, err := g.SetView("hello", maxX/2-7, maxY/2, maxX/2+7, maxY/2+2); err != nil {
@@ -37,6 +38,7 @@ func layout(g *gocui.Gui) error {
 	return nil
 }
 
+//goland:noinspection GoUnusedParameter
 func quit(g *gocui.Gui, v *gocui.View) error {
 	return gocui.ErrQuit
 }

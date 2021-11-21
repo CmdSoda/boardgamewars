@@ -32,7 +32,7 @@ func Test1(t *testing.T) {
 }
 
 func TestRollRange(t *testing.T) {
-	Init()
+	Init(0)
 	var rolled20 bool
 	var rolled21 bool
 	var rolled22 bool

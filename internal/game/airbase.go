@@ -24,6 +24,7 @@ type Airbase struct {
 
 type AirbasesMap map[AirbaseId]Airbase
 
+//goland:noinspection GoUnhandledErrorResult
 func (al AirbasesMap) String() string {
 	var sb strings.Builder
 	fmt.Fprint(&sb, "Airbases:\n")
@@ -33,6 +34,7 @@ func (al AirbasesMap) String() string {
 	return sb.String()
 }
 
+//goland:noinspection GoUnhandledErrorResult
 func (ab Airbase) String() string {
 	var sb strings.Builder
 	wp := Globals.AllWarParties[ab.BelongsTo]

@@ -2,6 +2,7 @@ package nato
 
 type Code int
 
+//goland:noinspection GoUnusedConst
 const (
 	OF0 Code = 0
 	OF1 Code = 1

@@ -16,14 +16,14 @@ func TestNewMap(t *testing.T) {
 
 func TestGetTileAt(t *testing.T) {
 	m := NewMap(3, 3)
-	m.SetTileAt(hexagon.HexPosition{1, 1}, Tile{
+	m.SetTileAt(hexagon.HexPosition{Column: 1, Row: 1}, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundMud,
 	})
 	assert.Equal(t, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundMud,
-	}, m.GetTileAt(hexagon.HexPosition{1, 1}))
+	}, m.GetTileAt(hexagon.HexPosition{Column: 1, Row: 1}))
 	assert.Equal(t, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundMud,
@@ -31,7 +31,7 @@ func TestGetTileAt(t *testing.T) {
 	assert.Equal(t, Tile{
 		HillType:   HillPlain,
 		GroundType: GroundStreet,
-	}, m.GetTileAt(hexagon.HexPosition{0, 0}))
+	}, m.GetTileAt(hexagon.HexPosition{}))
 }
 
 func TestSearch(t *testing.T) {

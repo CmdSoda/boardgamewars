@@ -63,7 +63,7 @@ func (ac *Aircraft) ReviveAndRepair() {
 }
 
 func (ac *Aircraft) Rearm() {
-	for i, _ := range ac.WeaponSystems {
+	for i := range ac.WeaponSystems {
 		ac.WeaponSystems[i].Depleted = false
 	}
 }
@@ -221,4 +221,3 @@ func (ac Aircraft) String() string {
 	}
 	return b.String()
 }
-

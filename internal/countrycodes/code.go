@@ -3,11 +3,10 @@ package countrycodes
 type Code int
 
 const (
-	UK               Code   = 0
-	Germany          Code   = 1
-	USA              Code   = 2
-	Russia           Code   = 3
-	InvalidParameter string = "InvalidParameter"
+	UK      Code = 0
+	Germany Code = 1
+	USA     Code = 2
+	Russia  Code = 3
 )
 
 func (c Code) String() string {
