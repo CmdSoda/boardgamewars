@@ -17,4 +17,4 @@ type AltitudeBand uint
 type Hitpoints uint
 type EquipmentId uint
 type ShortId int
-
+type Knots int

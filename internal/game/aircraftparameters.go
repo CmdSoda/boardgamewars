@@ -19,8 +19,8 @@ type AircraftParameters struct {
 	Role                  string
 	FirstFlight           Year
 	Introduction          Year
-	CombatSpeed           Rating
-	CruiseSpeed           Rating
+	CombatSpeed           Knots
+	CruiseSpeed           Knots
 	CombatFuelConsumption Rating // Treibstoffverbrauch im Kampf pro Runde.
 	CruiseFuelConsumption Rating // Treibstoffverbrauch beim Cruisen pro Runde.
 	Fuel                  Rating
@@ -40,7 +40,7 @@ type AircraftLibraryFile []AircraftParameters
 
 func LoadAircraftParameters() error {
 	var err error
-	filename := Globals.Config.DataPath + "/aircraftparameters.json"
+	filename := Globals.Config.DataPath + "aircraftparameters.json"
 	file, err := os.Open(filename)
 	if err != nil {
 		Log.Errorf("%s not found\n", filename)

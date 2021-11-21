@@ -4,11 +4,16 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 type Config struct {
 	DataPath string
 	LogLevel string
+}
+
+func endsWithSlash(path string) bool {
+	return strings.HasSuffix(path, "/")
 }
 
 func LoadConfig(filename string) (Config, error) {
@@ -28,5 +33,10 @@ func LoadConfig(filename string) (Config, error) {
 		Log.Errorf("%s error while unmarshaling\n", filename)
 		return c, err
 	}
+
+	if !endsWithSlash(c.DataPath) {
+		c.DataPath = c.DataPath + "/"
+	}
+
 	return c, nil
 }

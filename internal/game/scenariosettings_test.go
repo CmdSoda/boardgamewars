@@ -9,7 +9,8 @@ import (
 
 func TestLoadScenarioSettings(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
-	s, err := LoadScenarioSettings(Globals.Config.DataPath + "/scenario_example1.json")
+	s, err := LoadScenarioSettings(Globals.Config.DataPath + "scenario_example1.json")
 	assert.Nil(t, err)
 	fmt.Println(s)
+	assert.Greater(t, s.HexDiameterKm, float32(0))
 }
