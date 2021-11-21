@@ -7,6 +7,21 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type Data struct {
+	Config
+	AllAirbases           AirbasesMap
+	AllAircraftParameters AircraftParametersMap
+	Air2AirWeapons        Air2AirWeaponLibrary
+	AllWarParties         WarPartyMap
+	AllAircrafts          AircraftsMap
+	AllPilots             PilotsMap
+	AllCounters           CounterList
+	World
+	Statistics
+}
+
+var Globals = Data{}
+
 var WarPartyIdUSA = WarPartyId(uuid.MustParse("92432884-3974-11ec-8d3d-0242ac130003"))
 var WarPartyIdRussia = WarPartyId(uuid.MustParse("a261b7c6-3974-11ec-8d3d-0242ac130003"))
 var WarPartyIdUK = WarPartyId(uuid.MustParse("5a6dffaa-3975-11ec-8d3d-0242ac130003"))
@@ -76,6 +91,7 @@ func initgame(seed int64) error {
 	Globals.AllAirbases = map[AirbaseId]Airbase{}
 	Globals.Statistics = NewStatistics()
 	randomizer.Init(seed)
+	Globals.World = NewWorld()
 	if err = LoadAircraftParameters(); err != nil {
 		return err
 	}
