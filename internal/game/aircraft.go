@@ -160,7 +160,6 @@ func (ac *Aircraft) DoDamageWith(ws WeaponSystem) ([]DamageType, bool) {
 	if ws.Air2AirWeaponParameters != nil {
 		dhp := ws.Air2AirWeaponParameters.DoRandomDamage()
 		acp := Globals.AllAircraftParameters[ac.AircraftParametersId]
-		// TODO RollRandomDamage soll mehrere DamageType erzeugen können.
 		rd := RollRandomDamage(dhp, acp.MaxHitpoints)
 		Globals.Statistics.WeaponPerformance.Damage(ws.Name, ac.AircraftId, len(rd))
 		ac.AddDamage(rd)
