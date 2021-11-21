@@ -16,4 +16,6 @@ func TestStep(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
 	Step(3)
 	assert.Equal(t, StepTime(3), Globals.World.CurrentStep)
+	Step(7)
+	assert.Equal(t, StepTime(10), Globals.World.CurrentStep)
 }
