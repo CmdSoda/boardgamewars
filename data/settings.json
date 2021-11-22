@@ -1,0 +1,6 @@
+{
+  "DogfightPositionAdventageBonus": 30,
+  "DogfightPositionBehindEnemiesTailOptimalThreshold": 55,
+  "DogfightPositionBehindEnemiesTailThreshold": 30,
+  "DogfightPositionAdventageThreshold": 10
+}

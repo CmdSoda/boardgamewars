@@ -18,6 +18,7 @@ type Data struct {
 	AllCounters           CounterList
 	World
 	Statistics
+	Settings
 }
 
 var Globals = Data{}
@@ -92,6 +93,12 @@ func initgame(seed int64) error {
 	Globals.Statistics = NewStatistics()
 	randomizer.Init(seed)
 	Globals.World = NewWorld()
+	var s Settings
+	s, err = LoadSettings(Globals.Config.DataPath + "settings.json")
+	if err = LoadAircraftParameters(); err != nil {
+		return err
+	}
+	Globals.Settings = s
 	if err = LoadAircraftParameters(); err != nil {
 		return err
 	}

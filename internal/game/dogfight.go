@@ -415,27 +415,27 @@ func SimulateDogfightPosition(rating1 Rating, lastPosition1 DogfightPosition,
 	dfdelta := dfr1 - dfr2
 
 	if lastPosition1 == DogfightPositionAdventage {
-		dfdelta = dfdelta + 30
+		dfdelta = dfdelta + Globals.Settings.DogfightPositionAdventageBonus
 	}
 
 	if lastPosition2 == DogfightPositionAdventage {
-		dfdelta = dfdelta - 30
+		dfdelta = dfdelta - Globals.Settings.DogfightPositionAdventageBonus
 	}
 
 	if dfdelta > 0 {
-		if dfdelta >= 50 {
+		if dfdelta >= Globals.Settings.DogfightPositionBehindEnemiesTailOptimalThreshold {
 			return DogfightPositionBehindEnemiesTailOptimal
-		} else if dfdelta >= 30 {
+		} else if dfdelta >= Globals.Settings.DogfightPositionBehindEnemiesTailThreshold {
 			return DogfightPositionBehindEnemiesTail
-		} else if dfdelta >= 10 {
+		} else if dfdelta >= Globals.Settings.DogfightPositionAdventageThreshold {
 			return DogfightPositionAdventage
 		}
 	} else {
-		if -dfdelta >= 50 {
+		if -dfdelta >= Globals.Settings.DogfightPositionBehindEnemiesTailOptimalThreshold {
 			return DogfightPositionEnemyAtMySixOptimal
-		} else if -dfdelta >= 30 {
+		} else if -dfdelta >= Globals.Settings.DogfightPositionBehindEnemiesTailThreshold {
 			return DogfightPositionEnemyAtMySix
-		} else if -dfdelta >= 10 {
+		} else if -dfdelta >= Globals.Settings.DogfightPositionAdventageThreshold {
 			return DogfightPositionDisadvantage
 		}
 	}
