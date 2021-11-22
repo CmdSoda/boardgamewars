@@ -13,5 +13,4 @@ func main() {
 	}
 	game.FreeForAll()
 	game.Globals.Statistics.AircraftVsAircraft.Dump()
-	game.Globals.Statistics.WeaponPerformance.Dump()
 }
