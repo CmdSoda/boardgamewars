@@ -82,10 +82,26 @@ func TestStateChange(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.InfoLevel))
 	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
 	ac1.FillSeatsWithNewPilots(nato.OF1)
+
+	assert.Equal(t, "in_the_hangar", ac1.FSM.Current())
+
 	err := ac1.FSM.Event("start")
 	assert.Nil(t, err)
-	assert.Equal(t, "started", ac1.FSM.Current())
+	assert.Equal(t, "in_the_air", ac1.FSM.Current())
+
+	err = ac1.FSM.Event("attack")
+	assert.Nil(t, err)
+	assert.Equal(t, "in_dogfight", ac1.FSM.Current())
+
+	// Unerlaubt
+	err = ac1.FSM.Event("land")
+	assert.NotNil(t, err)
+
+	err = ac1.FSM.Event("disengage")
+	assert.Nil(t, err)
+	assert.Equal(t, "in_the_air", ac1.FSM.Current())
+
 	err = ac1.FSM.Event("land")
 	assert.Nil(t, err)
-	assert.Equal(t, "landed", ac1.FSM.Current())
+	assert.Equal(t, "in_the_hangar", ac1.FSM.Current())
 }
