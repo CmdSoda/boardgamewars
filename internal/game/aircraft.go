@@ -52,6 +52,7 @@ const (
 	AcEventLand          string = "land"
 	AcEventDisengage     string = "disengage"
 	AcEventRepair        string = "repair"
+	AcEventRepairDone    string = "repaired"
 )
 
 func (ac *Aircraft) GetHexPosition() hexagon.HexPosition {
@@ -121,6 +122,7 @@ func NewAircraft(name string, weaponConfigName string, warpartyid WarPartyId) *A
 			{Name: AcEventAttack, Src: []string{AcStateInTheAir}, Dst: AcStateInDogfight},
 			{Name: AcEventDisengage, Src: []string{AcStateInDogfight}, Dst: AcStateInTheAir},
 			{Name: AcEventRepair, Src: []string{AcStateInTheHangar}, Dst: AcStateInMaintenance},
+			{Name: AcEventRepairDone, Src: []string{AcStateInMaintenance}, Dst: AcStateInTheHangar},
 		}, fsm.Callbacks{
 			"enter_state": func(e *fsm.Event) { ac.enterState(e) },
 		})
@@ -260,6 +262,13 @@ func (ac *Aircraft) Step(st StepTime) {
 	ac.StepsTaken = ac.StepsTaken + st
 	switch ac.FSM.Current() {
 	case AcStateInMaintenance:
+		ac.RepairTime = ac.RepairTime - st
+		if ac.RepairTime <= 0 {
+			err := ac.FSM.Event(AcEventRepairDone)
+			if err != nil {
+				Log.Panicf("Unable to change AC%d to AcEventRepairDone\n", ac.ShortId)
+			}
+		}
 	case AcStateInTheAir:
 	case AcStateInTheHangar:
 	case AcStateInDogfight:

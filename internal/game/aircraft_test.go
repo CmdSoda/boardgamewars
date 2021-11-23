@@ -114,4 +114,9 @@ func TestRepairTime(t *testing.T) {
 	err := ac1.FSM.Event(AcEventRepair, StepTime(20))
 	assert.Nil(t, err)
 	assert.Equal(t, StepTime(20), ac1.RepairTime)
+
+	ac1.Step(10)
+	assert.Equal(t, AcStateInMaintenance, ac1.FSM.Current())
+	ac1.Step(10)
+	assert.Equal(t, AcStateInTheHangar, ac1.FSM.Current())
 }
