@@ -19,7 +19,7 @@ func endsWithSlash(path string) bool {
 	return strings.HasSuffix(path, "/")
 }
 
-func LoadConfig(filename string) (Startup, error) {
+func LoadStartup(filename string) (Startup, error) {
 	c := Startup{}
 	file, err := os.Open(filename)
 	if err != nil {

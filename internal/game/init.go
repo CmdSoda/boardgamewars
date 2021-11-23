@@ -76,7 +76,7 @@ func CreateWarParties() {
 
 func loadconfig() error {
 	var err error
-	if Globals.Startup, err = LoadConfig("startup.json"); err != nil {
+	if Globals.Startup, err = LoadStartup("startup.json"); err != nil {
 		return err
 	}
 	return nil
