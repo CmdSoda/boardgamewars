@@ -10,7 +10,7 @@ import (
 // TODO Dateiname und Struktur in Startup umändern. Sie soll schliesslich den Einstiegspunkt in die
 // Datenstrukturen ermöglichen.
 
-type Config struct {
+type Startup struct {
 	DataPath string
 	LogLevel string
 }
@@ -19,8 +19,8 @@ func endsWithSlash(path string) bool {
 	return strings.HasSuffix(path, "/")
 }
 
-func LoadConfig(filename string) (Config, error) {
-	c := Config{}
+func LoadConfig(filename string) (Startup, error) {
+	c := Startup{}
 	file, err := os.Open(filename)
 	if err != nil {
 		Log.Errorf("%s not found\n", filename)

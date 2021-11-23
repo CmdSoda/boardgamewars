@@ -24,7 +24,7 @@ type Air2AirWeaponLibrary []Air2AirWeaponParameters
 
 func LoadAir2AirWeapons() error {
 	var err error
-	filename := Globals.Config.DataPath + "air2air.json"
+	filename := Globals.Startup.DataPath + "air2air.json"
 	file, err := os.Open(filename)
 	if err != nil {
 		Log.Errorf("%s not found\n", filename)

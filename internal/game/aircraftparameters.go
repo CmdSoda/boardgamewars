@@ -40,7 +40,7 @@ type AircraftLibraryFile []AircraftParameters
 
 func LoadAircraftParameters() error {
 	var err error
-	filename := Globals.Config.DataPath + "aircraftparameters.json"
+	filename := Globals.Startup.DataPath + "aircraftparameters.json"
 	file, err := os.Open(filename)
 	if err != nil {
 		Log.Errorf("%s not found\n", filename)

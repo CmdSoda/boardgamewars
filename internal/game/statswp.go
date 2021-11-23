@@ -2,7 +2,7 @@ package game
 
 import "fmt"
 
-// WeaponPerformanceMap ist eine Map auf Waffensystem-Name auf AircraftParametersId auf Config-Name
+// WeaponPerformanceMap ist eine Map auf Waffensystem-Name auf AircraftParametersId auf Startup-Name
 // Beispiel:
 // m := WeaponPerformanceMap{}
 // m["Aim-9"][acid]["Default"].Hit += 1

@@ -8,7 +8,7 @@ import (
 )
 
 type Data struct {
-	Config
+	Startup
 	AllAirbases           AirbasesMap
 	AllAircraftParameters AircraftParametersMap
 	Air2AirWeapons        Air2AirWeaponLibrary
@@ -76,7 +76,7 @@ func CreateWarParties() {
 
 func loadconfig() error {
 	var err error
-	if Globals.Config, err = LoadConfig("gameconfig.json"); err != nil {
+	if Globals.Startup, err = LoadConfig("startup.json"); err != nil {
 		return err
 	}
 	return nil
@@ -94,7 +94,7 @@ func initgame(seed int64) error {
 	randomizer.Init(seed)
 	Globals.World = NewWorld()
 	var s Settings
-	s, err = LoadSettings(Globals.Config.DataPath + "settings.json")
+	s, err = LoadSettings(Globals.Startup.DataPath + "settings.json")
 	if err = LoadAircraftParameters(); err != nil {
 		return err
 	}
@@ -117,7 +117,7 @@ func InitGame(seed int64) error {
 	if err = loadconfig(); err != nil {
 		return err
 	}
-	lvl, err = logrus.ParseLevel(Globals.Config.LogLevel)
+	lvl, err = logrus.ParseLevel(Globals.Startup.LogLevel)
 	if err != nil {
 		Log.Errorf("error while parsing log level: %s", err.Error())
 	}
