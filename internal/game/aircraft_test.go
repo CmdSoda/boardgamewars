@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"github.com/CmdSoda/boardgamewars/internal/hexagon"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
@@ -106,7 +107,7 @@ func TestStateChange(t *testing.T) {
 	assert.Equal(t, AcStateInTheHangar, ac1.FSM.Current())
 }
 
-func TestRepairTime(t *testing.T) {
+func TestStateChanges(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
 	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
 	ac1.FillSeatsWithNewPilots(nato.OF1)
@@ -119,4 +120,10 @@ func TestRepairTime(t *testing.T) {
 	assert.Equal(t, AcStateInMaintenance, ac1.FSM.Current())
 	ac1.Step(10)
 	assert.Equal(t, AcStateInTheHangar, ac1.FSM.Current())
+	ac1.Waypoints = []hexagon.HexPosition{{
+		Column: 15,
+		Row:    15,
+	}}
+	ac1.Step(1)
+	assert.Equal(t, AcStateInTheAir, ac1.FSM.Current())
 }

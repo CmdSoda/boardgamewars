@@ -40,6 +40,7 @@ type Aircraft struct {
 	StepsTaken         StepTime
 	FSM                *fsm.FSM
 	RepairTime         StepTime
+	Waypoints          hexagon.PositionList
 }
 
 const (
@@ -163,7 +164,7 @@ func (ac Aircraft) GetBestDogfightingWeapon() (WeaponSystem, bool) {
 	var max = 0
 	exist := false
 	if ac.WeaponSystems == nil {
-		panic("no weapon systems")
+		Log.Panicln("no weapon systems")
 	}
 	for _, system := range ac.WeaponSystems {
 		if system.Depleted == false && system.Air2AirWeaponParameters != nil {
@@ -271,6 +272,12 @@ func (ac *Aircraft) Step(st StepTime) {
 		}
 	case AcStateInTheAir:
 	case AcStateInTheHangar:
+		if len(ac.Waypoints) > 0 {
+			err := ac.FSM.Event(AcEventStart)
+			if err != nil {
+				Log.Panicf("Unable to change AC%d to AcEventStart\n", ac.ShortId)
+			}
+		}
 	case AcStateInDogfight:
 	}
 }
