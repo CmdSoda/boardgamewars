@@ -2,5 +2,17 @@
   "DogfightPositionAdventageBonus": 30,
   "DogfightPositionBehindEnemiesTailOptimalThreshold": 55,
   "DogfightPositionBehindEnemiesTailThreshold": 30,
-  "DogfightPositionAdventageThreshold": 10
+  "DogfightPositionAdventageThreshold": 10,
+  "RandomDamageStrings": [
+    "Fuselage",
+    "Fuselage",
+    "Fuselage",
+    "Wing",
+    "Wing",
+    "Cockpit",
+    "Turbine",
+    "Rudder",
+    "Rudder",
+    "Flaps"
+  ]
 }

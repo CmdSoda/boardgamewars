@@ -11,6 +11,8 @@ type Settings struct {
 	DogfightPositionBehindEnemiesTailOptimalThreshold int
 	DogfightPositionBehindEnemiesTailThreshold        int
 	DogfightPositionAdventageThreshold                int
+	RandomDamageStrings                               []string
+	RandomDamage                                      []DamageType
 }
 
 func LoadSettings(filename string) (Settings, error) {
@@ -30,6 +32,9 @@ func LoadSettings(filename string) (Settings, error) {
 		Log.Errorf("%s error while unmarshaling\n", filename)
 		return s, err
 	}
-
+	s.RandomDamage = []DamageType{}
+	for _, damageString := range s.RandomDamageStrings {
+		s.RandomDamage = append(s.RandomDamage, GetDamageTypeFromString(damageString))
+	}
 	return s, nil
 }

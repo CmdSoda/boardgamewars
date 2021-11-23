@@ -31,41 +31,37 @@ func (dt DamageType) String() string {
 	return "Nothing"
 }
 
+func GetDamageTypeFromString(dts string) DamageType {
+	switch dts {
+	case "Fuselage":
+		return DamageTypeFuselage
+	case "Wing":
+		return DamageTypeWing
+	case "Cockpit":
+		return DamageTypeCockpit
+	case "Turbine":
+		return DamageTypeTurbine
+	case "Rudder":
+		return DamageTypeRudder
+	case "Flaps":
+		return DamageTypeFlaps
+	}
+	return DamageTypeFuselage
+}
+
 func RollRandomDamage(weapondamage Hitpoints, targethp Hitpoints) []DamageType {
 	damagecount := 1
 	wdf := float32(weapondamage)
 	thpf := float32(targethp)
-	if wdf >= thpf * 0.8 {
+	if wdf >= thpf*0.8 {
 		damagecount = 3
-	} else if wdf >= thpf * 0.5 {
+	} else if wdf >= thpf*0.5 {
 		damagecount = 2
 	}
 	var dtl []DamageType
 	for i := 0; i < damagecount; i++ {
-		r := randomizer.Roll1D10()
-		switch r {
-		case 1:
-			dtl = append(dtl, DamageTypeFuselage)
-		case 2:
-			dtl = append(dtl, DamageTypeFuselage)
-		case 3:
-			dtl = append(dtl, DamageTypeFuselage)
-		case 4:
-			dtl = append(dtl, DamageTypeWing)
-		case 5:
-			dtl = append(dtl, DamageTypeWing)
-		case 6:
-			dtl = append(dtl, DamageTypeCockpit)
-		case 7:
-			dtl = append(dtl, DamageTypeTurbine)
-		case 8:
-			dtl = append(dtl, DamageTypeRudder)
-		case 9:
-			dtl = append(dtl, DamageTypeRudder)
-		case 10:
-			dtl = append(dtl, DamageTypeFlaps)
-		}
-
+		r := randomizer.Roll1DN(len(Globals.Settings.RandomDamage))
+		dtl = append(dtl, Globals.Settings.RandomDamage[r-1])
 	}
 	return dtl
 }
