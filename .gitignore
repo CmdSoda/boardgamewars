@@ -5,3 +5,4 @@ cmd/qttest/qttest
 cmd/acbalance/acbalance
 cmd/playground/playground
 cmd/tick/tick
+cmd/gotk3demo/gotk3demo
