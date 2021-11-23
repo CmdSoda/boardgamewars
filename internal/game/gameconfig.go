@@ -7,6 +7,9 @@ import (
 	"strings"
 )
 
+// TODO Dateiname und Struktur in Startup umändern. Sie soll schliesslich den Einstiegspunkt in die
+// Datenstrukturen ermöglichen.
+
 type Config struct {
 	DataPath string
 	LogLevel string
