@@ -220,3 +220,7 @@ func (ac Aircraft) String() string {
 	}
 	return b.String()
 }
+
+func (ac *Aircraft) Step(st StepTime) {
+
+}
