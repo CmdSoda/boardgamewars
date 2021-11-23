@@ -39,7 +39,20 @@ type Aircraft struct {
 	StationedAt        AirbaseId
 	StepsTaken         StepTime
 	FSM                *fsm.FSM
+	RepairTime         StepTime
 }
+
+const (
+	AcStateInTheAir      string = "in_the_air"
+	AcStateInTheHangar   string = "in_the_hangar"
+	AcStateInDogfight    string = "in_dogfight"
+	AcStateInMaintenance string = "in_maintenance"
+	AcEventStart         string = "start"
+	AcEventAttack        string = "attack"
+	AcEventLand          string = "land"
+	AcEventDisengage     string = "disengage"
+	AcEventRepair        string = "repair"
+)
 
 func (ac *Aircraft) GetHexPosition() hexagon.HexPosition {
 	return hexagon.HexPosition{}
@@ -102,11 +115,12 @@ func NewAircraft(name string, weaponConfigName string, warpartyid WarPartyId) *A
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
 		ac.Damage = make([]DamageType, 0)
-		ac.FSM = fsm.NewFSM("in_the_hangar", fsm.Events{
-			{Name: "START", Src: []string{"in_the_hangar"}, Dst: "in_the_air"},
-			{Name: "LAND", Src: []string{"in_the_air"}, Dst: "in_the_hangar"},
-			{Name: "ATTACK", Src: []string{"in_the_air"}, Dst: "in_dogfight"},
-			{Name: "DISENGAGE", Src: []string{"in_dogfight"}, Dst: "in_the_air"},
+		ac.FSM = fsm.NewFSM(AcStateInTheHangar, fsm.Events{
+			{Name: AcEventStart, Src: []string{AcStateInTheHangar}, Dst: AcStateInTheAir},
+			{Name: AcEventLand, Src: []string{AcStateInTheAir}, Dst: AcStateInTheHangar},
+			{Name: AcEventAttack, Src: []string{AcStateInTheAir}, Dst: AcStateInDogfight},
+			{Name: AcEventDisengage, Src: []string{AcStateInDogfight}, Dst: AcStateInTheAir},
+			{Name: AcEventRepair, Src: []string{AcStateInTheHangar}, Dst: AcStateInMaintenance},
 		}, fsm.Callbacks{
 			"enter_state": func(e *fsm.Event) { ac.enterState(e) },
 		})
@@ -118,7 +132,10 @@ func NewAircraft(name string, weaponConfigName string, warpartyid WarPartyId) *A
 }
 
 func (ac *Aircraft) enterState(e *fsm.Event) {
-	Log.Infof("AC%d changed to %s", ac.ShortId, e.Dst)
+	switch e.Event {
+	case AcEventRepair:
+		ac.RepairTime = e.Args[0].(StepTime)
+	}
 }
 
 func GetAircraftParametersIdByName(name string) (AircraftParametersId, bool) {
@@ -238,4 +255,10 @@ func (ac Aircraft) String() string {
 
 func (ac *Aircraft) Step(st StepTime) {
 	ac.StepsTaken = ac.StepsTaken + st
+	switch ac.FSM.Current() {
+	case AcStateInMaintenance:
+	case AcStateInTheAir:
+	case AcStateInTheHangar:
+	case AcStateInDogfight:
+	}
 }

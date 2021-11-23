@@ -79,29 +79,39 @@ func TestAircraft_GetHexPosition(t *testing.T) {
 }
 
 func TestStateChange(t *testing.T) {
-	assert.Nil(t, InitGameWithLogLevel(0, logrus.InfoLevel))
+	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
 	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
 	ac1.FillSeatsWithNewPilots(nato.OF1)
 
-	assert.Equal(t, "in_the_hangar", ac1.FSM.Current())
+	assert.Equal(t, AcStateInTheHangar, ac1.FSM.Current())
 
-	err := ac1.FSM.Event("START")
+	err := ac1.FSM.Event(AcEventStart)
 	assert.Nil(t, err)
-	assert.Equal(t, "in_the_air", ac1.FSM.Current())
+	assert.Equal(t, AcStateInTheAir, ac1.FSM.Current())
 
-	err = ac1.FSM.Event("ATTACK")
+	err = ac1.FSM.Event(AcEventAttack)
 	assert.Nil(t, err)
-	assert.Equal(t, "in_dogfight", ac1.FSM.Current())
+	assert.Equal(t, AcStateInDogfight, ac1.FSM.Current())
 
 	// Unerlaubt
-	err = ac1.FSM.Event("LAND")
+	err = ac1.FSM.Event(AcEventLand)
 	assert.NotNil(t, err)
 
-	err = ac1.FSM.Event("DISENGAGE")
+	err = ac1.FSM.Event(AcEventDisengage)
 	assert.Nil(t, err)
-	assert.Equal(t, "in_the_air", ac1.FSM.Current())
+	assert.Equal(t, AcStateInTheAir, ac1.FSM.Current())
 
-	err = ac1.FSM.Event("LAND")
+	err = ac1.FSM.Event(AcEventLand)
 	assert.Nil(t, err)
-	assert.Equal(t, "in_the_hangar", ac1.FSM.Current())
+	assert.Equal(t, AcStateInTheHangar, ac1.FSM.Current())
+}
+
+func TestRepairTime(t *testing.T) {
+	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
+	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	ac1.FillSeatsWithNewPilots(nato.OF1)
+
+	err := ac1.FSM.Event(AcEventRepair, StepTime(20))
+	assert.Nil(t, err)
+	assert.Equal(t, StepTime(20), ac1.RepairTime)
 }
