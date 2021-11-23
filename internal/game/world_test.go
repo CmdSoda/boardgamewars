@@ -27,4 +27,5 @@ func TestAircraftStep(t *testing.T) {
 	ac1.FillSeatsWithNewPilots(nato.OF1)
 	Globals.World.Add(ac1)
 	Globals.World.Step(3)
+	assert.Equal(t, StepTime(3), ac1.StepsTaken)
 }

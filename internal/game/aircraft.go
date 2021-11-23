@@ -36,6 +36,7 @@ type Aircraft struct {
 	Destroyed          bool
 	Pilots             []PilotId
 	StationedAt        AirbaseId
+	StepsTaken         StepTime
 }
 
 func (ac *Aircraft) GetHexPosition() hexagon.HexPosition {
@@ -222,5 +223,5 @@ func (ac Aircraft) String() string {
 }
 
 func (ac *Aircraft) Step(st StepTime) {
-
+	ac.StepsTaken = ac.StepsTaken + st
 }
