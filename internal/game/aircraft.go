@@ -103,10 +103,10 @@ func NewAircraft(name string, weaponConfigName string, warpartyid WarPartyId) *A
 		}
 		ac.Damage = make([]DamageType, 0)
 		ac.FSM = fsm.NewFSM("in_the_hangar", fsm.Events{
-			{Name: "start", Src: []string{"in_the_hangar"}, Dst: "in_the_air"},
-			{Name: "land", Src: []string{"in_the_air"}, Dst: "in_the_hangar"},
-			{Name: "attack", Src: []string{"in_the_air"}, Dst: "in_dogfight"},
-			{Name: "disengage", Src: []string{"in_dogfight"}, Dst: "in_the_air"},
+			{Name: "START", Src: []string{"in_the_hangar"}, Dst: "in_the_air"},
+			{Name: "LAND", Src: []string{"in_the_air"}, Dst: "in_the_hangar"},
+			{Name: "ATTACK", Src: []string{"in_the_air"}, Dst: "in_dogfight"},
+			{Name: "DISENGAGE", Src: []string{"in_dogfight"}, Dst: "in_the_air"},
 		}, fsm.Callbacks{
 			"enter_state": func(e *fsm.Event) { ac.enterState(e) },
 		})

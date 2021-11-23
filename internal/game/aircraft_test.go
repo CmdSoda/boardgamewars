@@ -85,23 +85,23 @@ func TestStateChange(t *testing.T) {
 
 	assert.Equal(t, "in_the_hangar", ac1.FSM.Current())
 
-	err := ac1.FSM.Event("start")
+	err := ac1.FSM.Event("START")
 	assert.Nil(t, err)
 	assert.Equal(t, "in_the_air", ac1.FSM.Current())
 
-	err = ac1.FSM.Event("attack")
+	err = ac1.FSM.Event("ATTACK")
 	assert.Nil(t, err)
 	assert.Equal(t, "in_dogfight", ac1.FSM.Current())
 
 	// Unerlaubt
-	err = ac1.FSM.Event("land")
+	err = ac1.FSM.Event("LAND")
 	assert.NotNil(t, err)
 
-	err = ac1.FSM.Event("disengage")
+	err = ac1.FSM.Event("DISENGAGE")
 	assert.Nil(t, err)
 	assert.Equal(t, "in_the_air", ac1.FSM.Current())
 
-	err = ac1.FSM.Event("land")
+	err = ac1.FSM.Event("LAND")
 	assert.Nil(t, err)
 	assert.Equal(t, "in_the_hangar", ac1.FSM.Current())
 }
