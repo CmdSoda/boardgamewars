@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/google/uuid v1.3.0
+	github.com/gotk3/gotk3 v0.6.1
 	github.com/jroimartin/gocui v0.5.0
 	github.com/sirupsen/logrus v1.4.1
 	github.com/stretchr/testify v1.7.0
