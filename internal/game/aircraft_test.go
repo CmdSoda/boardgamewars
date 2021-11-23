@@ -116,14 +116,16 @@ func TestStateChanges(t *testing.T) {
 	ac1.FillSeatsWithNewPilots(nato.OF1)
 	ac1.AssignToAB(ab.AirbaseId)
 
-	err := ac1.FSM.Event(AcEventRepair, StepTime(20))
+	ac1.Damage = append(ac1.Damage, []DamageType{DamageTypeFuselage, DamageTypeCockpit}...)
+	err := ac1.FSM.Event(AcEventRepair)
 	assert.Nil(t, err)
-	assert.Equal(t, StepTime(20), ac1.RepairTime)
+	assert.Equal(t, StepTime(2*20), ac1.RepairTime)
 
 	ac1.Step(10)
 	assert.Equal(t, AcStateInMaintenance, ac1.FSM.Current())
-	ac1.Step(10)
+	ac1.Step(30)
 	assert.Equal(t, AcStateInTheHangar, ac1.FSM.Current())
+	assert.Equal(t, 0, len(ac1.Damage))
 	ac1.Waypoints = []hexagon.HexPosition{{
 		Column: 15,
 		Row:    15,

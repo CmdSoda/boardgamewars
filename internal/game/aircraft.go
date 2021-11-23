@@ -138,10 +138,7 @@ func NewAircraft(name string, weaponConfigName string, warpartyid WarPartyId) *A
 func (ac *Aircraft) enterState(e *fsm.Event) {
 	switch e.Event {
 	case AcEventRepair:
-		if len(e.Args) != 1 {
-			Log.Panicln("AcEventRepair not enough parameters")
-		}
-		ac.RepairTime = e.Args[0].(StepTime)
+		ac.RepairTime = StepTime(20 * len(ac.Damage))
 	}
 }
 
@@ -266,6 +263,7 @@ func (ac *Aircraft) Step(st StepTime) {
 	case AcStateInMaintenance:
 		ac.RepairTime = ac.RepairTime - st
 		if ac.RepairTime <= 0 {
+			ac.Damage = []DamageType{}
 			err := ac.FSM.Event(AcEventRepairDone)
 			if err != nil {
 				Log.Panicf("Unable to change AC%d to AcEventRepairDone\n", ac.ShortId)
