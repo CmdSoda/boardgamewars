@@ -77,3 +77,15 @@ func TestAircraft_GetHexPosition(t *testing.T) {
 	hp := ac1.GetHexPosition()
 	fmt.Println(hp)
 }
+
+func TestStateChange(t *testing.T) {
+	assert.Nil(t, InitGameWithLogLevel(0, logrus.InfoLevel))
+	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	ac1.FillSeatsWithNewPilots(nato.OF1)
+	err := ac1.FSM.Event("start")
+	assert.Nil(t, err)
+	assert.Equal(t, "started", ac1.FSM.Current())
+	err = ac1.FSM.Event("land")
+	assert.Nil(t, err)
+	assert.Equal(t, "landed", ac1.FSM.Current())
+}

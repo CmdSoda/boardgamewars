@@ -5,6 +5,7 @@ import (
 	"github.com/CmdSoda/boardgamewars/internal/hexagon"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
+	"github.com/looplab/fsm"
 	"strings"
 )
 
@@ -37,6 +38,7 @@ type Aircraft struct {
 	Pilots             []PilotId
 	StationedAt        AirbaseId
 	StepsTaken         StepTime
+	FSM                *fsm.FSM
 }
 
 func (ac *Aircraft) GetHexPosition() hexagon.HexPosition {
@@ -100,11 +102,21 @@ func NewAircraft(name string, weaponConfigName string, warpartyid WarPartyId) *A
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
 		ac.Damage = make([]DamageType, 0)
+		ac.FSM = fsm.NewFSM("landed", fsm.Events{
+			{Name: "start", Src: []string{"landed"}, Dst: "started"},
+			{Name: "land", Src: []string{"started"}, Dst: "landed"},
+		}, fsm.Callbacks{
+			"enter_state": func(e *fsm.Event) { ac.enterState(e) },
+		})
 		Globals.AllAircrafts[ac.AircraftId] = &ac
-		Log.Infof("new aircraft created: %s (%d)", name, ac.ShortId)
+		Log.Infof("new aircraft created: %s (AC%d)", name, ac.ShortId)
 		return &ac
 	}
 	return &ac
+}
+
+func (ac *Aircraft) enterState(e *fsm.Event) {
+	Log.Infof("AC%d changed to %s", ac.ShortId, e.Dst)
 }
 
 func GetAircraftParametersIdByName(name string) (AircraftParametersId, bool) {
