@@ -28,19 +28,20 @@ type Aircraft struct {
 	AircraftParametersId
 	WarPartyId
 	ShortId
-	Altitude           AltitudeBand // Aktuelle Höhe.
-	CurrentPosition    FloatPosition
-	NextTargetLocation FloatPosition // Das ist die FloatPosition, die das Flugzeug jetzt ansteuert.
-	WeaponSystems      WeaponSystemList
-	WeaponsConfigName  string
-	Damage             []DamageType // Eine Liste von Schäden
-	Destroyed          bool
-	Pilots             []PilotId
-	StationedAt        AirbaseId
-	StepsTaken         StepTime
-	FSM                *fsm.FSM
-	RepairTime         StepTime
-	Waypoints          hexagon.PositionList
+	Altitude          AltitudeBand // Aktuelle Höhe.
+	CurrentPosition   hexagon.HexPosition
+	WeaponSystems     WeaponSystemList
+	WeaponsConfigName string
+	Damage            []DamageType // Eine Liste von Schäden
+	Destroyed         bool
+	Pilots            []PilotId
+	StationedAt       AirbaseId
+	StepsTaken        StepTime
+	FSM               *fsm.FSM
+	RepairTime        StepTime
+	Waypoints         hexagon.PositionList
+	CurrentWaypoint   int
+	Destination       hexagon.HexPosition
 }
 
 const (
@@ -271,6 +272,14 @@ func (ac *Aircraft) Step(st StepTime) {
 			}
 		}
 	case AcStateInTheAir:
+		ab := Globals.AllAirbases[ac.StationedAt]
+		// Soll das Flugzeug landen?
+		if ac.Destination == ac.CurrentPosition && ab.HexPosition == ac.CurrentPosition {
+			err := ac.FSM.Event(AcEventLand)
+			if err != nil {
+				Log.Panicf("Unable to change AC%d to AcEventLand\n", ac.ShortId)
+			}
+		}
 	case AcStateInTheHangar:
 		if len(ac.Waypoints) > 0 {
 			err := ac.FSM.Event(AcEventStart)

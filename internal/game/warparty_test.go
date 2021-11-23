@@ -3,6 +3,7 @@ package game
 import (
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
+	"github.com/CmdSoda/boardgamewars/internal/hexagon"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -68,7 +69,7 @@ func TestNewWarParty(t *testing.T) {
 	assert.Nil(t, InitGame(0))
 	wp := NewWarParty("NeueParty", countrycodes.USA, Blue)
 	fmt.Println(wp)
-	ab := NewAirbase("Parkhaus", wp.WarPartyId, FloatPosition{1, 1})
+	ab := NewAirbase("Parkhaus", wp.WarPartyId, hexagon.HexPosition{Column: 1, Row: 1})
 	assert.Equal(t, wp.Name, Globals.AllWarParties[wp.WarPartyId].Name)
 	ab.AssignToWarParty(wp.WarPartyId)
 	assert.Equal(t, wp.WarPartyId, ab.BelongsTo)

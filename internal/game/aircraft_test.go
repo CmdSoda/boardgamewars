@@ -27,13 +27,13 @@ func TestAssign(t *testing.T) {
 	wrongid := AirbaseId(uuid.New())
 	ac := NewAircraft("F14", "Default", WarPartyIdUK)
 	assert.Equal(t, false, ac.AssignToAB(wrongid))
-	nellis := NewAirbase("Nellis AB", WarPartyIdUSA, FloatPosition{6, 9})
+	nellis := NewAirbase("Nellis AB", WarPartyIdUSA, hexagon.HexPosition{Column: 6, Row: 9})
 	assert.Equal(t, true, ac.AssignToAB(nellis.AirbaseId))
 }
 
 func TestAircraftMap(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	ab := NewAirbase("Carrier", WarPartyIdUK, FloatPosition{4, 6})
+	ab := NewAirbase("Carrier", WarPartyIdUK, hexagon.HexPosition{Column: 4, Row: 6})
 	ac := NewAircraft("F14", "Default", WarPartyIdUK)
 	p1 := NewPilot(WarPartyIdUK, nato.OF1)
 	ac.AddPilot(p1.PilotId)
@@ -53,7 +53,7 @@ func TestAircraftId(t *testing.T) {
 
 func TestAircraft_AssignToAB(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	ab := NewAirbase("Carrier", WarPartyIdUK, FloatPosition{4, 6})
+	ab := NewAirbase("Carrier", WarPartyIdUK, hexagon.HexPosition{Column: 4, Row: 6})
 	ac := NewAircraft("F14", "Default", WarPartyIdUK)
 	ac.AssignToAB(ab.AirbaseId)
 	_, exist := Globals.AllAirbases[ab.AirbaseId]
@@ -109,8 +109,12 @@ func TestStateChange(t *testing.T) {
 
 func TestStateChanges(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
+
+	ab := NewAirbase("Airbase1", WarPartyIdUSA, hexagon.HexPosition{Column: 15, Row: 15})
+
 	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
 	ac1.FillSeatsWithNewPilots(nato.OF1)
+	ac1.AssignToAB(ab.AirbaseId)
 
 	err := ac1.FSM.Event(AcEventRepair, StepTime(20))
 	assert.Nil(t, err)
@@ -126,4 +130,8 @@ func TestStateChanges(t *testing.T) {
 	}}
 	ac1.Step(1)
 	assert.Equal(t, AcStateInTheAir, ac1.FSM.Current())
+	ac1.Destination = hexagon.NewHexagon(15, 15)
+	ac1.CurrentPosition = hexagon.NewHexagon(15, 15)
+	ac1.Step(1)
+	assert.Equal(t, AcStateInTheHangar, ac1.FSM.Current())
 }

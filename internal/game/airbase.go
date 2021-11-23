@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"github.com/CmdSoda/boardgamewars/internal/hexagon"
 	"github.com/google/uuid"
 	"strings"
 )
@@ -19,7 +20,7 @@ type Airbase struct {
 	AllPilots           []PilotId    // Alle Piloten, die zu dieser Basis gehören
 	AircraftsHangar     []AircraftId
 	AircraftsMaintained []AircraftId
-	FloatPosition
+	hexagon.HexPosition
 }
 
 type AirbasesMap map[AirbaseId]Airbase
@@ -44,17 +45,17 @@ func (ab Airbase) String() string {
 		fmt.Fprintf(&sb, "%s, ", Globals.AllAircrafts[aircraftid].GetParameters().Name)
 	}
 	fmt.Fprint(&sb, "\n")
-	fmt.Fprintf(&sb, "Location: %s\n", ab.FloatPosition)
+	fmt.Fprintf(&sb, "Location: %s\n", ab.HexPosition)
 
 	return sb.String()
 }
 
-func NewAirbase(name string, warpartyid WarPartyId, pos FloatPosition) Airbase {
+func NewAirbase(name string, warpartyid WarPartyId, pos hexagon.HexPosition) Airbase {
 	ab := Airbase{}
 	ab.AirbaseId = AirbaseId(uuid.New())
 	ab.Name = name
 	ab.BelongsTo = warpartyid
-	ab.FloatPosition = pos
+	ab.HexPosition = pos
 	Globals.AllAirbases[ab.AirbaseId] = ab
 	ab.AircraftsHangar = []AircraftId{}
 	ab.AircraftsMaintained = []AircraftId{}
