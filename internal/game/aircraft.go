@@ -134,6 +134,9 @@ func NewAircraft(name string, weaponConfigName string, warpartyid WarPartyId) *A
 func (ac *Aircraft) enterState(e *fsm.Event) {
 	switch e.Event {
 	case AcEventRepair:
+		if len(e.Args) != 1 {
+			Log.Panicln("AcEventRepair not enough parameters")
+		}
 		ac.RepairTime = e.Args[0].(StepTime)
 	}
 }
