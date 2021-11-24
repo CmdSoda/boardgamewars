@@ -46,7 +46,7 @@ type Aircraft struct {
 
 const (
 	AcStateInTheAir      string = "in_the_air"
-	AcStateInTheHangar   string = "in_the_hangar"
+	AcStateParking       string = "parking"
 	AcStateInDogfight    string = "in_dogfight"
 	AcStateInMaintenance string = "in_maintenance"
 	AcEventStart         string = "start"
@@ -118,13 +118,13 @@ func NewAircraft(name string, weaponConfigName string, warpartyid WarPartyId) *A
 			ac.WeaponSystems[i].InitWeaponSystem()
 		}
 		ac.Damage = make([]DamageType, 0)
-		ac.FSM = fsm.NewFSM(AcStateInTheHangar, fsm.Events{
-			{Name: AcEventStart, Src: []string{AcStateInTheHangar}, Dst: AcStateInTheAir},
-			{Name: AcEventLand, Src: []string{AcStateInTheAir}, Dst: AcStateInTheHangar},
+		ac.FSM = fsm.NewFSM(AcStateParking, fsm.Events{
+			{Name: AcEventStart, Src: []string{AcStateParking}, Dst: AcStateInTheAir},
+			{Name: AcEventLand, Src: []string{AcStateInTheAir}, Dst: AcStateParking},
 			{Name: AcEventAttack, Src: []string{AcStateInTheAir}, Dst: AcStateInDogfight},
 			{Name: AcEventDisengage, Src: []string{AcStateInDogfight}, Dst: AcStateInTheAir},
-			{Name: AcEventRepair, Src: []string{AcStateInTheHangar}, Dst: AcStateInMaintenance},
-			{Name: AcEventRepairDone, Src: []string{AcStateInMaintenance}, Dst: AcStateInTheHangar},
+			{Name: AcEventRepair, Src: []string{AcStateParking}, Dst: AcStateInMaintenance},
+			{Name: AcEventRepairDone, Src: []string{AcStateInMaintenance}, Dst: AcStateParking},
 		}, fsm.Callbacks{
 			"enter_state": func(e *fsm.Event) { ac.enterState(e) },
 		})
@@ -278,7 +278,7 @@ func (ac *Aircraft) Step(st StepTime) {
 				Log.Panicf("Unable to change AC%d to AcEventLand\n", ac.ShortId)
 			}
 		}
-	case AcStateInTheHangar:
+	case AcStateParking:
 		if len(ac.Waypoints) > 0 {
 			err := ac.FSM.Event(AcEventStart)
 			if err != nil {

@@ -41,7 +41,7 @@ func TestAircraftMap(t *testing.T) {
 	ac.AddPilot(p2.PilotId)
 	ab.AddToHangar(ac.AircraftId)
 	ac.Damage = append(ac.Damage, DamageTypeCockpit)
-	fmt.Println(ab.AircraftsHangar)
+	fmt.Println(ab.AircraftsParked)
 }
 
 func TestAircraftId(t *testing.T) {
@@ -84,7 +84,7 @@ func TestStateChange(t *testing.T) {
 	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
 	ac1.FillSeatsWithNewPilots(nato.OF1)
 
-	assert.Equal(t, AcStateInTheHangar, ac1.FSM.Current())
+	assert.Equal(t, AcStateParking, ac1.FSM.Current())
 
 	err := ac1.FSM.Event(AcEventStart)
 	assert.Nil(t, err)
@@ -104,7 +104,7 @@ func TestStateChange(t *testing.T) {
 
 	err = ac1.FSM.Event(AcEventLand)
 	assert.Nil(t, err)
-	assert.Equal(t, AcStateInTheHangar, ac1.FSM.Current())
+	assert.Equal(t, AcStateParking, ac1.FSM.Current())
 }
 
 func TestStateChanges(t *testing.T) {
@@ -124,7 +124,7 @@ func TestStateChanges(t *testing.T) {
 	ac1.Step(10)
 	assert.Equal(t, AcStateInMaintenance, ac1.FSM.Current())
 	ac1.Step(30)
-	assert.Equal(t, AcStateInTheHangar, ac1.FSM.Current())
+	assert.Equal(t, AcStateParking, ac1.FSM.Current())
 	assert.Equal(t, 0, len(ac1.Damage))
 	ac1.Waypoints = []hexagon.HexPosition{{
 		Column: 15,
@@ -135,5 +135,5 @@ func TestStateChanges(t *testing.T) {
 	ac1.Destination = hexagon.NewHexagon(15, 15)
 	ac1.CurrentPosition = hexagon.NewHexagon(15, 15)
 	ac1.Step(1)
-	assert.Equal(t, AcStateInTheHangar, ac1.FSM.Current())
+	assert.Equal(t, AcStateParking, ac1.FSM.Current())
 }

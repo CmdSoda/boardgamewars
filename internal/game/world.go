@@ -11,9 +11,9 @@ func NewWorld() World {
 	return World{Machines: []*Stepper{}}
 }
 
-func (w *World) Add(st *Aircraft) {
-	var s Stepper = st
-	w.Machines = append(w.Machines, &s)
+func (w *World) Add(st *Stepper) {
+	//var s Stepper = st
+	w.Machines = append(w.Machines, st)
 }
 
 func (w *World) Step(st StepTime) {
