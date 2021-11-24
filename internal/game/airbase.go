@@ -105,8 +105,10 @@ func (ab *Airbase) Step(st StepTime) {
 			ac.RepairTime = ac.RepairTime - st
 			if ac.RepairTime < 0 {
 				ac.RepairTime = 0
+				ac.Damage = []DamageType{}
 				ab.moveAircraftToParkingArea(i)
 				doAgain = true
+				break
 			}
 		}
 	}

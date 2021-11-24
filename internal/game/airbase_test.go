@@ -62,4 +62,14 @@ func TestMoveAircraftsToMaintenance(t *testing.T) {
 	assert.Equal(t, ac3.AircraftId, ab.MaintenanceArea[1])
 	assert.Equal(t, ac4.AircraftId, ab.MaintenanceArea[2])
 	assert.Equal(t, ac5.AircraftId, ab.MaintenanceArea[3])
+
+	ab.Step(1)
+	assert.Equal(t, 2, len(ab.ParkingArea))
+	assert.Equal(t, 4, len(ab.MaintenanceArea))
+	ab.Step(300)
+	assert.Equal(t, 5, len(ab.ParkingArea))
+	assert.Equal(t, 1, len(ab.MaintenanceArea))
+	ab.Step(300)
+	assert.Equal(t, 6, len(ab.ParkingArea))
+	assert.Equal(t, 0, len(ab.MaintenanceArea))
 }
