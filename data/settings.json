@@ -14,5 +14,9 @@
     "Rudder",
     "Rudder",
     "Flaps"
-  ]
+  ],
+  "DamageMaintenanceMultiplier": {
+    "Fuselage": 1.4, "Flaps": 0.6, "Rudder": 0.8, "Cockpit": 1.6, "Wing": 0.3, "Turbine": 1.0
+  },
+  "RepairTimePerDamageTypeBase": 10.0
 }

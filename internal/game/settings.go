@@ -13,6 +13,8 @@ type Settings struct {
 	DogfightPositionAdventageThreshold                int
 	RandomDamageStrings                               []string
 	RandomDamage                                      []DamageType
+	DamageMaintenanceMultiplier                       map[string]float64
+	RepairTimePerDamageTypeBase                       float64
 }
 
 func LoadSettings(filename string) (Settings, error) {

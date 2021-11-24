@@ -84,17 +84,46 @@ func (ab *Airbase) moveAircraftToParkingArea(idx int) {
 	ab.ParkingArea = append(ab.ParkingArea, acid)
 }
 
+func (ab *Airbase) CalculateRepairTime(ac *Aircraft) {
+	ac.RepairTime = 0
+	for _, damageType := range ac.Damage {
+		mp := Globals.Settings.DamageMaintenanceMultiplier[damageType.String()]
+		cost := mp * Globals.Settings.RepairTimePerDamageTypeBase
+		ac.RepairTime = ac.RepairTime + StepTime(cost)
+	}
+}
+
 func (ab *Airbase) Step(st StepTime) {
-	doagain := true
-	for doagain {
-		doagain = false
+	doAgain := true
+
+	// Flugzeuge im Wartungsbereich entsprechend der StepTime reparieren.
+	for doAgain {
+		doAgain = false
+		for i := range ab.MaintenanceArea {
+			// Beschädigtes Flugzeug?
+			ac := Globals.AllAircrafts[ab.MaintenanceArea[i]]
+			ac.RepairTime = ac.RepairTime - st
+			if ac.RepairTime < 0 {
+				ac.RepairTime = 0
+				ab.moveAircraftToParkingArea(i)
+				doAgain = true
+			}
+		}
+	}
+
+	// Defekte Flugzeuge in den Wartungsbereich schieben
+	doAgain = true
+	for doAgain {
+		doAgain = false
 		// Ist noch Platz für mehr Flugzeuge in der Wartung?
 		if ab.MaxMaintainenanceSlots > len(ab.MaintenanceArea) {
 			for i := range ab.ParkingArea {
 				// Beschädigtes Flugzeug?
-				if Globals.AllAircrafts[ab.ParkingArea[i]].IsDamaged() {
+				ac := Globals.AllAircrafts[ab.ParkingArea[i]]
+				if ac.IsDamaged() {
+					ab.CalculateRepairTime(ac)
 					ab.moveAircraftToMaintenance(i)
-					doagain = true
+					doAgain = true
 					break
 				}
 			}
