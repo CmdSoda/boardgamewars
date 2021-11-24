@@ -39,9 +39,9 @@ func TestAircraftMap(t *testing.T) {
 	ac.AddPilot(p1.PilotId)
 	p2 := NewPilot(WarPartyIdUK, nato.OF1)
 	ac.AddPilot(p2.PilotId)
-	ab.AddToHangar(ac.AircraftId)
+	ab.AddToParkingArea(ac.AircraftId)
 	ac.Damage = append(ac.Damage, DamageTypeCockpit)
-	fmt.Println(ab.AircraftsParked)
+	fmt.Println(ab.ParkingArea)
 }
 
 func TestAircraftId(t *testing.T) {

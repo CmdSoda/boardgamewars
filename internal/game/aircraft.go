@@ -257,6 +257,10 @@ func (ac Aircraft) String() string {
 	return b.String()
 }
 
+func (ac *Aircraft) IsDamaged() bool {
+	return len(ac.Damage) > 0
+}
+
 func (ac *Aircraft) Step(st StepTime) {
 	ac.StepsTaken = ac.StepsTaken + st
 	switch ac.FSM.Current() {
