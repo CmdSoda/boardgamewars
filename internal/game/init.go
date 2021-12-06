@@ -22,12 +22,13 @@ type Data struct {
 
 var Globals = Data{}
 
+// Shortcuts to the warparties
 var WarPartyIdUSA = WarPartyId(uuid.MustParse("92432884-3974-11ec-8d3d-0242ac130003"))
 var WarPartyIdRussia = WarPartyId(uuid.MustParse("a261b7c6-3974-11ec-8d3d-0242ac130003"))
 var WarPartyIdUK = WarPartyId(uuid.MustParse("5a6dffaa-3975-11ec-8d3d-0242ac130003"))
 var WarPartyIdGermany = WarPartyId(uuid.MustParse("5e737c4c-3975-11ec-8d3d-0242ac130003"))
 
-func loadconfig() error {
+func loadConfig() error {
 	var err error
 	if Globals.Startup, err = LoadStartup("startup.json"); err != nil {
 		return err
@@ -35,7 +36,7 @@ func loadconfig() error {
 	return nil
 }
 
-func initgame(seed int64) error {
+func initGame(seed int64) error {
 	var err error
 	Log.Info("game engine is starting...\n")
 	Globals.AllWarParties = map[WarPartyId]*WarParty{}
@@ -69,7 +70,7 @@ func InitGame(seed int64) error {
 	var err error
 	var lvl logrus.Level
 	Log = logrus.New()
-	if err = loadconfig(); err != nil {
+	if err = loadConfig(); err != nil {
 		return err
 	}
 	lvl, err = logrus.ParseLevel(Globals.Startup.LogLevel)
@@ -77,14 +78,14 @@ func InitGame(seed int64) error {
 		Log.Errorf("error while parsing log level: %s", err.Error())
 	}
 	Log.SetLevel(lvl)
-	return initgame(seed)
+	return initGame(seed)
 }
 
 func InitGameWithLogLevel(seed int64, level logrus.Level) error {
 	Log = logrus.New()
 	Log.SetLevel(level)
-	if err := loadconfig(); err != nil {
+	if err := loadConfig(); err != nil {
 		return err
 	}
-	return initgame(seed)
+	return initGame(seed)
 }
