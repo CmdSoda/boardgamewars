@@ -5,13 +5,15 @@ import (
 	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/CmdSoda/boardgamewars/internal/hexagon"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
+	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func Test(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	wp := NewWarParty("USA", countrycodes.USA, Blue)
+	wp := NewWarParty(countrycodes.USA, Blue)
 	ac := NewAircraft("F14", "Default", wp.WarPartyId)
 	pl := NewPilots(ac.GetParameters().Seats, wp.WarPartyId, nato.OF1)
 	ac.FillSeatsWith(pl)
@@ -67,10 +69,10 @@ func TestList(t *testing.T) {
 
 func TestNewWarParty(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	wp := NewWarParty("NeueParty", countrycodes.USA, Blue)
+	wp := NewWarParty(countrycodes.USA, Blue)
 	fmt.Println(wp)
 	ab := NewAirbase("Parkhaus", wp.WarPartyId, hexagon.HexPosition{Column: 1, Row: 1})
-	assert.Equal(t, wp.Name, Globals.AllWarParties[wp.WarPartyId].Name)
+	assert.Equal(t, wp.Country, Globals.AllWarParties[wp.WarPartyId].Country)
 	ab.AssignToWarParty(wp.WarPartyId)
 	assert.Equal(t, wp.WarPartyId, ab.BelongsTo)
 	//assert.Equal(t, wp.Airbases)
@@ -78,9 +80,9 @@ func TestNewWarParty(t *testing.T) {
 
 func TestBlueRed(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	wp1 := NewWarParty("NeueParty", countrycodes.USA, Blue)
-	wp2 := NewWarParty("NeueParty2", countrycodes.Russia, Red)
-	wp3 := NewWarParty("NeueParty3", countrycodes.Russia, 99)
+	wp1 := NewWarParty(countrycodes.USA, Blue)
+	wp2 := NewWarParty(countrycodes.Russia, Red)
+	wp3 := NewWarParty(countrycodes.Russia, 99)
 	fmt.Println(wp1)
 	fmt.Println(wp2)
 	fmt.Println(wp3)
@@ -94,4 +96,14 @@ func TestSlice2Evil(t *testing.T) {
 	l := make([]int, 1) // "{ 0 }"
 	subfunction(l)      // "{ 99 }"
 	assert.Equal(t, 99, l[0])
+}
+
+func TestLoadWarParties(t *testing.T) {
+	Log = logrus.New()
+	wm, err := LoadWarParties("../../data/warparties.json")
+	assert.Nil(t, err)
+	wpid := WarPartyId(uuid.MustParse("5a6dffaa-3975-11ec-8d3d-0242ac130003"))
+	wpuk := wm[wpid]
+	assert.Equal(t, countrycodes.UK, wpuk.Country)
+	fmt.Println(wm)
 }

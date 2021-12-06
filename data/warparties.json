@@ -1,0 +1,22 @@
+[
+  {
+    "WarPartyIdString": "5a6dffaa-3975-11ec-8d3d-0242ac130003",
+    "WarPartyColorString:": "blue",
+    "CountryString": "UK"
+  },
+  {
+    "WarPartyIdString": "a261b7c6-3974-11ec-8d3d-0242ac130003",
+    "WarPartyColorString:": "red",
+    "CountryString": "Russia"
+  },
+  {
+    "WarPartyIdString": "92432884-3974-11ec-8d3d-0242ac130003",
+    "WarPartyColorString:": "blue",
+    "CountryString": "USA"
+  },
+  {
+    "WarPartyIdString": "5e737c4c-3975-11ec-8d3d-0242ac130003",
+    "WarPartyColorString:": "blue",
+    "CountryString": "Germany"
+  }
+]

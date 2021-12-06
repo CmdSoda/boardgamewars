@@ -1,7 +1,6 @@
 package game
 
 import (
-	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
@@ -28,52 +27,6 @@ var WarPartyIdRussia = WarPartyId(uuid.MustParse("a261b7c6-3974-11ec-8d3d-0242ac
 var WarPartyIdUK = WarPartyId(uuid.MustParse("5a6dffaa-3975-11ec-8d3d-0242ac130003"))
 var WarPartyIdGermany = WarPartyId(uuid.MustParse("5e737c4c-3975-11ec-8d3d-0242ac130003"))
 
-func CreateWarParties() {
-	// USA
-	wpUSA := WarParty{
-		WarPartyId:    WarPartyIdUSA,
-		WarPartyColor: Blue,
-		Name:          "USA",
-		Country:       countrycodes.USA,
-		Pilots:        []PilotId{},
-		Aircrafts:     []AircraftId{},
-	}
-	Globals.AllWarParties[WarPartyIdUSA] = &wpUSA
-
-	// Russia
-	wpRussia := WarParty{
-		WarPartyId:    WarPartyIdRussia,
-		WarPartyColor: Red,
-		Name:          "Russia",
-		Country:       countrycodes.Russia,
-		Pilots:        []PilotId{},
-		Aircrafts:     []AircraftId{},
-	}
-	Globals.AllWarParties[WarPartyIdRussia] = &wpRussia
-
-	// UK
-	wpUK := WarParty{
-		WarPartyId:    WarPartyIdUK,
-		WarPartyColor: Red,
-		Name:          "UK",
-		Country:       countrycodes.UK,
-		Pilots:        []PilotId{},
-		Aircrafts:     []AircraftId{},
-	}
-	Globals.AllWarParties[WarPartyIdUK] = &wpUK
-
-	// Germany
-	wpGermany := WarParty{
-		WarPartyId:    WarPartyIdGermany,
-		WarPartyColor: Blue,
-		Name:          "Germany",
-		Country:       countrycodes.Germany,
-		Pilots:        []PilotId{},
-		Aircrafts:     []AircraftId{},
-	}
-	Globals.AllWarParties[WarPartyIdGermany] = &wpGermany
-}
-
 func loadconfig() error {
 	var err error
 	if Globals.Startup, err = LoadStartup("startup.json"); err != nil {
@@ -88,7 +41,9 @@ func initgame(seed int64) error {
 	Globals.AllWarParties = map[WarPartyId]*WarParty{}
 	Globals.AllAircrafts = map[AircraftId]*Aircraft{}
 	Globals.AllPilots = map[PilotId]*Pilot{}
-	CreateWarParties()
+	if Globals.AllWarParties, err = LoadWarParties(Globals.Startup.DataPath + "warparties.json"); err != nil {
+		return err
+	}
 	Globals.AllAirbases = map[AirbaseId]Airbase{}
 	Globals.Statistics = NewStatistics()
 	randomizer.Init(seed)
