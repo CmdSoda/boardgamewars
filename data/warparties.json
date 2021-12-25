@@ -1,22 +1,22 @@
 [
   {
     "WarPartyIdString": "5a6dffaa-3975-11ec-8d3d-0242ac130003",
-    "WarPartyColorString:": "blue",
-    "CountryString": "UK"
+    "WarPartyColorString": "blue",
+    "CountryName": "uk"
   },
   {
     "WarPartyIdString": "a261b7c6-3974-11ec-8d3d-0242ac130003",
-    "WarPartyColorString:": "red",
-    "CountryString": "Russia"
+    "WarPartyColorString": "red",
+    "CountryName": "russia"
   },
   {
     "WarPartyIdString": "92432884-3974-11ec-8d3d-0242ac130003",
-    "WarPartyColorString:": "blue",
-    "CountryString": "USA"
+    "WarPartyColorString": "blue",
+    "CountryName": "usa"
   },
   {
     "WarPartyIdString": "5e737c4c-3975-11ec-8d3d-0242ac130003",
-    "WarPartyColorString:": "blue",
-    "CountryString": "Germany"
+    "WarPartyColorString": "blue",
+    "CountryName": "germany"
   }
 ]

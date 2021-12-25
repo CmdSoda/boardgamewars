@@ -1,0 +1,52 @@
+{
+  "Country": "usa",
+  "FlightRankList": [
+    {
+        "Name": "Second Lieutenant",
+        "Short": "2ndLt",
+        "Code": 1
+    },
+    {
+        "Name": "First Lieutenant",
+        "Short": "1stLt",
+        "Code": 1
+    },
+    {
+        "Name": "Captain",
+        "Short": "Capt",
+        "Code": 2
+    },
+    {
+        "Name": "Major",
+        "Short": "Maj",
+        "Code": 3
+    },
+    {
+        "Name": "Lieutenant Colonel",
+        "Short": "Lt Col",
+        "Code": 4
+    },
+    {
+        "Name": "Oberstleutnant",
+        "Short": "",
+        "Code": 4
+    },
+    {
+        "Name": "Colonel",
+        "Short": "Col",
+        "Code": 5
+    }
+  ],
+  "NameSet": {
+    "AirForceBases": [
+    ],
+    "Cities": [
+    ],
+    "Surnames": [
+    ],
+    "Males": [
+    ],
+    "Females": [
+    ]
+  }
+}

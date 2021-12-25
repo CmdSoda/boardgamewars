@@ -1,7 +1,7 @@
 package countrycodes
 
-type Code int
-
+//type Code int
+/*
 const (
 	UK      Code = 0
 	Germany Code = 1
@@ -22,3 +22,4 @@ func (c Code) String() string {
 	}
 	return ""
 }
+*/

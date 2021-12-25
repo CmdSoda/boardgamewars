@@ -1,8 +1,7 @@
-package military
+package game
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 )
@@ -10,7 +9,7 @@ import (
 type FlightRank struct {
 	Name  string
 	Short string
-	nato.Code
+	Code  int
 }
 
 func (f FlightRank) String() string {
@@ -31,7 +30,7 @@ func (frl FlightRankList) RandomPick() FlightRank {
 func GetAllRanksWithNatoCode(list []FlightRank, noc nato.Code) FlightRankList {
 	frl := make(FlightRankList, 0)
 	for _, rank := range list {
-		if rank.Code == noc {
+		if nato.Code(rank.Code) == noc {
 			frl = append(frl, rank)
 		}
 	}
@@ -43,13 +42,6 @@ func GetFlightRank(list []FlightRank, noc nato.Code) FlightRank {
 	return frl.RandomPick()
 }
 
-var TheFlightRanks = map[countrycodes.Code][]FlightRank{
-	countrycodes.UK:      PilotRanksUK,
-	countrycodes.Germany: PilotRanksGermany,
-	countrycodes.USA:     PilotRanksUSA,
-	countrycodes.Russia:  PilotRanksUSA,
-}
-
-func NewRank(cc countrycodes.Code, noc nato.Code) FlightRank {
-	return GetFlightRank(TheFlightRanks[cc], noc)
+func NewRank(cn CountryName, noc nato.Code) FlightRank {
+	return GetFlightRank(Globals.CountryDataMap[cn].FlightRankList, noc)
 }

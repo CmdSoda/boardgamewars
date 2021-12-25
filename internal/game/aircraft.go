@@ -65,8 +65,8 @@ func (ac *Aircraft) GetHighestPilotRank() nato.Code {
 	highest := nato.OF0
 	for _, pid := range ac.Pilots {
 		p := Globals.AllPilots[pid]
-		if p.Code > highest {
-			highest = p.Code
+		if nato.Code(p.Code) > highest {
+			highest = nato.Code(p.Code)
 		}
 	}
 	return highest

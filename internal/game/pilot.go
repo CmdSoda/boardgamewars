@@ -2,8 +2,6 @@ package game
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
-	"github.com/CmdSoda/boardgamewars/internal/military"
 	"github.com/CmdSoda/boardgamewars/internal/namegenerator"
 	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
@@ -35,7 +33,7 @@ type Pilot struct {
 	WarPartyId // Gehört dieser WarParty an
 	Gender
 	Background PilotBackground
-	military.FlightRank
+	FlightRank
 	PilotStats
 }
 
@@ -55,7 +53,7 @@ func (p Pilot) String() string {
 		p.Name,
 		p.Gender,
 		p.FlightRank,
-		p.Background.Country.String(),
+		p.Background.CountryName,
 		p.PilotStats.Sorties,
 		p.PilotStats.Hits,
 		p.PilotStats.Kills,
@@ -101,25 +99,27 @@ func NewPilot(warpartyid WarPartyId, ofc nato.Code) *Pilot {
 		g = GenderFemale
 	}
 
-	var fn func(countrycodes.Code) string
-	if g == GenderMale {
-		fn = namegenerator.CreateMaleFullName
-	} else {
-		fn = namegenerator.CreateFemaleFullName
+	ng := namegenerator.Generator{}
+	var cd *CountryDataItem
+	cd, exist = Globals.CountryDataMap[wp.CountryName]
+	if !exist {
+		Log.Panicf("data for %s not found", wp.CountryName)
+		return nil
 	}
+	ng.AddNameSet(&cd.NameSet)
 
 	np := Pilot{
-		Name:       fn(wp.Country),
+		Name:       ng.CreateFullName(g == GenderMale, string(wp.CountryName)),
 		WarPartyId: warpartyid,
 		PilotId:    PilotId(uuid.New()),
 		Gender:     g,
 		Background: PilotBackground{
-			Country:     wp.Country,
-			Born:        namegenerator.CreateCityName(wp.Country),
+			CountryName: wp.CountryName,
+			Born:        ng.CreateCityName(string(wp.CountryName)),
 			Age:         RollAge(ofc),
-			HomeAirBase: namegenerator.CreateAirForceBaseName(wp.Country),
+			HomeAirBase: ng.CreateAirForceBaseName(string(wp.CountryName)),
 		},
-		FlightRank: military.NewRank(wp.Country, ofc),
+		FlightRank: NewRank(wp.CountryName, ofc),
 	}
 
 	Globals.AllWarParties[warpartyid].Pilots = append(Globals.AllWarParties[warpartyid].Pilots, np.PilotId)

@@ -3,7 +3,6 @@ package game
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/google/uuid"
 	"io/ioutil"
 	"os"
@@ -43,54 +42,55 @@ type WarParty struct {
 	WarPartyIdString    string
 	WarPartyColorString string
 	WarPartyColor
-	Country       countrycodes.Code
-	CountryString string
-	Pilots        []PilotId
-	Aircrafts     []AircraftId
-	Airbases      map[AirbaseId]struct{}
+	CountryName
+	Pilots    []PilotId
+	Aircrafts []AircraftId
+	Airbases  map[AirbaseId]struct{}
 }
 
 func (w WarParty) String() string {
-	return fmt.Sprintf("%s [%s]\nAircrafts: %d", w.Country.String(), w.WarPartyColor.String(), len(w.Aircrafts))
+	return fmt.Sprintf("%s [%s]\nAircrafts: %d", w.CountryName, w.WarPartyColor.String(), len(w.Aircrafts))
 }
 
 type WarPartyMap map[WarPartyId]*WarParty
 
-func NewWarParty(code countrycodes.Code, side WarPartyColor) WarParty {
+func NewWarParty(cn CountryName, side WarPartyColor) WarParty {
 	wp := WarParty{}
-	wp.Country = code
 	wp.WarPartyColor = side
 	wp.WarPartyId = WarPartyId(uuid.New())
 	wp.Pilots = []PilotId{}
 	wp.Aircrafts = []AircraftId{}
 	wp.Airbases = map[AirbaseId]struct{}{}
+	wp.CountryName = cn
 	Globals.AllWarParties[wp.WarPartyId] = &wp
 	return wp
 }
 
-func LoadWarParties(filename string) (map[WarPartyId]*WarParty, error) {
+func LoadWarParties() (map[WarPartyId]*WarParty, error) {
 	wm := map[WarPartyId]*WarParty{}
-	file, err := os.Open(filename)
+	dataPathFilename := Globals.Startup.DataPath + "warparties.json"
+	file, err := os.Open(dataPathFilename)
 	if err != nil {
-		Log.Errorf("%s not found\n", filename)
+		Log.Errorf("%s not found\n", dataPathFilename)
 		return wm, err
 	}
 	bytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		Log.Errorf("%s error while reading\n", filename)
+		Log.Errorf("%s error while reading\n", dataPathFilename)
 		return wm, err
 	}
 	var wl []WarParty
 	err = json.Unmarshal(bytes, &wl)
 	if err != nil {
-		Log.Errorf("%s error while unmarshaling\n", filename)
+		Log.Errorf("%s error while unmarshaling\n", dataPathFilename)
 		return wm, err
 	}
 
-	for _, party := range wl {
+	for idx, _ := range wl {
+		party := &wl[idx]
 		party.WarPartyId = WarPartyId(uuid.MustParse(party.WarPartyIdString))
 		party.WarPartyColor = WarPartyColorFromString(party.WarPartyColorString)
-		wm[party.WarPartyId] = &party
+		wm[party.WarPartyId] = party
 	}
 
 	return wm, nil

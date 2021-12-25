@@ -15,6 +15,7 @@ type Data struct {
 	AllAircrafts          AircraftsMap
 	AllPilots             PilotsMap
 	AllCounters           CounterList
+	CountryDataMap
 	World
 	Statistics
 	Settings
@@ -42,7 +43,7 @@ func initGame(seed int64) error {
 	Globals.AllWarParties = map[WarPartyId]*WarParty{}
 	Globals.AllAircrafts = map[AircraftId]*Aircraft{}
 	Globals.AllPilots = map[PilotId]*Pilot{}
-	if Globals.AllWarParties, err = LoadWarParties(Globals.Startup.DataPath + "warparties.json"); err != nil {
+	if Globals.AllWarParties, err = LoadWarParties(); err != nil {
 		return err
 	}
 	Globals.AllAirbases = map[AirbaseId]Airbase{}
@@ -50,7 +51,7 @@ func initGame(seed int64) error {
 	randomizer.Init(seed)
 	Globals.World = NewWorld()
 	var s Settings
-	s, err = LoadSettings(Globals.Startup.DataPath + "settings.json")
+	s, err = LoadSettings("settings.json")
 	if err = LoadAircraftParameters(); err != nil {
 		return err
 	}
@@ -59,6 +60,9 @@ func initGame(seed int64) error {
 		return err
 	}
 	if err = LoadAir2AirWeapons(); err != nil {
+		return err
+	}
+	if err = LoadCountryData(); err != nil {
 		return err
 	}
 	return nil

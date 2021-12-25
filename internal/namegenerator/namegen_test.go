@@ -2,19 +2,9 @@ package namegenerator
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/countrycodes"
 	"github.com/CmdSoda/boardgamewars/internal/namegenerator/country"
-	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"testing"
 )
-
-func TestFullname(t *testing.T) {
-	randomizer.Init(0)
-	fn := CreateMaleFullName(countrycodes.UK)
-	fmt.Println(fn)
-	fn = CreateFemaleFullName(countrycodes.UK)
-	fmt.Println(fn)
-}
 
 func findDuplicates(a []string) (string, bool) {
 	for i := 0; i < len(a); i++ {

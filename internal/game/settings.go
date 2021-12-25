@@ -19,19 +19,20 @@ type Settings struct {
 
 func LoadSettings(filename string) (Settings, error) {
 	s := Settings{}
-	file, err := os.Open(filename)
+	dataPathfilename := Globals.Startup.DataPath + filename
+	file, err := os.Open(dataPathfilename)
 	if err != nil {
-		Log.Errorf("%s not found\n", filename)
+		Log.Errorf("%s not found\n", dataPathfilename)
 		return s, err
 	}
 	bytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		Log.Errorf("%s error while reading\n", filename)
+		Log.Errorf("%s error while reading\n", dataPathfilename)
 		return s, err
 	}
 	err = json.Unmarshal(bytes, &s)
 	if err != nil {
-		Log.Errorf("%s error while unmarshaling\n", filename)
+		Log.Errorf("%s error while unmarshaling\n", dataPathfilename)
 		return s, err
 	}
 	s.RandomDamage = []DamageType{}
