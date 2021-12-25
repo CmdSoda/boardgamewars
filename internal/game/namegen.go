@@ -1,4 +1,4 @@
-package namegenerator
+package game
 
 import (
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"

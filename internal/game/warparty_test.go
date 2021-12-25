@@ -3,7 +3,6 @@ package game
 import (
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/hexagon"
-	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
@@ -14,7 +13,7 @@ func Test(t *testing.T) {
 	assert.Nil(t, InitGame(0))
 	wp := NewWarParty("usa", Blue)
 	ac := NewAircraft("F14", "Default", wp.WarPartyId)
-	pl := NewPilots(ac.GetParameters().Seats, wp.WarPartyId, nato.OF1)
+	pl := NewPilots(ac.GetParameters().Seats, wp.WarPartyId, OF1)
 	ac.FillSeatsWith(pl)
 	wp.Aircrafts = append(wp.Aircrafts, ac.AircraftId)
 	fmt.Println(wp)

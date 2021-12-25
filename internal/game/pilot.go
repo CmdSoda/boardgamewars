@@ -2,8 +2,6 @@ package game
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/namegenerator"
-	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"github.com/google/uuid"
 )
@@ -68,23 +66,23 @@ func (p Pilot) Short() string {
 
 // RollAge
 // https://www.operationmilitarykids.org/air-force-age-limits/
-func RollAge(ofc nato.Code) int {
+func RollAge(ofc Code) int {
 	switch ofc {
-	case nato.OF1:
+	case OF1:
 		return randomizer.Roll(22, 24)
-	case nato.OF2:
+	case OF2:
 		return randomizer.Roll(25, 28)
-	case nato.OF3:
+	case OF3:
 		return randomizer.Roll(27, 31)
-	case nato.OF4:
+	case OF4:
 		return randomizer.Roll(29, 35)
-	case nato.OF5:
+	case OF5:
 		return randomizer.Roll(32, 39)
 	}
 	return 0
 }
 
-func NewPilot(warpartyid WarPartyId, ofc nato.Code) *Pilot {
+func NewPilot(warpartyid WarPartyId, ofc Code) *Pilot {
 	var g Gender
 
 	wp, exist := Globals.AllWarParties[warpartyid]
@@ -99,7 +97,7 @@ func NewPilot(warpartyid WarPartyId, ofc nato.Code) *Pilot {
 		g = GenderFemale
 	}
 
-	ng := namegenerator.Generator{}
+	ng := Generator{}
 	var cd *CountryDataItem
 	cd, exist = Globals.CountryDataMap[wp.CountryName]
 	if !exist {
@@ -128,7 +126,7 @@ func NewPilot(warpartyid WarPartyId, ofc nato.Code) *Pilot {
 	return &np
 }
 
-func NewPilots(count int, warpartyid WarPartyId, ofc nato.Code) []PilotId {
+func NewPilots(count int, warpartyid WarPartyId, ofc Code) []PilotId {
 	var pilots []PilotId
 	for i := 0; i < count; i++ {
 		np := NewPilot(warpartyid, ofc)

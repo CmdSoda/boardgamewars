@@ -2,7 +2,6 @@ package game
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
@@ -135,11 +134,11 @@ func TestDogfight_Simulate(t *testing.T) {
 	ds := NewDogfightSetup()
 	for i := 0; i < 50; i++ {
 		b := NewAircraft("F14", "Default", WarPartyIdUSA)
-		bpl := NewPilots(2, WarPartyIdUSA, nato.OF1)
+		bpl := NewPilots(2, WarPartyIdUSA, OF1)
 		b.FillSeatsWith(bpl)
 		ds.AddBlue(b.AircraftId)
 		r := NewAircraft("F14", "Default", WarPartyIdRussia)
-		rpl := NewPilots(2, WarPartyIdRussia, nato.OF1)
+		rpl := NewPilots(2, WarPartyIdRussia, OF1)
 		r.FillSeatsWith(rpl)
 		ds.AddRed(r.AircraftId)
 	}
@@ -155,28 +154,28 @@ func TestDistributeReshuffle(t *testing.T) {
 	ds := NewDogfightSetup()
 
 	b1 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	bpl1 := NewPilots(2, WarPartyIdUSA, nato.OF1)
+	bpl1 := NewPilots(2, WarPartyIdUSA, OF1)
 	b1.FillSeatsWith(bpl1)
 	ds.AddBlue(b1.AircraftId)
 	b2 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	bpl2 := NewPilots(2, WarPartyIdUSA, nato.OF1)
+	bpl2 := NewPilots(2, WarPartyIdUSA, OF1)
 	b2.FillSeatsWith(bpl2)
 	ds.AddBlue(b2.AircraftId)
 	b3 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	bpl3 := NewPilots(2, WarPartyIdUSA, nato.OF1)
+	bpl3 := NewPilots(2, WarPartyIdUSA, OF1)
 	b3.FillSeatsWith(bpl3)
 	ds.AddBlue(b3.AircraftId)
 
 	r1 := NewAircraft("F14", "Default", WarPartyIdRussia)
-	rpl1 := NewPilots(2, WarPartyIdRussia, nato.OF1)
+	rpl1 := NewPilots(2, WarPartyIdRussia, OF1)
 	r1.FillSeatsWith(rpl1)
 	ds.AddRed(r1.AircraftId)
 	r2 := NewAircraft("F14", "Default", WarPartyIdRussia)
-	rpl2 := NewPilots(2, WarPartyIdRussia, nato.OF1)
+	rpl2 := NewPilots(2, WarPartyIdRussia, OF1)
 	r2.FillSeatsWith(rpl2)
 	ds.AddRed(r2.AircraftId)
 	r3 := NewAircraft("F14", "Default", WarPartyIdRussia)
-	rpl3 := NewPilots(2, WarPartyIdRussia, nato.OF1)
+	rpl3 := NewPilots(2, WarPartyIdRussia, OF1)
 	r3.FillSeatsWith(rpl3)
 	ds.AddRed(r3.AircraftId)
 
@@ -211,9 +210,9 @@ func TestDistributeReshuffle(t *testing.T) {
 func TestF5Mystery(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
 	acblue := NewAircraft("F5", "Default", WarPartyIdUSA)
-	acblue.FillSeatsWithNewPilots(nato.OF1)
+	acblue.FillSeatsWithNewPilots(OF1)
 	acred := NewAircraft("F14", "Default", WarPartyIdRussia)
-	acred.FillSeatsWithNewPilots(nato.OF1)
+	acred.FillSeatsWithNewPilots(OF1)
 
 	for i := 0; i < 10000; i++ {
 		ds := NewDogfightSetup()

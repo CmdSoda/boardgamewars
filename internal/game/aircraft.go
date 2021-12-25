@@ -3,7 +3,6 @@ package game
 import (
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/hexagon"
-	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
 	"github.com/looplab/fsm"
 	"strings"
@@ -61,12 +60,12 @@ func (ac *Aircraft) GetHexPosition() hexagon.HexPosition {
 	return hexagon.HexPosition{}
 }
 
-func (ac *Aircraft) GetHighestPilotRank() nato.Code {
-	highest := nato.OF0
+func (ac *Aircraft) GetHighestPilotRank() Code {
+	highest := OF0
 	for _, pid := range ac.Pilots {
 		p := Globals.AllPilots[pid]
-		if nato.Code(p.Code) > highest {
-			highest = nato.Code(p.Code)
+		if Code(p.Code) > highest {
+			highest = Code(p.Code)
 		}
 	}
 	return highest
@@ -229,7 +228,7 @@ func (ac *Aircraft) FillSeatsWith(pl []PilotId) {
 
 }
 
-func (ac *Aircraft) FillSeatsWithNewPilots(nc nato.Code) {
+func (ac *Aircraft) FillSeatsWithNewPilots(nc Code) {
 	pl := NewPilots(Globals.AllAircraftParameters[ac.AircraftParametersId].Seats, ac.WarPartyId, nc)
 	ac.FillSeatsWith(pl)
 }

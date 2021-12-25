@@ -1,4 +1,4 @@
-package nato
+package game
 
 type Code int
 

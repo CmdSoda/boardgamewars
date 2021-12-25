@@ -2,7 +2,6 @@ package game
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 )
 
@@ -27,21 +26,21 @@ func (frl FlightRankList) RandomPick() FlightRank {
 	return frl[roll-1]
 }
 
-func GetAllRanksWithNatoCode(list []FlightRank, noc nato.Code) FlightRankList {
+func GetAllRanksWithNatoCode(list []FlightRank, noc Code) FlightRankList {
 	frl := make(FlightRankList, 0)
 	for _, rank := range list {
-		if nato.Code(rank.Code) == noc {
+		if Code(rank.Code) == noc {
 			frl = append(frl, rank)
 		}
 	}
 	return frl
 }
 
-func GetFlightRank(list []FlightRank, noc nato.Code) FlightRank {
+func GetFlightRank(list []FlightRank, noc Code) FlightRank {
 	frl := GetAllRanksWithNatoCode(list, noc)
 	return frl.RandomPick()
 }
 
-func NewRank(cn CountryName, noc nato.Code) FlightRank {
+func NewRank(cn CountryName, noc Code) FlightRank {
 	return GetFlightRank(Globals.CountryDataMap[cn].FlightRankList, noc)
 }

@@ -3,7 +3,6 @@ package game
 import (
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/hexagon"
-	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
@@ -35,9 +34,9 @@ func TestAircraftMap(t *testing.T) {
 	assert.Nil(t, InitGame(0))
 	ab := NewAirbase("Carrier", WarPartyIdUK, hexagon.HexPosition{Column: 4, Row: 6})
 	ac := NewAircraft("F14", "Default", WarPartyIdUK)
-	p1 := NewPilot(WarPartyIdUK, nato.OF1)
+	p1 := NewPilot(WarPartyIdUK, OF1)
 	ac.AddPilot(p1.PilotId)
-	p2 := NewPilot(WarPartyIdUK, nato.OF1)
+	p2 := NewPilot(WarPartyIdUK, OF1)
 	ac.AddPilot(p2.PilotId)
 	ab.AddToParkingArea(ac.AircraftId)
 	ac.Damage = append(ac.Damage, DamageTypeCockpit)
@@ -64,9 +63,9 @@ func TestAircraft_AssignToAB(t *testing.T) {
 func TestAircraft_DoDamageWith(t *testing.T) {
 	assert.Nil(t, InitGame(0))
 	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	ac1.FillSeatsWithNewPilots(nato.OF1)
+	ac1.FillSeatsWithNewPilots(OF1)
 	ac2 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
-	ac2.FillSeatsWithNewPilots(nato.OF1)
+	ac2.FillSeatsWithNewPilots(OF1)
 	ws, _ := ac1.GetBestDogfightingWeapon()
 	ac2.DoDamageWith(ws)
 }
@@ -74,7 +73,7 @@ func TestAircraft_DoDamageWith(t *testing.T) {
 func TestAircraft_GetHexPosition(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
 	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	ac1.FillSeatsWithNewPilots(nato.OF1)
+	ac1.FillSeatsWithNewPilots(OF1)
 	hp := ac1.GetHexPosition()
 	fmt.Println(hp)
 }
@@ -82,7 +81,7 @@ func TestAircraft_GetHexPosition(t *testing.T) {
 func TestStateChange(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
 	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	ac1.FillSeatsWithNewPilots(nato.OF1)
+	ac1.FillSeatsWithNewPilots(OF1)
 
 	assert.Equal(t, AcStateParking, ac1.FSM.Current())
 
@@ -113,7 +112,7 @@ func TestStateChanges(t *testing.T) {
 	ab := NewAirbase("Airbase1", WarPartyIdUSA, hexagon.HexPosition{Column: 15, Row: 15})
 
 	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	ac1.FillSeatsWithNewPilots(nato.OF1)
+	ac1.FillSeatsWithNewPilots(OF1)
 	ac1.AssignToAB(ab.AirbaseId)
 
 	ac1.Damage = append(ac1.Damage, []DamageType{DamageTypeFuselage, DamageTypeCockpit}...)

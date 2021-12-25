@@ -1,7 +1,6 @@
 package game
 
 import (
-	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -28,10 +27,10 @@ func TestStatistics2(t *testing.T) {
 	ds := NewDogfightSetup()
 	for i := 0; i < 500; i++ {
 		b := NewAircraft("F14", "Default", WarPartyIdUSA)
-		b.FillSeatsWithNewPilots(nato.OF1)
+		b.FillSeatsWithNewPilots(OF1)
 		ds.AddBlue(b.AircraftId)
 		r := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
-		r.FillSeatsWithNewPilots(nato.OF1)
+		r.FillSeatsWithNewPilots(OF1)
 		ds.AddRed(r.AircraftId)
 	}
 	d := NewDogfight(ds)
@@ -47,15 +46,15 @@ func TestWin1(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
 	s := NewStatistics()
 	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	ac1.FillSeatsWithNewPilots(nato.OF1)
+	ac1.FillSeatsWithNewPilots(OF1)
 	ac2 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
-	ac2.FillSeatsWithNewPilots(nato.OF1)
+	ac2.FillSeatsWithNewPilots(OF1)
 	ac3 := NewAircraft("F5", "Default", WarPartyIdRussia)
-	ac3.FillSeatsWithNewPilots(nato.OF1)
+	ac3.FillSeatsWithNewPilots(OF1)
 	ac4 := NewAircraft("F5", "Default", WarPartyIdRussia)
-	ac4.FillSeatsWithNewPilots(nato.OF1)
+	ac4.FillSeatsWithNewPilots(OF1)
 	ac5 := NewAircraft("F14", "Default", WarPartyIdRussia)
-	ac5.FillSeatsWithNewPilots(nato.OF1)
+	ac5.FillSeatsWithNewPilots(OF1)
 	s.AircraftVsAircraft.Win(ac1.AircraftId, ac2.AircraftId, WinTypeWon)
 	s.AircraftVsAircraft.Win(ac1.AircraftId, ac2.AircraftId, WinTypeWon)
 	s.AircraftVsAircraft.Win(ac2.AircraftId, ac1.AircraftId, WinTypeWon)
@@ -86,9 +85,9 @@ func TestWin1(t *testing.T) {
 func TestDamageMapAdd(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
 	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	ac1.FillSeatsWithNewPilots(nato.OF1)
+	ac1.FillSeatsWithNewPilots(OF1)
 	ac2 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
-	ac2.FillSeatsWithNewPilots(nato.OF1)
+	ac2.FillSeatsWithNewPilots(OF1)
 	for i := 0; i < 1000; i++ {
 		ac1.Rearm()
 		wps, _ := ac1.GetBestDogfightingWeapon()

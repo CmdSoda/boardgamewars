@@ -2,7 +2,6 @@ package game
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/nato"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -30,7 +29,7 @@ func Test2(t *testing.T) {
 func TestCounterAircraft(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
 	ac := NewAircraft("F14", "Default", WarPartyIdUSA)
-	ac.FillSeatsWithNewPilots(nato.OF1)
+	ac.FillSeatsWithNewPilots(OF1)
 	c := NewCounter(CounterTypeAircraft, ac)
 	fmt.Println(c)
 }

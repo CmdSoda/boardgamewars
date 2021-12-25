@@ -2,7 +2,6 @@ package game
 
 import (
 	"encoding/json"
-	"github.com/CmdSoda/boardgamewars/internal/namegenerator"
 	"io/ioutil"
 	"os"
 )
@@ -14,7 +13,7 @@ type CountryName string
 type CountryDataItem struct {
 	Country        string
 	FlightRankList []FlightRank
-	NameSet        namegenerator.NameSet
+	NameSet        NameSet
 }
 type CountryDataMap map[CountryName]*CountryDataItem
 

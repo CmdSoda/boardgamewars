@@ -1,7 +1,5 @@
 package game
 
-import "github.com/CmdSoda/boardgamewars/internal/nato"
-
 type Statistics struct {
 	WeaponPerformance  WeaponPerformanceMap
 	AircraftVsAircraft AircraftVersusStatisticsList
@@ -18,12 +16,12 @@ func FreeForAll() {
 	for _, parameters := range Globals.AllAircraftParameters {
 		// Blau erstellen
 		acblue := NewAircraft(parameters.Name, "Default", WarPartyIdUSA)
-		acblue.FillSeatsWithNewPilots(nato.OF1)
+		acblue.FillSeatsWithNewPilots(OF1)
 		for _, parameters2 := range Globals.AllAircraftParameters {
 			if parameters.Name != parameters2.Name {
 				// Rot erstellen
 				acred := NewAircraft(parameters2.Name, "Default", WarPartyIdRussia)
-				acred.FillSeatsWithNewPilots(nato.OF1)
+				acred.FillSeatsWithNewPilots(OF1)
 				for i := 0; i < 10000; i++ {
 					acblue.ReviveAndRepair()
 					acblue.Rearm()
@@ -40,4 +38,3 @@ func FreeForAll() {
 		}
 	}
 }
-

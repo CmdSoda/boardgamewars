@@ -2,7 +2,6 @@ package game
 
 import (
 	"fmt"
-	"github.com/CmdSoda/boardgamewars/internal/nato"
 )
 
 type WinType int
@@ -15,7 +14,7 @@ const (
 type AircraftPerformanceParameters struct {
 	AircraftParametersId
 	ConfigName string
-	PilotRank  nato.Code
+	PilotRank  Code
 }
 
 type AircraftVersusStatistics struct {
