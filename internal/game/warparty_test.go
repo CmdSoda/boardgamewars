@@ -3,8 +3,6 @@ package game
 import (
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/hexagon"
-	"github.com/google/uuid"
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -78,12 +76,14 @@ func TestNewWarParty(t *testing.T) {
 
 func TestBlueRed(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	wp1 := NewWarParty("usa", Blue)
-	wp2 := NewWarParty("russia", Red)
-	wp3 := NewWarParty("russia", 99)
+	count := len(Globals.AllWarParties)
+	wp1 := NewWarParty("usa2", Blue)
+	wp2 := NewWarParty("russia2", Red)
+	wp3 := NewWarParty("russia3", 99)
 	fmt.Println(wp1)
 	fmt.Println(wp2)
 	fmt.Println(wp3)
+	assert.Equal(t, count+3, len(Globals.AllWarParties))
 }
 
 func subfunction(il []int) {
@@ -97,11 +97,9 @@ func TestSlice2Evil(t *testing.T) {
 }
 
 func TestLoadWarParties(t *testing.T) {
-	Log = logrus.New()
-	wm, err := LoadWarParties()
-	assert.Nil(t, err)
-	wpid := WarPartyId(uuid.MustParse("5a6dffaa-3975-11ec-8d3d-0242ac130003"))
-	wpuk := wm[wpid]
-	assert.Equal(t, CountryName("uk"), wpuk.CountryName)
-	fmt.Println(wm)
+	assert.Nil(t, InitGame(0))
+	assert.Equal(t, CountryName("uk"), Globals.AllWarParties[WarPartyIdUK].CountryName)
+	assert.Equal(t, CountryName("germany"), Globals.AllWarParties[WarPartyIdGermany].CountryName)
+	assert.Equal(t, CountryName("russia"), Globals.AllWarParties[WarPartyIdRussia].CountryName)
+	assert.Equal(t, CountryName("usa"), Globals.AllWarParties[WarPartyIdUSA].CountryName)
 }
