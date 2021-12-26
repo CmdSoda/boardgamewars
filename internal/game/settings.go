@@ -17,27 +17,26 @@ type Settings struct {
 	RepairTimePerDamageTypeBase                       float64
 }
 
-func LoadSettings(filename string) (Settings, error) {
-	s := Settings{}
+func LoadSettings(filename string) error {
 	dataPathfilename := Globals.Startup.DataPath + filename
 	file, err := os.Open(dataPathfilename)
 	if err != nil {
 		Log.Errorf("%s not found\n", dataPathfilename)
-		return s, err
+		return err
 	}
 	bytes, err := ioutil.ReadAll(file)
 	if err != nil {
 		Log.Errorf("%s error while reading\n", dataPathfilename)
-		return s, err
+		return err
 	}
-	err = json.Unmarshal(bytes, &s)
+	err = json.Unmarshal(bytes, &Globals.Settings)
 	if err != nil {
 		Log.Errorf("%s error while unmarshaling\n", dataPathfilename)
-		return s, err
+		return err
 	}
-	s.RandomDamage = []DamageType{}
-	for _, damageString := range s.RandomDamageStrings {
-		s.RandomDamage = append(s.RandomDamage, GetDamageTypeFromString(damageString))
+	Globals.Settings.RandomDamage = []DamageType{}
+	for _, damageString := range Globals.Settings.RandomDamageStrings {
+		Globals.Settings.RandomDamage = append(Globals.Settings.RandomDamage, GetDamageTypeFromString(damageString))
 	}
-	return s, nil
+	return nil
 }

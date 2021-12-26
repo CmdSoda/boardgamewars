@@ -50,12 +50,12 @@ func initGame(seed int64) error {
 	Globals.Statistics = NewStatistics()
 	randomizer.Init(seed)
 	Globals.World = NewWorld()
-	var s Settings
-	s, err = LoadSettings("settings.json")
+	if err = LoadSettings("settings.json"); err != nil {
+		return err
+	}
 	if err = LoadAircraftParameters(); err != nil {
 		return err
 	}
-	Globals.Settings = s
 	if err = LoadAircraftParameters(); err != nil {
 		return err
 	}
