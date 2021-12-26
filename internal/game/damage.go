@@ -50,13 +50,15 @@ func GetDamageTypeFromString(dts string) DamageType {
 }
 
 func RollRandomDamage(weapondamage Hitpoints, targethp Hitpoints) []DamageType {
-	damagecount := 1
+	damagecount := 0
 	wdf := float32(weapondamage)
 	thpf := float32(targethp)
-	if wdf >= thpf*0.8 {
-		damagecount = 3
-	} else if wdf >= thpf*0.5 {
-		damagecount = 2
+	if wdf >= thpf*Globals.Settings.DamageCountStage1Percent/100.0 {
+		damagecount = Globals.Settings.DamageCountStage1Value
+	} else if wdf >= thpf*Globals.Settings.DamageCountStage2Percent/100.0 {
+		damagecount = Globals.Settings.DamageCountStage2Value
+	} else if wdf >= thpf*Globals.Settings.DamageCountStage3Percent/100.0 {
+		damagecount = Globals.Settings.DamageCountStage3Value
 	}
 	var dtl []DamageType
 	for i := 0; i < damagecount; i++ {

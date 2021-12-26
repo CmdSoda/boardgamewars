@@ -15,6 +15,12 @@ type Settings struct {
 	RandomDamage                                      []DamageType
 	DamageMaintenanceMultiplier                       map[string]float64
 	RepairTimePerDamageTypeBase                       float64
+	DamageCountStage1Percent                          float32
+	DamageCountStage1Value                            int
+	DamageCountStage2Percent                          float32
+	DamageCountStage2Value                            int
+	DamageCountStage3Percent                          float32
+	DamageCountStage3Value                            int
 }
 
 func LoadSettings(filename string) error {

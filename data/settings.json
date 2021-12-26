@@ -18,5 +18,11 @@
   "DamageMaintenanceMultiplier": {
     "Fuselage": 1.4, "Flaps": 0.6, "Rudder": 0.8, "Cockpit": 1.6, "Wing": 0.3, "Turbine": 1.0
   },
-  "RepairTimePerDamageTypeBase": 10.0
+  "RepairTimePerDamageTypeBase": 10.0,
+  "DamageCountStage1Percent": 80.0,
+  "DamageCountStage1Value": 3,
+  "DamageCountStage2Percent": 50.0,
+  "DamageCountStage2Value": 2,
+  "DamageCountStage3Percent": 10.0,
+  "DamageCountStage3Value": 1
 }
