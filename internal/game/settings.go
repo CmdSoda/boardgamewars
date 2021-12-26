@@ -21,6 +21,7 @@ type Settings struct {
 	DamageCountStage2Value                            int
 	DamageCountStage3Percent                          float32
 	DamageCountStage3Value                            int
+	DamagePointsPercent                               []float32
 }
 
 func LoadSettings(filename string) error {

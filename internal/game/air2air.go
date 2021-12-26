@@ -70,16 +70,6 @@ func (awp Air2AirWeaponParameters) Hit(target AircraftId, dfp DogfightPosition) 
 }
 
 func (awp Air2AirWeaponParameters) DoRandomDamage() Hitpoints {
-	dr := randomizer.Roll1D10()
-	if dr >= 9 {
-		return awp.Damage
-	} else if dr >= 7 {
-		return Hitpoints(float32(awp.Damage) * 0.80)
-	} else if dr >= 5 {
-		return Hitpoints(float32(awp.Damage) * 0.70)
-	} else if dr >= 3 {
-		return Hitpoints(float32(awp.Damage) * 0.60)
-	} else {
-		return Hitpoints(float32(awp.Damage) * 0.50)
-	}
+	dr := randomizer.Roll1DN(len(Globals.Settings.DamagePointsPercent))
+	return Hitpoints(float32(awp.Damage) * Globals.Settings.DamagePointsPercent[dr-1] / 100.0)
 }

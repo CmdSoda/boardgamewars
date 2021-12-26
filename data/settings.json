@@ -24,5 +24,6 @@
   "DamageCountStage2Percent": 50.0,
   "DamageCountStage2Value": 2,
   "DamageCountStage3Percent": 10.0,
-  "DamageCountStage3Value": 1
+  "DamageCountStage3Value": 1,
+  "DamagePointsPercent": [ 100.0, 100.0, 80.0, 80.0, 70.0, 70.0, 60.0, 60.0, 50.0, 50.0 ]
 }
