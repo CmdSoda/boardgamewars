@@ -10,6 +10,8 @@ type CountryFilenames []string
 
 type CountryName string
 
+// TODO combine warparties and countries
+
 type CountryDataItem struct {
 	Country        string
 	FlightRankList []FlightRank
