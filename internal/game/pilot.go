@@ -107,15 +107,15 @@ func NewPilot(warpartyid WarPartyId, ofc Code) *Pilot {
 	ng.AddNameSet(&cd.NameSet)
 
 	np := Pilot{
-		Name:       ng.CreateFullName(g == GenderMale, string(wp.CountryName)),
+		Name:       ng.CreateFullName(g == GenderMale, wp.CountryName),
 		WarPartyId: warpartyid,
 		PilotId:    PilotId(uuid.New()),
 		Gender:     g,
 		Background: PilotBackground{
 			CountryName: wp.CountryName,
-			Born:        ng.CreateCityName(string(wp.CountryName)),
+			Born:        ng.CreateCityName(wp.CountryName),
 			Age:         RollAge(ofc),
-			HomeAirBase: ng.CreateAirForceBaseName(string(wp.CountryName)),
+			HomeAirBase: ng.CreateAirForceBaseName(wp.CountryName),
 		},
 		FlightRank: NewRank(wp.CountryName, ofc),
 	}

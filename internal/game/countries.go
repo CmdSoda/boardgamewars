@@ -13,9 +13,16 @@ type CountryName string
 // TODO combine warparties and countries
 
 type CountryDataItem struct {
-	Country        string
+	CountryName
 	FlightRankList []FlightRank
 	NameSet        NameSet
+	WarPartyId
+	WarPartyIdString    string
+	WarPartyColorString string
+	WarPartyColor
+	Pilots    []PilotId
+	Aircrafts []AircraftId
+	Airbases  map[AirbaseId]struct{}
 }
 type CountryDataMap map[CountryName]*CountryDataItem
 
@@ -58,8 +65,8 @@ func LoadCountryData() error {
 			Log.Errorf("%s while unmarshaling\n", countryDataFilename)
 			return err
 		}
-		cd.NameSet.Country = cd.Country
-		Globals.CountryDataMap[CountryName(cd.Country)] = &cd
+		cd.NameSet.CountryName = cd.CountryName
+		Globals.CountryDataMap[cd.CountryName] = &cd
 	}
 
 	return nil

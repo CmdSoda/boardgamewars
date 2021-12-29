@@ -16,7 +16,7 @@ func ignoreBraces(s string) string {
 }
 
 type NameSet struct {
-	Country       string
+	CountryName
 	Males         []string
 	Females       []string
 	Surnames      []string
@@ -24,14 +24,14 @@ type NameSet struct {
 	AirForceBases []string
 }
 
-type Generator map[string]*NameSet
+type Generator map[CountryName]*NameSet
 
 func (g *Generator) AddNameSet(ns *NameSet) {
 	tns := *g
-	tns[ns.Country] = ns
+	tns[ns.CountryName] = ns
 }
 
-func (g *Generator) CreateMaleFullName(countryName string) string {
+func (g *Generator) CreateMaleFullName(countryName CountryName) string {
 	tns := *g
 	r := randomizer.Roll1DN(len(tns[countryName].Males))
 	firstname := ignoreBraces(strings.Title(strings.ToLower(tns[countryName].Males[r-1])))
@@ -40,7 +40,7 @@ func (g *Generator) CreateMaleFullName(countryName string) string {
 	return firstname + " " + surname
 }
 
-func (g *Generator) CreateFemaleFullName(countryName string) string {
+func (g *Generator) CreateFemaleFullName(countryName CountryName) string {
 	tns := *g
 	r := randomizer.Roll1DN(len(tns[countryName].Females))
 	firstname := ignoreBraces(strings.Title(strings.ToLower(tns[countryName].Females[r-1])))
@@ -49,7 +49,7 @@ func (g *Generator) CreateFemaleFullName(countryName string) string {
 	return firstname + " " + surname
 }
 
-func (g *Generator) CreateFullName(male bool, countryName string) string {
+func (g *Generator) CreateFullName(male bool, countryName CountryName) string {
 	if male {
 		return g.CreateMaleFullName(countryName)
 	} else {
@@ -57,14 +57,14 @@ func (g *Generator) CreateFullName(male bool, countryName string) string {
 	}
 }
 
-func (g *Generator) CreateCityName(countryName string) string {
+func (g *Generator) CreateCityName(countryName CountryName) string {
 	tns := *g
 	r := randomizer.Roll1DN(len(tns[countryName].Cities))
 	city := ignoreBraces(strings.Title(strings.ToLower(tns[countryName].Cities[r-1])))
 	return city
 }
 
-func (g *Generator) CreateAirForceBaseName(countryName string) string {
+func (g *Generator) CreateAirForceBaseName(countryName CountryName) string {
 	tns := *g
 	r := randomizer.Roll1DN(len(tns[countryName].AirForceBases))
 	airforcebase := ignoreBraces(strings.Title(strings.ToLower(tns[countryName].AirForceBases[r-1])))

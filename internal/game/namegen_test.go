@@ -27,27 +27,27 @@ func TestFindDuplicates(t *testing.T) {
 	for _, item := range Globals.CountryDataMap {
 		dup, found := findDuplicates(item.NameSet.Surnames)
 		if found {
-			t.Log("duplicate found: surnames in " + item.Country + ": " + dup)
+			t.Log("duplicate found: surnames in " + string(item.CountryName) + ": " + dup)
 			t.FailNow()
 		}
 		dup, found = findDuplicates(item.NameSet.Males)
 		if found {
-			t.Log("duplicate found: males in " + item.Country + ": " + dup)
+			t.Log("duplicate found: males in " + string(item.CountryName) + ": " + dup)
 			t.FailNow()
 		}
 		dup, found = findDuplicates(item.NameSet.Females)
 		if found {
-			t.Log("duplicate found: females in " + item.Country + ": " + dup)
+			t.Log("duplicate found: females in " + string(item.CountryName) + ": " + dup)
 			t.FailNow()
 		}
 		dup, found = findDuplicates(item.NameSet.Cities)
 		if found {
-			t.Log("duplicate found: cities in " + item.Country + ": " + dup)
+			t.Log("duplicate found: cities in " + string(item.CountryName) + ": " + dup)
 			t.FailNow()
 		}
 		dup, found = findDuplicates(item.NameSet.AirForceBases)
 		if found {
-			t.Log("duplicate found: air bases in " + item.Country + ": " + dup)
+			t.Log("duplicate found: air bases in " + string(item.CountryName) + ": " + dup)
 			t.FailNow()
 		}
 	}

@@ -1,5 +1,7 @@
 {
-  "Country": "russia",
+  "CountryName": "russia",
+  "WarPartyIdString": "a261b7c6-3974-11ec-8d3d-0242ac130003",
+  "WarPartyColorString": "red",
   "FlightRankList": [
     {
         "Name": "Second Lieutenant",

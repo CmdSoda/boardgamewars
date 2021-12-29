@@ -1,5 +1,7 @@
 {
-  "Country": "uk",
+  "CountryName": "uk",
+  "WarPartyIdString": "5a6dffaa-3975-11ec-8d3d-0242ac130003",
+  "WarPartyColorString": "blue",
   "FlightRankList": [
     {
         "Name": "Pilot Officer",

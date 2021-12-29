@@ -1,5 +1,7 @@
 {
-  "Country": "germany",
+  "CountryName": "germany",
+  "WarPartyIdString": "5e737c4c-3975-11ec-8d3d-0242ac130003",
+  "WarPartyColorString": "blue",
   "FlightRankList": [
     {
         "Name": "Leutnant",
