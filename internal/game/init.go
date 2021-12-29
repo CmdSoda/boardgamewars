@@ -2,7 +2,6 @@ package game
 
 import (
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
-	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
 
@@ -11,7 +10,6 @@ type Data struct {
 	AllAirbases           AirbasesMap
 	AllAircraftParameters AircraftParametersMap
 	Air2AirWeapons        Air2AirWeaponLibrary
-	AllWarParties         WarPartyMap
 	AllAircrafts          AircraftsMap
 	AllPilots             PilotsMap
 	AllCounters           CounterList
@@ -22,12 +20,6 @@ type Data struct {
 }
 
 var Globals = Data{}
-
-// Shortcuts to the warparties
-var WarPartyIdUSA = WarPartyId(uuid.MustParse("92432884-3974-11ec-8d3d-0242ac130003"))
-var WarPartyIdRussia = WarPartyId(uuid.MustParse("a261b7c6-3974-11ec-8d3d-0242ac130003"))
-var WarPartyIdUK = WarPartyId(uuid.MustParse("5a6dffaa-3975-11ec-8d3d-0242ac130003"))
-var WarPartyIdGermany = WarPartyId(uuid.MustParse("5e737c4c-3975-11ec-8d3d-0242ac130003"))
 
 func loadConfig() error {
 	var err error
@@ -40,12 +32,8 @@ func loadConfig() error {
 func initGame(seed int64) error {
 	var err error
 	Log.Info("game engine is starting...\n")
-	Globals.AllWarParties = map[WarPartyId]*WarParty{}
 	Globals.AllAircrafts = map[AircraftId]*Aircraft{}
 	Globals.AllPilots = map[PilotId]*Pilot{}
-	if Globals.AllWarParties, err = LoadWarParties(); err != nil {
-		return err
-	}
 	Globals.AllAirbases = map[AirbaseId]Airbase{}
 	Globals.Statistics = NewStatistics()
 	randomizer.Init(seed)

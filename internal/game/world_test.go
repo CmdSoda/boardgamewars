@@ -23,7 +23,7 @@ func TestStep(t *testing.T) {
 
 func TestAirbaseSteps(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
-	ab := NewAirbase("Airbase 1", WarPartyIdUSA, hexagon.NewHexagon(15, 15))
+	ab := NewAirbase("Airbase 1", "usa", hexagon.NewHexagon(15, 15))
 	Globals.World.AddAirbase(ab.AirbaseId)
 	Globals.World.Step(1)
 }

@@ -15,12 +15,12 @@ func NewStatistics() Statistics {
 func FreeForAll() {
 	for _, parameters := range Globals.AllAircraftParameters {
 		// Blau erstellen
-		acblue := NewAircraft(parameters.Name, "Default", WarPartyIdUSA)
+		acblue := NewAircraft(parameters.Name, "Default", "usa")
 		acblue.FillSeatsWithNewPilots(OF1)
 		for _, parameters2 := range Globals.AllAircraftParameters {
 			if parameters.Name != parameters2.Name {
 				// Rot erstellen
-				acred := NewAircraft(parameters2.Name, "Default", WarPartyIdRussia)
+				acred := NewAircraft(parameters2.Name, "Default", "russia")
 				acred.FillSeatsWithNewPilots(OF1)
 				for i := 0; i < 10000; i++ {
 					acblue.ReviveAndRepair()

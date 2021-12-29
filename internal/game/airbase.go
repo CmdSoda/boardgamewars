@@ -14,7 +14,7 @@ type AirbaseId uuid.UUID
 type Airbase struct {
 	AirbaseId
 	Name                   string
-	BelongsTo              WarPartyId
+	BelongsTo              CountryName
 	AcceptAllies           bool
 	AllAircrafts           []AircraftId // Alle Aircrafts, die zu dieser Basis gehören
 	AllPilots              []PilotId    // Alle Piloten, die zu dieser Basis gehören
@@ -37,11 +37,11 @@ func (al AirbasesMap) String() string {
 	return sb.String()
 }
 
-func NewAirbase(name string, warpartyid WarPartyId, pos hexagon.HexPosition) *Airbase {
+func NewAirbase(name string, country CountryName, pos hexagon.HexPosition) *Airbase {
 	ab := Airbase{}
 	ab.AirbaseId = AirbaseId(uuid.New())
 	ab.Name = name
-	ab.BelongsTo = warpartyid
+	ab.BelongsTo = country
 	ab.HexPosition = pos
 	ab.ParkingArea = []AircraftId{}
 	ab.MaintenanceArea = []AircraftId{}
@@ -55,18 +55,18 @@ func (ab *Airbase) AddToParkingArea(acid AircraftId) {
 	ab.ParkingArea = append(ab.ParkingArea, acid)
 }
 
-func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, warpartyid WarPartyId, count int) {
+func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, country CountryName, count int) {
 	for i := 0; i < count; i++ {
-		ac := NewAircraft(aircraftName, configurationName, warpartyid)
+		ac := NewAircraft(aircraftName, configurationName, country)
 		ac.StationedAt = ab.AirbaseId
 		ab.ParkingArea = append(ab.ParkingArea, ac.AircraftId)
 	}
 }
 
-func (ab *Airbase) AssignToWarParty(wpid WarPartyId) {
-	wp := Globals.AllWarParties[wpid]
-	ab.BelongsTo = wpid
-	wp.Airbases[ab.AirbaseId] = struct{}{}
+func (ab *Airbase) AssignToCountry(country CountryName) {
+	cd := Globals.CountryDataMap[country]
+	ab.BelongsTo = country
+	cd.Airbases[ab.AirbaseId] = struct{}{}
 }
 
 // moveAircraftToMaintenance bewegt ein Flugzeug von ParkingArea zu MaintenanceArea.
@@ -136,8 +136,7 @@ func (ab *Airbase) Step(st StepTime) {
 //goland:noinspection GoUnhandledErrorResult
 func (ab Airbase) String() string {
 	var sb strings.Builder
-	wp := Globals.AllWarParties[ab.BelongsTo]
-	fmt.Fprintf(&sb, "Airbase: %s [%s]\n", ab.Name, wp.String())
+	fmt.Fprintf(&sb, "Airbase: %s [%s]\n", ab.Name, ab.BelongsTo)
 	fmt.Fprint(&sb, "ParkingArea: ")
 	for _, aircraftid := range ab.ParkingArea {
 		fmt.Fprintf(&sb, "%s, ", Globals.AllAircrafts[aircraftid].GetParameters().Name)

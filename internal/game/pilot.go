@@ -27,8 +27,8 @@ type PilotsMap map[PilotId]*Pilot
 
 type Pilot struct {
 	PilotId
-	Name       string
-	WarPartyId // Gehört dieser WarParty an
+	Name        string
+	CountryName // Gehört diesem Land an
 	Gender
 	Background PilotBackground
 	FlightRank
@@ -82,12 +82,12 @@ func RollAge(ofc Code) int {
 	return 0
 }
 
-func NewPilot(warpartyid WarPartyId, ofc Code) *Pilot {
+func NewPilot(country CountryName, ofc Code) *Pilot {
 	var g Gender
 
-	wp, exist := Globals.AllWarParties[warpartyid]
+	wp, exist := Globals.CountryDataMap[country]
 	if exist == false {
-		panic("warpartyid does not exist")
+		panic("country does not exist")
 	}
 
 	gr := randomizer.Roll1D10()
@@ -107,10 +107,10 @@ func NewPilot(warpartyid WarPartyId, ofc Code) *Pilot {
 	ng.AddNameSet(&cd.NameSet)
 
 	np := Pilot{
-		Name:       ng.CreateFullName(g == GenderMale, wp.CountryName),
-		WarPartyId: warpartyid,
-		PilotId:    PilotId(uuid.New()),
-		Gender:     g,
+		Name:        ng.CreateFullName(g == GenderMale, wp.CountryName),
+		CountryName: country,
+		PilotId:     PilotId(uuid.New()),
+		Gender:      g,
 		Background: PilotBackground{
 			CountryName: wp.CountryName,
 			Born:        ng.CreateCityName(wp.CountryName),
@@ -120,16 +120,16 @@ func NewPilot(warpartyid WarPartyId, ofc Code) *Pilot {
 		FlightRank: NewRank(wp.CountryName, ofc),
 	}
 
-	Globals.AllWarParties[warpartyid].Pilots = append(Globals.AllWarParties[warpartyid].Pilots, np.PilotId)
+	Globals.CountryDataMap[country].Pilots = append(Globals.CountryDataMap[country].Pilots, np.PilotId)
 	Globals.AllPilots[np.PilotId] = &np
 	Log.Infof("new pilot created: %s", np.Short())
 	return &np
 }
 
-func NewPilots(count int, warpartyid WarPartyId, ofc Code) []PilotId {
+func NewPilots(count int, country CountryName, ofc Code) []PilotId {
 	var pilots []PilotId
 	for i := 0; i < count; i++ {
-		np := NewPilot(warpartyid, ofc)
+		np := NewPilot(country, ofc)
 		pilots = append(pilots, np.PilotId)
 	}
 	return pilots

@@ -10,19 +10,15 @@ type CountryFilenames []string
 
 type CountryName string
 
-// TODO combine warparties and countries
-
 type CountryDataItem struct {
 	CountryName
-	FlightRankList []FlightRank
-	NameSet        NameSet
-	WarPartyId
+	FlightRankList      []FlightRank
+	NameSet             NameSet
 	WarPartyIdString    string
 	WarPartyColorString string
-	WarPartyColor
-	Pilots    []PilotId
-	Aircrafts []AircraftId
-	Airbases  map[AirbaseId]struct{}
+	Pilots              []PilotId
+	Aircrafts           []AircraftId
+	Airbases            map[AirbaseId]struct{}
 }
 type CountryDataMap map[CountryName]*CountryDataItem
 

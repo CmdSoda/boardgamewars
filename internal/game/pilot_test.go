@@ -8,7 +8,7 @@ import (
 
 func TestNewPilot(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	p := NewPilot(WarPartyIdUSA, OF5)
+	p := NewPilot("usa", OF5)
 	fmt.Println(p)
 	p2, exist := Globals.AllPilots[p.PilotId]
 	assert.True(t, exist)
@@ -17,6 +17,6 @@ func TestNewPilot(t *testing.T) {
 
 func TestNewPilots(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	pl := NewPilots(3, WarPartyIdUSA, OF1)
+	pl := NewPilots(3, "usa", OF1)
 	fmt.Println(pl)
 }

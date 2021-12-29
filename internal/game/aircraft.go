@@ -25,7 +25,7 @@ var currentAircraftShortId ShortId = 0
 type Aircraft struct {
 	AircraftId
 	AircraftParametersId
-	WarPartyId
+	CountryName
 	ShortId
 	Altitude          AltitudeBand // Aktuelle Höhe.
 	CurrentPosition   hexagon.HexPosition
@@ -102,7 +102,7 @@ func (ac *Aircraft) AssignToAB(id AirbaseId) bool {
 	return false
 }
 
-func NewAircraft(name string, weaponConfigName string, warpartyid WarPartyId) *Aircraft {
+func NewAircraft(name string, weaponConfigName string, country CountryName) *Aircraft {
 	ac := Aircraft{}
 	ac.ShortId = currentAircraftShortId
 	currentAircraftShortId = currentAircraftShortId + 1
@@ -110,7 +110,7 @@ func NewAircraft(name string, weaponConfigName string, warpartyid WarPartyId) *A
 	if exist {
 		ac.AircraftId = AircraftId(uuid.New())
 		ac.AircraftParametersId = acpid
-		ac.WarPartyId = warpartyid
+		ac.CountryName = country
 		ac.WeaponSystems = CloneWeaponSystemList(acpid, weaponConfigName)
 		ac.WeaponsConfigName = weaponConfigName
 		for i := 0; i < len(ac.WeaponSystems); i++ {
@@ -229,7 +229,7 @@ func (ac *Aircraft) FillSeatsWith(pl []PilotId) {
 }
 
 func (ac *Aircraft) FillSeatsWithNewPilots(nc Code) {
-	pl := NewPilots(Globals.AllAircraftParameters[ac.AircraftParametersId].Seats, ac.WarPartyId, nc)
+	pl := NewPilots(Globals.AllAircraftParameters[ac.AircraftParametersId].Seats, ac.CountryName, nc)
 	ac.FillSeatsWith(pl)
 }
 

@@ -10,23 +10,23 @@ import (
 
 func TestAirbase(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	ab := NewAirbase("Fallujah AB", WarPartyIdUSA, hexagon.HexPosition{Column: 3, Row: 5})
-	ab.CreateAircrafts("F14", "Default", WarPartyIdUSA, 6)
+	ab := NewAirbase("Fallujah AB", "usa", hexagon.HexPosition{Column: 3, Row: 5})
+	ab.CreateAircrafts("F14", "Default", "usa", 6)
 	fmt.Println(ab.String())
 	fmt.Println(Globals.AllAirbases)
 }
 
 func TestHangar(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	ab := NewAirbase("Fallujah AB", WarPartyIdUSA, hexagon.HexPosition{Column: 3, Row: 5})
-	ac := NewAircraft("F14", "Default", WarPartyIdUSA)
+	ab := NewAirbase("Fallujah AB", "usa", hexagon.HexPosition{Column: 3, Row: 5})
+	ac := NewAircraft("F14", "Default", "usa")
 	ab.AddToParkingArea(ac.AircraftId)
 	fmt.Println(ab)
 }
 
 func TestNewAirbase(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
-	ab := NewAirbase("Airbase 1", WarPartyIdUSA, hexagon.NewHexagon(15, 15))
+	ab := NewAirbase("Airbase 1", "usa", hexagon.NewHexagon(15, 15))
 	assert.Equal(t, 1, len(Globals.AllAirbases))
 	_, exist := Globals.AllAirbases[ab.AirbaseId]
 	assert.True(t, exist)
@@ -34,14 +34,14 @@ func TestNewAirbase(t *testing.T) {
 
 func TestMoveAircraftsToMaintenance(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
-	ab := NewAirbase("Airbase", WarPartyIdUSA, hexagon.NewHexagon(15, 15))
+	ab := NewAirbase("Airbase", "usa", hexagon.NewHexagon(15, 15))
 	ab.MaxMaintainenanceSlots = 4
-	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	ac2 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	ac3 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	ac4 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	ac5 := NewAircraft("F14", "Default", WarPartyIdUSA)
-	ac6 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	ac1 := NewAircraft("F14", "Default", "usa")
+	ac2 := NewAircraft("F14", "Default", "usa")
+	ac3 := NewAircraft("F14", "Default", "usa")
+	ac4 := NewAircraft("F14", "Default", "usa")
+	ac5 := NewAircraft("F14", "Default", "usa")
+	ac6 := NewAircraft("F14", "Default", "usa")
 	ab.AddToParkingArea(ac1.AircraftId)
 	ab.AddToParkingArea(ac2.AircraftId)
 	ab.AddToParkingArea(ac3.AircraftId)

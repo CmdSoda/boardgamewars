@@ -19,7 +19,7 @@ func TestCounterType_String(t *testing.T) {
 
 func Test2(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	ac := NewAircraft("F14", "Default", WarPartyIdUSA)
+	ac := NewAircraft("F14", "Default", "usa")
 	c := NewCounter(CounterTypeAircraft, ac)
 	assert.Equal(t, "Aircraft", c.Type.String())
 	ac2 := c.Object.(*Aircraft)
@@ -28,7 +28,7 @@ func Test2(t *testing.T) {
 
 func TestCounterAircraft(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
-	ac := NewAircraft("F14", "Default", WarPartyIdUSA)
+	ac := NewAircraft("F14", "Default", "usa")
 	ac.FillSeatsWithNewPilots(OF1)
 	c := NewCounter(CounterTypeAircraft, ac)
 	fmt.Println(c)

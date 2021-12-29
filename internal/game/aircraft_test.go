@@ -11,32 +11,32 @@ import (
 
 func TestAircraftPilots(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	ac := NewAircraft("F14", "Default", WarPartyIdUK)
+	ac := NewAircraft("F14", "Default", "uk")
 	fmt.Println(ac)
-	ac = NewAircraft("F14", "Default", WarPartyIdGermany)
+	ac = NewAircraft("F14", "Default", "germany")
 	fmt.Println(ac)
-	ac = NewAircraft("F14", "Default", WarPartyIdUSA)
+	ac = NewAircraft("F14", "Default", "usa")
 	fmt.Println(ac)
-	ac = NewAircraft("F14", "Default", WarPartyIdRussia)
+	ac = NewAircraft("F14", "Default", "russia")
 	fmt.Println(ac)
 }
 
 func TestAssign(t *testing.T) {
 	assert.Nil(t, InitGame(0))
 	wrongid := AirbaseId(uuid.New())
-	ac := NewAircraft("F14", "Default", WarPartyIdUK)
+	ac := NewAircraft("F14", "Default", "uk")
 	assert.Equal(t, false, ac.AssignToAB(wrongid))
-	nellis := NewAirbase("Nellis AB", WarPartyIdUSA, hexagon.HexPosition{Column: 6, Row: 9})
+	nellis := NewAirbase("Nellis AB", "usa", hexagon.HexPosition{Column: 6, Row: 9})
 	assert.Equal(t, true, ac.AssignToAB(nellis.AirbaseId))
 }
 
 func TestAircraftMap(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	ab := NewAirbase("Carrier", WarPartyIdUK, hexagon.HexPosition{Column: 4, Row: 6})
-	ac := NewAircraft("F14", "Default", WarPartyIdUK)
-	p1 := NewPilot(WarPartyIdUK, OF1)
+	ab := NewAirbase("Carrier", "uk", hexagon.HexPosition{Column: 4, Row: 6})
+	ac := NewAircraft("F14", "Default", "uk")
+	p1 := NewPilot("uk", OF1)
 	ac.AddPilot(p1.PilotId)
-	p2 := NewPilot(WarPartyIdUK, OF1)
+	p2 := NewPilot("uk", OF1)
 	ac.AddPilot(p2.PilotId)
 	ab.AddToParkingArea(ac.AircraftId)
 	ac.Damage = append(ac.Damage, DamageTypeCockpit)
@@ -45,15 +45,15 @@ func TestAircraftMap(t *testing.T) {
 
 func TestAircraftId(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	ac := NewAircraft("F14", "Default", WarPartyIdUK)
+	ac := NewAircraft("F14", "Default", "uk")
 	_, exist := Globals.AllAircrafts[ac.AircraftId]
 	assert.True(t, exist)
 }
 
 func TestAircraft_AssignToAB(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	ab := NewAirbase("Carrier", WarPartyIdUK, hexagon.HexPosition{Column: 4, Row: 6})
-	ac := NewAircraft("F14", "Default", WarPartyIdUK)
+	ab := NewAirbase("Carrier", "uk", hexagon.HexPosition{Column: 4, Row: 6})
+	ac := NewAircraft("F14", "Default", "uk")
 	ac.AssignToAB(ab.AirbaseId)
 	_, exist := Globals.AllAirbases[ab.AirbaseId]
 	assert.True(t, exist)
@@ -62,9 +62,9 @@ func TestAircraft_AssignToAB(t *testing.T) {
 
 func TestAircraft_DoDamageWith(t *testing.T) {
 	assert.Nil(t, InitGame(0))
-	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	ac1 := NewAircraft("F14", "Default", "usa")
 	ac1.FillSeatsWithNewPilots(OF1)
-	ac2 := NewAircraft("MiG-29", "Default", WarPartyIdRussia)
+	ac2 := NewAircraft("MiG-29", "Default", "russia")
 	ac2.FillSeatsWithNewPilots(OF1)
 	ws, _ := ac1.GetBestDogfightingWeapon()
 	ac2.DoDamageWith(ws)
@@ -72,7 +72,7 @@ func TestAircraft_DoDamageWith(t *testing.T) {
 
 func TestAircraft_GetHexPosition(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
-	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	ac1 := NewAircraft("F14", "Default", "usa")
 	ac1.FillSeatsWithNewPilots(OF1)
 	hp := ac1.GetHexPosition()
 	fmt.Println(hp)
@@ -80,7 +80,7 @@ func TestAircraft_GetHexPosition(t *testing.T) {
 
 func TestStateChange(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
-	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	ac1 := NewAircraft("F14", "Default", "usa")
 	ac1.FillSeatsWithNewPilots(OF1)
 
 	assert.Equal(t, AcStateParking, ac1.FSM.Current())
@@ -109,9 +109,9 @@ func TestStateChange(t *testing.T) {
 func TestStateChanges(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
 
-	ab := NewAirbase("Airbase1", WarPartyIdUSA, hexagon.HexPosition{Column: 15, Row: 15})
+	ab := NewAirbase("Airbase1", "usa", hexagon.HexPosition{Column: 15, Row: 15})
 
-	ac1 := NewAircraft("F14", "Default", WarPartyIdUSA)
+	ac1 := NewAircraft("F14", "Default", "usa")
 	ac1.FillSeatsWithNewPilots(OF1)
 	ac1.AssignToAB(ab.AirbaseId)
 
