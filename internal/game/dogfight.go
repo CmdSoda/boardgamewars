@@ -165,7 +165,7 @@ func (dg *DogfightGroup) Simulate() (DogfightResult, DogfightResult) {
 	return dfr1, dfr2
 }
 
-// HasAircraftsOnBothSides liefert true, solange Aircrafts auf beiden Seiten der WarPartys vorhanden sind.
+// HasAircraftsOnBothSides liefert true, solange Aircrafts auf beiden Seiten vorhanden sind.
 func (dg DogfightGroup) HasAircraftsOnBothSides() bool {
 	b := Globals.AllAircrafts[dg.BlueFighterId]
 	bAvailable := b.Destroyed == false

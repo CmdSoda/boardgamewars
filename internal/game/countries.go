@@ -12,13 +12,11 @@ type CountryName string
 
 type CountryDataItem struct {
 	CountryName
-	FlightRankList      []FlightRank
-	NameSet             NameSet
-	WarPartyIdString    string
-	WarPartyColorString string
-	Pilots              []PilotId
-	Aircrafts           []AircraftId
-	Airbases            map[AirbaseId]struct{}
+	FlightRankList []FlightRank
+	NameSet        NameSet
+	Pilots         []PilotId
+	Aircrafts      []AircraftId
+	Airbases       map[AirbaseId]struct{}
 }
 type CountryDataMap map[CountryName]*CountryDataItem
 
