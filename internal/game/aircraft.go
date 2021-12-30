@@ -129,6 +129,7 @@ func NewAircraft(name string, weaponConfigName string, country CountryName) *Air
 		})
 		Globals.AllAircrafts[ac.AircraftId] = &ac
 		Log.Infof("new aircraft created: %s (AC%d)", name, ac.ShortId)
+		AppendEvent(NewEvent(uuid.UUID(ac.AircraftId), SourceTypeAircraft, "created"))
 		return &ac
 	}
 	return &ac
