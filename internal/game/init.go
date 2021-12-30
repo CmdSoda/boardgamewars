@@ -17,6 +17,7 @@ type Data struct {
 	World
 	Statistics
 	Settings
+	EventList
 }
 
 var Globals = Data{}
@@ -38,6 +39,7 @@ func initGame(seed int64) error {
 	Globals.Statistics = NewStatistics()
 	randomizer.Init(seed)
 	Globals.World = NewWorld()
+	Globals.EventList = NewEventList()
 	if err = LoadSettings("settings.json"); err != nil {
 		return err
 	}
