@@ -140,6 +140,7 @@ func (ac *Aircraft) enterState(e *fsm.Event) {
 	case AcEventRepair:
 		ac.RepairTime = StepTime(20 * len(ac.Damage))
 	}
+	AppendEvent(NewEvent(uuid.UUID(ac.AircraftId), SourceTypeAircraft, e.Event))
 }
 
 func GetAircraftParametersIdByName(name string) (AircraftParametersId, bool) {
@@ -264,6 +265,7 @@ func (ac *Aircraft) IsDamaged() bool {
 func (ac *Aircraft) Step(st StepTime) {
 	ac.StepsTaken = ac.StepsTaken + st
 	switch ac.FSM.Current() {
+	// TODO Das Reparieren macht bereits die Airbase. Das kann hier also entfernt werden.
 	case AcStateInMaintenance:
 		ac.RepairTime = ac.RepairTime - st
 		if ac.RepairTime <= 0 {
@@ -283,6 +285,8 @@ func (ac *Aircraft) Step(st StepTime) {
 			}
 		}
 	case AcStateParking:
+		// TODO Soll das Aircraft sofort starten, wenn es Wegpunkte bekommen hat? Gibt es eine bessere Lösung?
+		// Vielleicht will man Wegpunkte setzen können, ohne das Flugzeug zum Start zu zwingen.
 		if len(ac.Waypoints) > 0 {
 			err := ac.FSM.Event(AcEventStart)
 			if err != nil {

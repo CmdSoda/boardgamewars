@@ -47,7 +47,7 @@ func NewEvent(thisId uuid.UUID, st SourceType, msg string) Event {
 }
 
 func (e Event) String() string {
-	return fmt.Sprintf("%s %s: %s", e.SourceType.String(), e.Source.String(), e.Message)
+	return fmt.Sprintf("%s %s: %s [%d]", e.SourceType.String(), e.Source.String(), e.Message, e.StepTime)
 }
 
 type EventList []Event

@@ -135,4 +135,6 @@ func TestStateChanges(t *testing.T) {
 	ac1.CurrentPosition = hexagon.NewHexagon(15, 15)
 	ac1.Step(1)
 	assert.Equal(t, AcStateParking, ac1.FSM.Current())
+
+	fmt.Println(Globals.EventList.String())
 }

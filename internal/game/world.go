@@ -25,6 +25,7 @@ func (w *World) MoveAircraftToAirbase(acid AircraftId) {
 
 }
 
+// TODO Zur Zeit werden nur die Airbases gesteppt.
 func (w *World) Step(st StepTime) {
 	w.CurrentStep = w.CurrentStep + st
 	fmt.Println(st)

@@ -35,7 +35,7 @@ func TestNewAirbase(t *testing.T) {
 func TestMoveAircraftsToMaintenance(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
 	ab := NewAirbase("Airbase", "usa", hexagon.NewHexagon(15, 15))
-	ab.MaxMaintainenanceSlots = 4
+	ab.MaxMaintenanceSlots = 4
 	ac1 := NewAircraft("F14", "Default", "usa")
 	ac2 := NewAircraft("F14", "Default", "usa")
 	ac3 := NewAircraft("F14", "Default", "usa")

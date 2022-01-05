@@ -13,15 +13,15 @@ type AirbaseId uuid.UUID
 
 type Airbase struct {
 	AirbaseId
-	Name                   string
-	BelongsTo              CountryName
-	AcceptAllies           bool
-	AllAircrafts           []AircraftId // Alle Aircrafts, die zu dieser Basis gehören
-	AllPilots              []PilotId    // Alle Piloten, die zu dieser Basis gehören
-	ParkingArea            []AircraftId
-	MaxParkingSlots        int
-	MaintenanceArea        []AircraftId
-	MaxMaintainenanceSlots int
+	Name                string
+	BelongsTo           CountryName
+	AcceptAllies        bool
+	AllAircrafts        []AircraftId // Alle Aircrafts, die zu dieser Basis gehören
+	AllPilots           []PilotId    // Alle Piloten, die zu dieser Basis gehören
+	ParkingArea         []AircraftId
+	MaxParkingSlots     int
+	MaintenanceArea     []AircraftId
+	MaxMaintenanceSlots int
 	hexagon.HexPosition
 }
 
@@ -93,10 +93,12 @@ func (ab *Airbase) CalculateRepairTime(ac *Aircraft) {
 	}
 }
 
+// Step macht:
+// * Verschiebt Aircrafts zwischen Maintenance und Parking Area.
+// * Repariert Aircrafts im Maintenance
 func (ab *Airbase) Step(st StepTime) {
-	doAgain := true
-
 	// Flugzeuge im Wartungsbereich entsprechend der StepTime reparieren.
+	doAgain := true
 	for doAgain {
 		doAgain = false
 		for i := range ab.MaintenanceArea {
@@ -118,7 +120,7 @@ func (ab *Airbase) Step(st StepTime) {
 	for doAgain {
 		doAgain = false
 		// Ist noch Platz für mehr Flugzeuge in der Wartung?
-		if ab.MaxMaintainenanceSlots > len(ab.MaintenanceArea) {
+		if ab.MaxMaintenanceSlots > len(ab.MaintenanceArea) {
 			for i := range ab.ParkingArea {
 				// Beschädigtes Flugzeug?
 				ac := Globals.AllAircrafts[ab.ParkingArea[i]]
