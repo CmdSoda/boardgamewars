@@ -105,9 +105,13 @@ func (ab *Airbase) Step(st StepTime) {
 			// Beschädigtes Flugzeug?
 			ac := Globals.AllAircrafts[ab.MaintenanceArea[i]]
 			ac.RepairTime = ac.RepairTime - st
-			if ac.RepairTime < 0 {
+			if ac.RepairTime <= 0 {
 				ac.RepairTime = 0
 				ac.Damage = []DamageType{}
+				err := ac.FSM.Event(AcEventRepairDone)
+				if err != nil {
+					Log.Panicf("Unable to change AC%d to AcEventRepairDone\n", ac.ShortId)
+				}
 				ab.moveAircraftToParkingArea(i)
 				doAgain = true
 				break
@@ -126,6 +130,7 @@ func (ab *Airbase) Step(st StepTime) {
 				ac := Globals.AllAircrafts[ab.ParkingArea[i]]
 				if ac.IsDamaged() {
 					ab.CalculateRepairTime(ac)
+					ac.FSM.Event(AcEventRepair)
 					ab.moveAircraftToMaintenance(i)
 					doAgain = true
 					break

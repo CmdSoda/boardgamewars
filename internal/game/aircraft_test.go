@@ -108,20 +108,23 @@ func TestStateChange(t *testing.T) {
 
 func TestStateChanges(t *testing.T) {
 	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
-
 	ab := NewAirbase("Airbase1", "usa", hexagon.HexPosition{Column: 15, Row: 15})
+	ab.MaxMaintenanceSlots = 4
 
 	ac1 := NewAircraft("F14", "Default", "usa")
 	ac1.FillSeatsWithNewPilots(OF1)
-	ac1.AssignToAB(ab.AirbaseId)
+	assert.True(t, ac1.AssignToAB(ab.AirbaseId))
 
 	ac1.Damage = append(ac1.Damage, []DamageType{DamageTypeFuselage, DamageTypeCockpit}...)
+	ab.AddToParkingArea(ac1.AircraftId)
 	err := ac1.FSM.Event(AcEventRepair)
 	assert.Nil(t, err)
 	assert.Equal(t, StepTime(2*20), ac1.RepairTime)
 
+	ab.Step(10)
 	ac1.Step(10)
 	assert.Equal(t, AcStateInMaintenance, ac1.FSM.Current())
+	ab.Step(30)
 	ac1.Step(30)
 	assert.Equal(t, AcStateParking, ac1.FSM.Current())
 	assert.Equal(t, 0, len(ac1.Damage))
@@ -129,10 +132,12 @@ func TestStateChanges(t *testing.T) {
 		Column: 15,
 		Row:    15,
 	}}
+	ab.Step(1)
 	ac1.Step(1)
 	assert.Equal(t, AcStateInTheAir, ac1.FSM.Current())
 	ac1.Destination = hexagon.NewHexagon(15, 15)
 	ac1.CurrentPosition = hexagon.NewHexagon(15, 15)
+	ab.Step(1)
 	ac1.Step(1)
 	assert.Equal(t, AcStateParking, ac1.FSM.Current())
 

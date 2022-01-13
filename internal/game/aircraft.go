@@ -265,16 +265,6 @@ func (ac *Aircraft) IsDamaged() bool {
 func (ac *Aircraft) Step(st StepTime) {
 	ac.StepsTaken = ac.StepsTaken + st
 	switch ac.FSM.Current() {
-	// TODO Das Reparieren macht bereits die Airbase. Das kann hier also entfernt werden.
-	case AcStateInMaintenance:
-		ac.RepairTime = ac.RepairTime - st
-		if ac.RepairTime <= 0 {
-			ac.Damage = []DamageType{}
-			err := ac.FSM.Event(AcEventRepairDone)
-			if err != nil {
-				Log.Panicf("Unable to change AC%d to AcEventRepairDone\n", ac.ShortId)
-			}
-		}
 	case AcStateInTheAir:
 		ab := Globals.AllAirbases[ac.StationedAt]
 		// Soll das Flugzeug landen?
