@@ -38,3 +38,24 @@ func TestAirbaseSteps(t *testing.T) {
 
 	fmt.Println(Globals.EventList.String())
 }
+
+func TestAirbaseAndAircraftsInTheAir(t *testing.T) {
+	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
+	ab := NewAirbase("Airbase 1", "usa", hexagon.NewHexagon(15, 15))
+	Globals.World.AddAirbase(ab.AirbaseId)
+	ac1 := NewAircraft("F14", "Default", "usa")
+	ac1.FillSeatsWithNewPilots(OF1)
+	ac1.AssignToAB(ab.AirbaseId)
+	ab.AddToParkingArea(ac1.AircraftId)
+	Globals.World.Step(1)
+	assert.Equal(t, 1, len(ab.ParkingArea))
+	assert.Equal(t, 0, len(Globals.AircraftsInTheAir))
+	ac1.Waypoints = []hexagon.HexPosition{{
+		Column: 15,
+		Row:    15,
+	}}
+	Globals.World.Step(1)
+	assert.Equal(t, 0, len(ab.ParkingArea))
+	assert.Equal(t, 1, len(Globals.AircraftsInTheAir))
+
+}

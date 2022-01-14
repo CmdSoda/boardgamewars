@@ -25,13 +25,20 @@ func (w *World) MoveAircraftToAirbase(acid AircraftId) {
 
 }
 
-// TODO Zur Zeit werden nur die Airbases gesteppt.
 func (w *World) Step(st StepTime) {
 	w.CurrentStep = w.CurrentStep + st
 	fmt.Println(st)
+
+	// Step all Airbases
 	for _, abid := range w.Airbases {
 		ab := Globals.AllAirbases[abid]
 		ab.Step(st)
+	}
+
+	// Step all aircrafts in the air
+	for _, acid := range w.AircraftsInTheAir {
+		ac := Globals.AllAircrafts[acid]
+		ac.Step(st)
 	}
 }
 
