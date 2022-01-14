@@ -47,12 +47,15 @@ func NewAirbase(name string, country CountryName, pos hexagon.HexPosition) *Airb
 	ab.MaintenanceArea = []AircraftId{}
 	ab.AllPilots = []PilotId{}
 	ab.AllAircrafts = []AircraftId{}
+	Globals.World.AddAirbase(ab.AirbaseId)
 	Globals.AllAirbases[ab.AirbaseId] = &ab
 	return &ab
 }
 
 func (ab *Airbase) AddToParkingArea(acid AircraftId) {
 	ab.ParkingArea = append(ab.ParkingArea, acid)
+	ac := Globals.AllAircrafts[acid]
+	ac.CurrentPosition = ab.HexPosition
 }
 
 func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, country CountryName, count int) {

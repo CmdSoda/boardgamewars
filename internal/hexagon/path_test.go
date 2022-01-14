@@ -234,3 +234,26 @@ func TestCombination(t *testing.T) {
 		}
 	}
 }
+
+func TestGetNextPositiion(t *testing.T) {
+	cp := HexPosition{
+		Column: 5,
+		Row:    5,
+	}
+	wps := []HexPosition{{
+		Column: 3,
+		Row:    3,
+	}, {4, 4}}
+	np := GetNextPosition(cp, wps)
+	assert.Equal(t, cp, np)
+}
+
+func TestGetNextPositiion2(t *testing.T) {
+	cp := HexPosition{
+		Column: 5,
+		Row:    5,
+	}
+	wps := []HexPosition{{3, 3}, {5, 5}, {4, 4}}
+	np := GetNextPosition(cp, wps)
+	assert.Equal(t, HexPosition{4, 4}, np)
+}

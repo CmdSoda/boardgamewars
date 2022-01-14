@@ -41,6 +41,7 @@ type Aircraft struct {
 	Waypoints         hexagon.PositionList
 	CurrentWaypoint   int
 	Destination       hexagon.HexPosition
+	CalculatedPath    []hexagon.HexPosition
 }
 
 const (
@@ -262,6 +263,19 @@ func (ac *Aircraft) IsDamaged() bool {
 	return len(ac.Damage) > 0
 }
 
+func (ac *Aircraft) SetWaypoints(wps []hexagon.HexPosition) {
+	ac.Waypoints = wps
+	ac.CurrentWaypoint = 0
+	ac.Destination = ac.Waypoints[0]
+	ac.CalculatedPath = hexagon.CalculatePath(ac.CurrentPosition, ac.Destination)
+}
+
+func (ac *Aircraft) nextWaypoint() {
+	ac.CurrentWaypoint++
+	ac.Destination = ac.Waypoints[ac.CurrentWaypoint]
+	ac.CalculatedPath = hexagon.CalculatePath(ac.CurrentPosition, ac.Destination)
+}
+
 func (ac *Aircraft) Step(st StepTime) {
 	ac.StepsTaken = ac.StepsTaken + st
 	switch ac.FSM.Current() {
@@ -273,7 +287,18 @@ func (ac *Aircraft) Step(st StepTime) {
 			if err != nil {
 				Log.Panicf("Unable to change AC%d to AcEventLand\n", ac.ShortId)
 			}
+			Globals.World.MoveAircraftInAirToAirbase(ac.AircraftId, ab.AirbaseId)
+			ab.AddToParkingArea(ac.AircraftId)
+		} else if ac.Destination != ac.CurrentPosition {
+			// Soll das Flugzeug
+			np := hexagon.GetNextPosition(ac.CurrentPosition, ac.CalculatedPath)
+			ac.CurrentPosition = np
+		} else if ac.Destination == ac.CurrentPosition {
+			if ac.CurrentWaypoint < len(ac.Waypoints)-1 {
+				ac.nextWaypoint()
+			}
 		}
+
 	case AcStateParking:
 		// TODO Soll das Aircraft sofort starten, wenn es Wegpunkte bekommen hat? Gibt es eine bessere Lösung?
 		// Vielleicht will man Wegpunkte setzen können, ohne das Flugzeug zum Start zu zwingen.
