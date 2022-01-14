@@ -25,7 +25,7 @@ type Airbase struct {
 	hexagon.HexPosition
 }
 
-type AirbasesMap map[AirbaseId]Airbase
+type AirbasesMap map[AirbaseId]*Airbase
 
 //goland:noinspection GoUnhandledErrorResult
 func (al AirbasesMap) String() string {
@@ -47,7 +47,7 @@ func NewAirbase(name string, country CountryName, pos hexagon.HexPosition) *Airb
 	ab.MaintenanceArea = []AircraftId{}
 	ab.AllPilots = []PilotId{}
 	ab.AllAircrafts = []AircraftId{}
-	Globals.AllAirbases[ab.AirbaseId] = ab
+	Globals.AllAirbases[ab.AirbaseId] = &ab
 	return &ab
 }
 
@@ -82,6 +82,14 @@ func (ab *Airbase) moveAircraftToParkingArea(idx int) {
 	acid := ab.MaintenanceArea[idx]
 	ab.MaintenanceArea = append(ab.MaintenanceArea[:idx], ab.MaintenanceArea[idx+1:]...)
 	ab.ParkingArea = append(ab.ParkingArea, acid)
+}
+
+func (ab *Airbase) moveAircraftToAir(idx int) {
+	if idx < len(ab.ParkingArea) {
+		acid := ab.ParkingArea[idx]
+		ab.ParkingArea = append(ab.ParkingArea[:idx], ab.ParkingArea[idx+1:]...)
+		Globals.AircraftsInTheAir = append(Globals.AircraftsInTheAir, acid)
+	}
 }
 
 func (ab *Airbase) CalculateRepairTime(ac *Aircraft) {
@@ -135,6 +143,18 @@ func (ab *Airbase) Step(st StepTime) {
 					doAgain = true
 					break
 				}
+			}
+		}
+	}
+
+	doAgain = true
+	for doAgain {
+		doAgain = false
+		for i := range ab.ParkingArea {
+			acid := ab.ParkingArea[i]
+			ac := Globals.AllAircrafts[acid]
+			if ac.RepairTime == 0 && len(ac.Waypoints) > 0 {
+				ab.moveAircraftToAir(i)
 			}
 		}
 	}
