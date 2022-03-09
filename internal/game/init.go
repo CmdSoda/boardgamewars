@@ -1,6 +1,7 @@
 package game
 
 import (
+	"database/sql"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"github.com/sirupsen/logrus"
 )
@@ -18,6 +19,7 @@ type Data struct {
 	Statistics
 	Settings
 	EventList
+	Database *sql.DB
 }
 
 var Globals = Data{}

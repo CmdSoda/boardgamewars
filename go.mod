@@ -7,6 +7,7 @@ require (
 	github.com/gotk3/gotk3 v0.6.1
 	github.com/jroimartin/gocui v0.5.0
 	github.com/looplab/fsm v0.3.0
+	github.com/mattn/go-sqlite3 v1.14.12
 	github.com/sirupsen/logrus v1.4.1
 	github.com/stretchr/testify v1.7.0
 	github.com/therecipe/qt v0.0.0-20200904063919-c0c124a5770d

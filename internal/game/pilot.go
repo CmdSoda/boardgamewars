@@ -1,6 +1,7 @@
 package game
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"github.com/google/uuid"
@@ -33,6 +34,7 @@ type Pilot struct {
 	Background PilotBackground
 	FlightRank
 	PilotStats
+	DatabaseId int64
 }
 
 type PilotStats struct {
@@ -133,4 +135,130 @@ func NewPilots(count int, country CountryName, ofc Code) []PilotId {
 		pilots = append(pilots, np.PilotId)
 	}
 	return pilots
+}
+
+func (p *Pilot) Save() error {
+	tx, err := Globals.Database.Begin()
+	if err != nil {
+		return err
+	}
+	stmt, err := tx.Prepare("insert into table_pilots(pilot_name, pilot_uuid, country_name, gender, flight_rank, age, born, home_air_base, sorties, hits, kills, kia, mia, xp, reflexes, endurance) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	if err != nil {
+		return err
+	}
+	//goland:noinspection GoUnhandledErrorResult
+	defer stmt.Close()
+	var res sql.Result
+	uid := (uuid.UUID)(p.PilotId)
+	res, err = stmt.Exec(p.Name, uid.String(), p.CountryName, p.Gender.String(), p.FlightRank.Code, p.Background.Age, p.Background.Born, p.Background.HomeAirBase, p.Sorties, p.Hits, p.Kills, p.Kia, p.Mia, p.XP, p.Reflexes, p.Endurance)
+	if err != nil {
+		return err
+	}
+	p.DatabaseId, err = res.LastInsertId()
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *Pilot) Load() error {
+	uid := (uuid.UUID)(p.PilotId)
+
+	stmt, err := Globals.Database.Prepare("select pilot_name, pilot_uuid, country_name, gender, flight_rank, age, born, home_air_base, sorties, hits, kills, kia, mia, xp, reflexes, endurance from table_pilots WHERE pilot_uuid = ?")
+	if err != nil {
+		return err
+	}
+
+	var gender string
+	var pilotUuid string
+	var frank int
+	err = stmt.QueryRow(uid.String()).Scan(
+		&p.Name,
+		&pilotUuid,
+		&p.CountryName,
+		&gender,
+		&frank,
+		&p.Background.Age,
+		&p.Background.Born,
+		&p.Background.HomeAirBase,
+		&p.Sorties,
+		&p.Hits,
+		&p.Kills,
+		&p.Kia,
+		&p.Mia,
+		&p.XP,
+		&p.Reflexes,
+		&p.Endurance)
+	if err != nil {
+		return err
+	}
+	pid, err2 := uuid.Parse(pilotUuid)
+	if err2 != nil {
+		return err2
+	}
+	p.PilotId = (PilotId)(pid)
+	if gender == "Male" {
+		p.Gender = GenderMale
+	} else {
+		p.Gender = GenderFemale
+	}
+	p.FlightRank = NewRank(p.CountryName, (Code)(frank))
+
+	return nil
+}
+
+func CreatePilotTable() error {
+	var stmt string
+	stmt = `create table table_pilots
+(
+    id            integer not null
+        constraint table_pilots_pk
+            primary key autoincrement,
+    pilot_name    string  not null,
+    country_name  string  not null,
+    gender        string  not null,
+    flight_rank   integer,
+    age           integer,
+    born          string,
+    home_air_base string,
+    sorties       integer,
+    hits          integer,
+    kills         integer,
+    kia           boolean,
+    mia           boolean,
+    xp            integer not null,
+    reflexes      integer,
+    endurance     integer,
+    pilot_uuid    string
+);
+insert into table_pilots(id, pilot_name, country_name, gender, flight_rank, age, born, home_air_base, sorties,
+                                hits, kills, kia, mia, xp, reflexes, endurance, pilot_uuid)
+select id,
+       pilot_name,
+       country_name,
+       gender,
+       flight_rank,
+       age,
+       born,
+       home_air_base,
+       sorties,
+       hits,
+       kills,
+       kia,
+       mia,
+       xp,
+       reflexes,
+       endurance,
+       pilot_uuid
+from table_pilots;
+create unique index table_pilots_id_uindex
+    on table_pilots (id);`
+
+	_, err := Globals.Database.Exec(stmt)
+	return err
+}
+
+func DropPilotTable() {
+	//goland:noinspection GoUnhandledErrorResult
+	Globals.Database.Exec("DROP TABLE IF EXISTS table_pilots")
 }
