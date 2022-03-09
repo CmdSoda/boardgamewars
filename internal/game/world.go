@@ -1,7 +1,5 @@
 package game
 
-import "fmt"
-
 type World struct {
 	CurrentStep       StepTime
 	Airbases          []AirbaseId
@@ -17,21 +15,25 @@ func (w *World) AddAirbase(st AirbaseId) {
 	w.Airbases = append(w.Airbases, st)
 }
 
-func (w *World) MoveAircraftToAir(acid AircraftId) {
-
+func (w *World) MoveAircraftToAir(abid AirbaseId, acid AircraftId) {
 }
 
-func (w *World) MoveAircraftToAirbase(acid AircraftId) {
-
+func (w *World) MoveAircraftInAirToAirbase(acid AircraftId, abid AirbaseId) {
 }
 
-// TODO Zur Zeit werden nur die Airbases gesteppt.
 func (w *World) Step(st StepTime) {
 	w.CurrentStep = w.CurrentStep + st
-	fmt.Println(st)
+
+	// Step all Airbases
 	for _, abid := range w.Airbases {
 		ab := Globals.AllAirbases[abid]
 		ab.Step(st)
+	}
+
+	// Step all aircrafts in the air
+	for _, acid := range w.AircraftsInTheAir {
+		ac := Globals.AllAircrafts[acid]
+		ac.Step(st)
 	}
 }
 

@@ -25,7 +25,7 @@ type Airbase struct {
 	hexagon.HexPosition
 }
 
-type AirbasesMap map[AirbaseId]Airbase
+type AirbasesMap map[AirbaseId]*Airbase
 
 //goland:noinspection GoUnhandledErrorResult
 func (al AirbasesMap) String() string {
@@ -47,12 +47,15 @@ func NewAirbase(name string, country CountryName, pos hexagon.HexPosition) *Airb
 	ab.MaintenanceArea = []AircraftId{}
 	ab.AllPilots = []PilotId{}
 	ab.AllAircrafts = []AircraftId{}
-	Globals.AllAirbases[ab.AirbaseId] = ab
+	Globals.World.AddAirbase(ab.AirbaseId)
+	Globals.AllAirbases[ab.AirbaseId] = &ab
 	return &ab
 }
 
 func (ab *Airbase) AddToParkingArea(acid AircraftId) {
 	ab.ParkingArea = append(ab.ParkingArea, acid)
+	ac := Globals.AllAircrafts[acid]
+	ac.CurrentPosition = ab.HexPosition
 }
 
 func (ab *Airbase) CreateAircrafts(aircraftName string, configurationName string, country CountryName, count int) {
@@ -84,6 +87,14 @@ func (ab *Airbase) moveAircraftToParkingArea(idx int) {
 	ab.ParkingArea = append(ab.ParkingArea, acid)
 }
 
+func (ab *Airbase) moveAircraftToAir(idx int) {
+	if idx < len(ab.ParkingArea) {
+		acid := ab.ParkingArea[idx]
+		ab.ParkingArea = append(ab.ParkingArea[:idx], ab.ParkingArea[idx+1:]...)
+		Globals.AircraftsInTheAir = append(Globals.AircraftsInTheAir, acid)
+	}
+}
+
 func (ab *Airbase) CalculateRepairTime(ac *Aircraft) {
 	ac.RepairTime = 0
 	for _, damageType := range ac.Damage {
@@ -105,9 +116,13 @@ func (ab *Airbase) Step(st StepTime) {
 			// Beschädigtes Flugzeug?
 			ac := Globals.AllAircrafts[ab.MaintenanceArea[i]]
 			ac.RepairTime = ac.RepairTime - st
-			if ac.RepairTime < 0 {
+			if ac.RepairTime <= 0 {
 				ac.RepairTime = 0
 				ac.Damage = []DamageType{}
+				err := ac.FSM.Event(AcEventRepairDone)
+				if err != nil {
+					Log.Panicf("Unable to change AC%d to AcEventRepairDone\n", ac.ShortId)
+				}
 				ab.moveAircraftToParkingArea(i)
 				doAgain = true
 				break
@@ -126,10 +141,23 @@ func (ab *Airbase) Step(st StepTime) {
 				ac := Globals.AllAircrafts[ab.ParkingArea[i]]
 				if ac.IsDamaged() {
 					ab.CalculateRepairTime(ac)
+					ac.FSM.Event(AcEventRepair)
 					ab.moveAircraftToMaintenance(i)
 					doAgain = true
 					break
 				}
+			}
+		}
+	}
+
+	doAgain = true
+	for doAgain {
+		doAgain = false
+		for i := range ab.ParkingArea {
+			acid := ab.ParkingArea[i]
+			ac := Globals.AllAircrafts[acid]
+			if ac.RepairTime == 0 && len(ac.Waypoints) > 0 {
+				ab.moveAircraftToAir(i)
 			}
 		}
 	}

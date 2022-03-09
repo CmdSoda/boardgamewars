@@ -9,6 +9,15 @@ func contains(hexagonList []HexPosition, hex HexPosition) bool {
 	return false
 }
 
+func GetNextPosition(currentPosition HexPosition, path []HexPosition) HexPosition {
+	for i := 0; i < len(path); i++ {
+		if path[i] == currentPosition {
+			return path[i+1]
+		}
+	}
+	return currentPosition
+}
+
 // CalculatePath berechnet die direkten Pfad (LOS) zwischen zwei Hexagons.
 func CalculatePath(startHex HexPosition, endHex HexPosition) []HexPosition {
 	var path = make([]HexPosition, 0)

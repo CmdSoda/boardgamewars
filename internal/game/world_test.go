@@ -38,3 +38,87 @@ func TestAirbaseSteps(t *testing.T) {
 
 	fmt.Println(Globals.EventList.String())
 }
+
+func TestAirbaseAndAircraftsInTheAir(t *testing.T) {
+	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
+	ab := NewAirbase("Airbase 1", "usa", hexagon.NewHexagon(15, 15))
+	ac1 := NewAircraft("F14", "Default", "usa")
+	ac1.FillSeatsWithNewPilots(OF1)
+	ac1.AssignToAB(ab.AirbaseId)
+	ab.AddToParkingArea(ac1.AircraftId)
+	Globals.World.Step(1)
+	assert.Equal(t, 1, len(ab.ParkingArea))
+	assert.Equal(t, 0, len(Globals.AircraftsInTheAir))
+	ac1.Waypoints = []hexagon.HexPosition{{
+		Column: 15,
+		Row:    15,
+	}}
+	Globals.World.Step(1)
+	assert.Equal(t, 0, len(ab.ParkingArea))
+	assert.Equal(t, 1, len(Globals.AircraftsInTheAir))
+}
+
+// TestStartAndLand starts and lands an aircraft.
+func TestStartAndLand(t *testing.T) {
+	assert.Nil(t, InitGameWithLogLevel(0, logrus.WarnLevel))
+	ab := NewAirbase("Airbase 1", "usa", hexagon.NewHexagon(15, 15))
+	ac1 := NewAircraft("F14", "Default", "usa")
+	ac1.FillSeatsWithNewPilots(OF1)
+	ac1.AssignToAB(ab.AirbaseId)
+	ab.AddToParkingArea(ac1.AircraftId)
+	waypoints := []hexagon.HexPosition{{17, 17}, {15, 15}}
+	ac1.SetWaypoints(waypoints)
+	assert.Equal(t, 4, len(ac1.CalculatedPath))
+	assert.Equal(t, 1, len(ab.ParkingArea))
+	assert.Equal(t, 0,
+		len(Globals.AircraftsInTheAir))
+	assert.Equal(t, hexagon.HexPosition{
+		Column: 15,
+		Row:    15,
+	}, ac1.CurrentPosition)
+	Globals.World.Step(1)
+	assert.Equal(t, 0, len(ab.ParkingArea))
+	assert.Equal(t, 1, len(Globals.AircraftsInTheAir))
+	Globals.World.Step(1)
+	assert.Equal(t, hexagon.HexPosition{
+		Column: 15,
+		Row:    16,
+	}, ac1.CurrentPosition)
+	Globals.World.Step(1)
+	assert.Equal(t, hexagon.HexPosition{
+		Column: 16,
+		Row:    16,
+	}, ac1.CurrentPosition)
+	Globals.World.Step(1)
+	assert.Equal(t, hexagon.HexPosition{
+		Column: 17,
+		Row:    17,
+	}, ac1.CurrentPosition)
+	Globals.World.Step(1)
+	assert.Equal(t, hexagon.HexPosition{
+		Column: 15,
+		Row:    15,
+	}, ac1.Destination)
+	Globals.World.Step(1)
+	assert.Equal(t, hexagon.HexPosition{
+		Column: 16,
+		Row:    16,
+	}, ac1.CurrentPosition)
+	Globals.World.Step(1)
+	assert.Equal(t, hexagon.HexPosition{
+		Column: 15,
+		Row:    16,
+	}, ac1.CurrentPosition)
+	Globals.World.Step(1)
+	assert.Equal(t, hexagon.HexPosition{
+		Column: 15,
+		Row:    15,
+	}, ac1.CurrentPosition)
+	Globals.World.Step(1)
+	assert.Equal(t, hexagon.HexPosition{
+		Column: 15,
+		Row:    15,
+	}, ac1.CurrentPosition)
+	assert.Equal(t, 1, len(ab.ParkingArea))
+	//assert.Equal(t, 0, len(Globals.AircraftsInTheAir))
+}

@@ -37,7 +37,7 @@ func initGame(seed int64) error {
 	Log.Info("game engine is starting...\n")
 	Globals.AllAircrafts = map[AircraftId]*Aircraft{}
 	Globals.AllPilots = map[PilotId]*Pilot{}
-	Globals.AllAirbases = map[AirbaseId]Airbase{}
+	Globals.AllAirbases = map[AirbaseId]*Airbase{}
 	Globals.Statistics = NewStatistics()
 	randomizer.Init(seed)
 	Globals.World = NewWorld()
