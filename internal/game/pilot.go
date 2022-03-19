@@ -1,7 +1,6 @@
 package game
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
 	"github.com/google/uuid"
@@ -34,7 +33,6 @@ type Pilot struct {
 	Background PilotBackground
 	FlightRank
 	PilotStats
-	DatabaseId int64
 }
 
 type PilotStats struct {
@@ -84,6 +82,7 @@ func RollAge(ofc Code) int {
 	return 0
 }
 
+// NewPilot erzeugt einen neuen Piloten und speichert ihn in die Datenbank.
 func NewPilot(country CountryName, ofc Code) *Pilot {
 	var g Gender
 
@@ -125,6 +124,9 @@ func NewPilot(country CountryName, ofc Code) *Pilot {
 	Globals.CountryDataMap[country].Pilots = append(Globals.CountryDataMap[country].Pilots, np.PilotId)
 	Globals.AllPilots[np.PilotId] = &np
 	Log.Infof("new pilot created: %s", np.Short())
+	if errdb := np.insert(); errdb != nil {
+		Log.Panicf("Error while saving pilot: %s", errdb)
+	}
 	return &np
 }
 
@@ -137,7 +139,10 @@ func NewPilots(count int, country CountryName, ofc Code) []PilotId {
 	return pilots
 }
 
-func (p *Pilot) Save() error {
+func (p *Pilot) insert() error {
+	if Globals.Database == nil {
+		return DatabaseNotOpenError{}
+	}
 	tx, err := Globals.Database.Begin()
 	if err != nil {
 		return err
@@ -148,13 +153,43 @@ func (p *Pilot) Save() error {
 	}
 	//goland:noinspection GoUnhandledErrorResult
 	defer stmt.Close()
-	var res sql.Result
 	uid := (uuid.UUID)(p.PilotId)
-	res, err = stmt.Exec(p.Name, uid.String(), p.CountryName, p.Gender.String(), p.FlightRank.Code, p.Background.Age, p.Background.Born, p.Background.HomeAirBase, p.Sorties, p.Hits, p.Kills, p.Kia, p.Mia, p.XP, p.Reflexes, p.Endurance)
+	_, err = stmt.Exec(p.Name, uid.String(), p.CountryName, p.Gender.String(), p.FlightRank.Code, p.Background.Age, p.Background.Born, p.Background.HomeAirBase, p.Sorties, p.Hits, p.Kills, p.Kia, p.Mia, p.XP, p.Reflexes, p.Endurance)
 	if err != nil {
 		return err
 	}
-	p.DatabaseId, err = res.LastInsertId()
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *Pilot) Update() error {
+	if Globals.Database == nil {
+		return DatabaseNotOpenError{}
+	}
+	tx, err := Globals.Database.Begin()
+	if err != nil {
+		return err
+	}
+	stmt, err := tx.Prepare("update table_pilots SET pilot_name = ?, country_name = ?, gender = ?, flight_rank = ?, age = ?, born = ?, home_air_base = ?, sorties = ?, hits = ?, kills = ?, kia = ?, mia = ?, xp = ?, reflexes = ?, endurance = ? WHERE pilot_uuid == ?")
+	if err != nil {
+		return err
+	}
+	//goland:noinspection GoUnhandledErrorResult
+	defer stmt.Close()
+	uid := (uuid.UUID)(p.PilotId)
+	_, err = stmt.Exec(p.Name,
+		p.CountryName,
+		p.Gender.String(),
+		p.FlightRank.Code,
+		p.Background.Age,
+		p.Background.Born,
+		p.Background.HomeAirBase,
+		p.Sorties, p.Hits, p.Kills, p.Kia, p.Mia, p.XP, p.Reflexes, p.Endurance, uid.String())
+	if err != nil {
+		return err
+	}
 	if err = tx.Commit(); err != nil {
 		return err
 	}
@@ -162,8 +197,10 @@ func (p *Pilot) Save() error {
 }
 
 func (p *Pilot) Load() error {
+	if Globals.Database == nil {
+		return DatabaseNotOpenError{}
+	}
 	uid := (uuid.UUID)(p.PilotId)
-
 	stmt, err := Globals.Database.Prepare("select pilot_name, pilot_uuid, country_name, gender, flight_rank, age, born, home_air_base, sorties, hits, kills, kia, mia, xp, reflexes, endurance from table_pilots WHERE pilot_uuid = ?")
 	if err != nil {
 		return err
@@ -211,9 +248,6 @@ func CreatePilotTable() error {
 	var stmt string
 	stmt = `create table table_pilots
 (
-    id            integer not null
-        constraint table_pilots_pk
-            primary key autoincrement,
     pilot_name    string  not null,
     country_name  string  not null,
     gender        string  not null,
@@ -229,12 +263,11 @@ func CreatePilotTable() error {
     xp            integer not null,
     reflexes      integer,
     endurance     integer,
-    pilot_uuid    string
+    pilot_uuid    string not null PRIMARY KEY 
 );
-insert into table_pilots(id, pilot_name, country_name, gender, flight_rank, age, born, home_air_base, sorties,
+insert into table_pilots(pilot_name, country_name, gender, flight_rank, age, born, home_air_base, sorties,
                                 hits, kills, kia, mia, xp, reflexes, endurance, pilot_uuid)
-select id,
-       pilot_name,
+select pilot_name,
        country_name,
        gender,
        flight_rank,
@@ -251,8 +284,8 @@ select id,
        endurance,
        pilot_uuid
 from table_pilots;
-create unique index table_pilots_id_uindex
-    on table_pilots (id);`
+create unique index table_pilots_uuid_uindex
+    on table_pilots (pilot_uuid);`
 
 	_, err := Globals.Database.Exec(stmt)
 	return err

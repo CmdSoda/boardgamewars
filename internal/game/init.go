@@ -57,6 +57,9 @@ func initGame(seed int64) error {
 	if err = LoadCountryData(); err != nil {
 		return err
 	}
+	if errdb := OpenDatabase(); errdb != nil {
+		return errdb
+	}
 	return nil
 }
 

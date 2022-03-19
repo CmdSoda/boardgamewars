@@ -5,6 +5,13 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+type DatabaseNotOpenError struct {
+}
+
+func (dberr DatabaseNotOpenError) Error() string {
+	return "Database not open"
+}
+
 func OpenDatabase() error {
 	db, err := sql.Open("sqlite3", "../../data/bgw.sqlite")
 	if err != nil {
