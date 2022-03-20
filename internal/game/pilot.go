@@ -121,8 +121,6 @@ func NewPilot(country CountryName, ofc Code) *Pilot {
 		FlightRank: NewRank(wp.CountryName, ofc),
 	}
 
-	Globals.CountryDataMap[country].Pilots = append(Globals.CountryDataMap[country].Pilots, np.PilotId)
-	Globals.AllPilots[np.PilotId] = &np
 	Log.Infof("new pilot created: %s", np.Short())
 	if errdb := np.insert(); errdb != nil {
 		Log.Panicf("Error while saving pilot: %s", errdb)
@@ -196,20 +194,20 @@ func (p *Pilot) Update() error {
 	return nil
 }
 
-func (p *Pilot) Load() error {
+func LoadPilot(pid PilotId) (Pilot, error) {
+	p := Pilot{}
 	if Globals.Database == nil {
-		return DatabaseNotOpenError{}
+		return p, DatabaseNotOpenError{}
 	}
-	uid := (uuid.UUID)(p.PilotId)
 	stmt, err := Globals.Database.Prepare("select pilot_name, pilot_uuid, country_name, gender, flight_rank, age, born, home_air_base, sorties, hits, kills, kia, mia, xp, reflexes, endurance from table_pilots WHERE pilot_uuid = ?")
 	if err != nil {
-		return err
+		return p, err
 	}
 
 	var gender string
 	var pilotUuid string
 	var frank int
-	err = stmt.QueryRow(uid.String()).Scan(
+	err = stmt.QueryRow((uuid.UUID)(pid).String()).Scan(
 		&p.Name,
 		&pilotUuid,
 		&p.CountryName,
@@ -227,13 +225,9 @@ func (p *Pilot) Load() error {
 		&p.Reflexes,
 		&p.Endurance)
 	if err != nil {
-		return err
+		return p, err
 	}
-	pid, err2 := uuid.Parse(pilotUuid)
-	if err2 != nil {
-		return err2
-	}
-	p.PilotId = (PilotId)(pid)
+	p.PilotId = pid
 	if gender == "Male" {
 		p.Gender = GenderMale
 	} else {
@@ -241,7 +235,7 @@ func (p *Pilot) Load() error {
 	}
 	p.FlightRank = NewRank(p.CountryName, (Code)(frank))
 
-	return nil
+	return p, nil
 }
 
 func CreatePilotTable() error {

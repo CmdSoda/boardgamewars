@@ -64,9 +64,11 @@ func (ac *Aircraft) GetHexPosition() hexagon.HexPosition {
 func (ac *Aircraft) GetHighestPilotRank() Code {
 	highest := OF0
 	for _, pid := range ac.Pilots {
-		p := Globals.AllPilots[pid]
-		if Code(p.Code) > highest {
-			highest = Code(p.Code)
+		p, errp := LoadPilot(pid)
+		if errp != nil {
+			if Code(p.Code) > highest {
+				highest = Code(p.Code)
+			}
 		}
 	}
 	return highest
@@ -246,8 +248,10 @@ func (ac Aircraft) String() string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "Aircraft(AC%d): %s\n", ac.ShortId, ac.GetParameters().Name)
 	for _, pilotid := range ac.Pilots {
-		p := Globals.AllPilots[pilotid]
-		fmt.Fprintf(&b, "  Pilot: %s\n", p)
+		p, errp := LoadPilot(pilotid)
+		if errp != nil {
+			fmt.Fprintf(&b, "  Pilot: %s\n", p)
+		}
 	}
 	fmt.Fprint(&b, "  Damage: ")
 	if len(ac.Damage) == 0 {

@@ -12,7 +12,6 @@ type Data struct {
 	AllAircraftParameters AircraftParametersMap
 	Air2AirWeapons        Air2AirWeaponLibrary
 	AllAircrafts          AircraftsMap
-	AllPilots             PilotsMap
 	AllCounters           CounterList
 	CountryDataMap
 	World
@@ -36,7 +35,6 @@ func initGame(seed int64) error {
 	var err error
 	Log.Info("game engine is starting...\n")
 	Globals.AllAircrafts = map[AircraftId]*Aircraft{}
-	Globals.AllPilots = map[PilotId]*Pilot{}
 	Globals.AllAirbases = map[AirbaseId]*Airbase{}
 	Globals.Statistics = NewStatistics()
 	randomizer.Init(seed)

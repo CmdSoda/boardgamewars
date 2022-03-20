@@ -14,7 +14,6 @@ type CountryDataItem struct {
 	CountryName
 	FlightRankList []FlightRank
 	NameSet        NameSet
-	Pilots         []PilotId
 	Aircrafts      []AircraftId
 	Airbases       map[AirbaseId]struct{}
 }

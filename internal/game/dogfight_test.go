@@ -214,7 +214,7 @@ func TestF5Mystery(t *testing.T) {
 	acred := NewAircraft("F14", "Default", "russia")
 	acred.FillSeatsWithNewPilots(OF1)
 
-	for i := 0; i < 10000; i++ {
+	for i := 0; i < 1000; i++ {
 		ds := NewDogfightSetup()
 		acblue.Rearm()
 		acblue.ReviveAndRepair()
