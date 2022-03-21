@@ -285,7 +285,40 @@ create unique index table_pilots_uuid_uindex
 	return err
 }
 
-func DropPilotTable() {
+func DropPilotTable() error {
+	if Globals.Database == nil {
+		return DatabaseNotOpenError{}
+	}
+
 	//goland:noinspection GoUnhandledErrorResult
 	Globals.Database.Exec("DROP TABLE IF EXISTS table_pilots")
+
+	return nil
+}
+
+func RemoveAllPilots() error {
+	if Globals.Database == nil {
+		return DatabaseNotOpenError{}
+	}
+	//goland:noinspection GoUnhandledErrorResult,SqlWithoutWhere
+	Globals.Database.Exec("DELETE FROM table_pilots")
+
+	return nil
+}
+
+func NumberOfPilots() (int, error) {
+	if Globals.Database == nil {
+		return 0, DatabaseNotOpenError{}
+	}
+	//goland:noinspection GoUnhandledErrorResult,SqlWithoutWhere
+	query, err := Globals.Database.Prepare("SELECT COUNT(*) FROM table_pilots")
+	if err != nil {
+		return 0, err
+	}
+	//goland:noinspection GoUnhandledErrorResult
+	defer query.Close()
+	var count int
+	err = query.QueryRow().Scan(&count)
+
+	return count, err
 }
