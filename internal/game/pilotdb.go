@@ -1,7 +1,5 @@
 package game
 
-import "github.com/google/uuid"
-
 func (p *Pilot) insert() error {
 	if Globals.Database == nil {
 		return DatabaseNotOpenError{}
@@ -10,16 +8,20 @@ func (p *Pilot) insert() error {
 	if err != nil {
 		return err
 	}
-	stmt, err := tx.Prepare("insert into table_pilots(pilot_name, pilot_uuid, country_name, gender, flight_rank, age, born, home_air_base, sorties, hits, kills, kia, mia, xp, reflexes, endurance) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-	if err != nil {
+	stmt, err3 := tx.Prepare("insert into table_pilots(pilot_name, country_name, gender, flight_rank, age, born, home_air_base, sorties, hits, kills, kia, mia, xp, reflexes, endurance) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	if err3 != nil {
 		return err
 	}
 	//goland:noinspection GoUnhandledErrorResult
 	defer stmt.Close()
-	uid := (uuid.UUID)(p.PilotId)
-	_, err = stmt.Exec(p.Name, uid.String(), p.CountryName, p.Gender.String(), p.FlightRank.Code, p.Background.Age, p.Background.Born, p.Background.HomeAirBase, p.Sorties, p.Hits, p.Kills, p.Kia, p.Mia, p.XP, p.Reflexes, p.Endurance)
-	if err != nil {
+	res, err2 := stmt.Exec(p.Name, p.CountryName, p.Gender.String(), p.FlightRank.Code, p.Background.Age, p.Background.Born, p.Background.HomeAirBase, p.Sorties, p.Hits, p.Kills, p.Kia, p.Mia, p.XP, p.Reflexes, p.Endurance)
+	if err2 != nil {
 		return err
+	}
+	var errInsert error
+	p.DatabaseId, errInsert = res.LastInsertId()
+	if errInsert != nil {
+		return errInsert
 	}
 	if err = tx.Commit(); err != nil {
 		return err
@@ -35,13 +37,12 @@ func (p *Pilot) Update() error {
 	if err != nil {
 		return err
 	}
-	stmt, err := tx.Prepare("update table_pilots SET pilot_name = ?, country_name = ?, gender = ?, flight_rank = ?, age = ?, born = ?, home_air_base = ?, sorties = ?, hits = ?, kills = ?, kia = ?, mia = ?, xp = ?, reflexes = ?, endurance = ? WHERE pilot_uuid == ?")
+	stmt, err := tx.Prepare("update table_pilots SET pilot_name = ?, country_name = ?, gender = ?, flight_rank = ?, age = ?, born = ?, home_air_base = ?, sorties = ?, hits = ?, kills = ?, kia = ?, mia = ?, xp = ?, reflexes = ?, endurance = ? WHERE pilot_id == ?")
 	if err != nil {
 		return err
 	}
 	//goland:noinspection GoUnhandledErrorResult
 	defer stmt.Close()
-	uid := (uuid.UUID)(p.PilotId)
 	_, err = stmt.Exec(p.Name,
 		p.CountryName,
 		p.Gender.String(),
@@ -49,7 +50,7 @@ func (p *Pilot) Update() error {
 		p.Background.Age,
 		p.Background.Born,
 		p.Background.HomeAirBase,
-		p.Sorties, p.Hits, p.Kills, p.Kia, p.Mia, p.XP, p.Reflexes, p.Endurance, uid.String())
+		p.Sorties, p.Hits, p.Kills, p.Kia, p.Mia, p.XP, p.Reflexes, p.Endurance, p.DatabaseId)
 	if err != nil {
 		return err
 	}
@@ -59,22 +60,20 @@ func (p *Pilot) Update() error {
 	return nil
 }
 
-func LoadPilot(pid PilotId) (Pilot, error) {
+func LoadPilot(pid int64) (Pilot, error) {
 	p := Pilot{}
 	if Globals.Database == nil {
 		return p, DatabaseNotOpenError{}
 	}
-	stmt, err := Globals.Database.Prepare("select pilot_name, pilot_uuid, country_name, gender, flight_rank, age, born, home_air_base, sorties, hits, kills, kia, mia, xp, reflexes, endurance from table_pilots WHERE pilot_uuid = ?")
+	stmt, err := Globals.Database.Prepare("select pilot_name, country_name, gender, flight_rank, age, born, home_air_base, sorties, hits, kills, kia, mia, xp, reflexes, endurance from table_pilots WHERE pilot_id = ?")
 	if err != nil {
 		return p, err
 	}
 
 	var gender string
-	var pilotUuid string
 	var frank int
-	err = stmt.QueryRow((uuid.UUID)(pid).String()).Scan(
+	err = stmt.QueryRow(pid).Scan(
 		&p.Name,
-		&pilotUuid,
 		&p.CountryName,
 		&gender,
 		&frank,
@@ -92,7 +91,7 @@ func LoadPilot(pid PilotId) (Pilot, error) {
 	if err != nil {
 		return p, err
 	}
-	p.PilotId = pid
+	p.DatabaseId = pid
 	if gender == "Male" {
 		p.Gender = GenderMale
 	} else {
@@ -122,10 +121,10 @@ func CreatePilotTable() error {
     xp            integer not null,
     reflexes      integer,
     endurance     integer,
-    pilot_uuid    string not null PRIMARY KEY 
+    pilot_id      integer not null PRIMARY KEY 
 );
 insert into table_pilots(pilot_name, country_name, gender, flight_rank, age, born, home_air_base, sorties,
-                                hits, kills, kia, mia, xp, reflexes, endurance, pilot_uuid)
+                                hits, kills, kia, mia, xp, reflexes, endurance, pilot_id)
 select pilot_name,
        country_name,
        gender,
@@ -141,10 +140,10 @@ select pilot_name,
        xp,
        reflexes,
        endurance,
-       pilot_uuid
+       pilot_id
 from table_pilots;
-create unique index table_pilots_uuid_uindex
-    on table_pilots (pilot_uuid);`
+create unique index table_pilots_id_uindex
+    on table_pilots (pilot_id);`
 
 	_, err := Globals.Database.Exec(stmt)
 	return err
@@ -194,17 +193,16 @@ func GetPilotsOfCountry(country string) ([]Pilot, error) {
 		return pilots, DatabaseNotOpenError{}
 	}
 	//goland:noinspection GoUnhandledErrorResult
-	rows, errq := Globals.Database.Query("SELECT pilot_name, pilot_uuid, country_name, gender, flight_rank, age, born, home_air_base, sorties, hits, kills, kia, mia, xp, reflexes, endurance FROM table_pilots WHERE country_name = '" + country + "'")
+	rows, errq := Globals.Database.Query("SELECT pilot_name, pilot_id, country_name, gender, flight_rank, age, born, home_air_base, sorties, hits, kills, kia, mia, xp, reflexes, endurance FROM table_pilots WHERE country_name = '" + country + "'")
 	if errq != nil {
 		return pilots, errq
 	}
 	for rows.Next() {
 		p := Pilot{}
 		var gender string
-		var pilotUuid string
 		var frank int
 		errs := rows.Scan(&p.Name,
-			&pilotUuid,
+			&p.DatabaseId,
 			&p.CountryName,
 			&gender,
 			&frank,
@@ -222,7 +220,6 @@ func GetPilotsOfCountry(country string) ([]Pilot, error) {
 		if errs != nil {
 			return pilots, errs
 		}
-		p.PilotId = (PilotId)(uuid.MustParse(pilotUuid))
 		if gender == "Male" {
 			p.Gender = GenderMale
 		} else {

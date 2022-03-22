@@ -23,7 +23,7 @@ func TestDatabaseSave(t *testing.T) {
 	assert.Nil(t, InitGame(0))
 
 	p := NewPilot("usa", OF5)
-	fmt.Println(p.PilotId)
+	fmt.Println(p.DatabaseId)
 
 	CloseDatabase()
 }
@@ -37,7 +37,7 @@ func TestDatabaseLoad(t *testing.T) {
 	p.Name = "Gordon Link"
 	assert.Nil(t, p.Update())
 
-	p2, errp := LoadPilot(p.PilotId)
+	p2, errp := LoadPilot(p.DatabaseId)
 	assert.Nil(t, errp)
 
 	assert.Equal(t, "Gordon Link", p2.Name)
@@ -79,7 +79,16 @@ func TestUpdatePilot(t *testing.T) {
 	pUsa := NewPilot("usa", OF5)
 	pUsa.XP = 100
 	assert.Nil(t, pUsa.Update())
-	pUsa2, errp2 := LoadPilot(pUsa.PilotId)
+	pUsa2, errp2 := LoadPilot(pUsa.DatabaseId)
 	assert.Nil(t, errp2)
 	assert.Equal(t, 100, pUsa2.XP)
+}
+
+func TestCreate100Pilots(t *testing.T) {
+	assert.Nil(t, InitGame(0))
+	assert.Nil(t, RemoveAllPilots())
+	NewPilots(100, "usa", OF1)
+	pilots, err := GetPilotsOfCountry("usa")
+	assert.Nil(t, err)
+	assert.Equal(t, 100, len(pilots))
 }

@@ -3,7 +3,6 @@ package game
 import (
 	"fmt"
 	"github.com/CmdSoda/boardgamewars/internal/randomizer"
-	"github.com/google/uuid"
 )
 
 type Gender int
@@ -21,12 +20,8 @@ func (g Gender) String() string {
 	}
 }
 
-type PilotId uuid.UUID
-
-type PilotsMap map[PilotId]*Pilot
-
 type Pilot struct {
-	PilotId
+	DatabaseId  int64
 	Name        string
 	CountryName // Gehört diesem Land an
 	Gender
@@ -110,7 +105,7 @@ func NewPilot(country CountryName, ofc Code) *Pilot {
 	np := Pilot{
 		Name:        ng.CreateFullName(g == GenderMale, wp.CountryName),
 		CountryName: country,
-		PilotId:     PilotId(uuid.New()),
+		DatabaseId:  -1,
 		Gender:      g,
 		Background: PilotBackground{
 			CountryName: wp.CountryName,
@@ -128,11 +123,11 @@ func NewPilot(country CountryName, ofc Code) *Pilot {
 	return &np
 }
 
-func NewPilots(count int, country CountryName, ofc Code) []PilotId {
-	var pilots []PilotId
+func NewPilots(count int, country CountryName, ofc Code) []int64 {
+	var pilots []int64
 	for i := 0; i < count; i++ {
 		np := NewPilot(country, ofc)
-		pilots = append(pilots, np.PilotId)
+		pilots = append(pilots, np.DatabaseId)
 	}
 	return pilots
 }

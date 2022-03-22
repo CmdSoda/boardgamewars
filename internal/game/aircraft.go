@@ -33,7 +33,7 @@ type Aircraft struct {
 	WeaponsConfigName string
 	Damage            []DamageType // Eine Liste von Schäden
 	Destroyed         bool
-	Pilots            []PilotId
+	Pilots            []int64
 	StationedAt       AirbaseId
 	StepsTaken        StepTime
 	FSM               *fsm.FSM
@@ -89,7 +89,7 @@ func (ac *Aircraft) Rearm() {
 	}
 }
 
-func (ac *Aircraft) AddPilot(id PilotId) {
+func (ac *Aircraft) AddPilot(id int64) {
 	if len(ac.Pilots) >= ac.GetParameters().Seats {
 		Log.Errorf("too many pilots in aircraft %d", ac.ShortId)
 	}
@@ -223,7 +223,7 @@ func (ac *Aircraft) DepleteWeapon(ws WeaponSystem) {
 	}
 }
 
-func (ac *Aircraft) FillSeatsWith(pl []PilotId) {
+func (ac *Aircraft) FillSeatsWith(pl []int64) {
 	if len(pl) > ac.GetParameters().Seats {
 		panic("too many pilots")
 	}

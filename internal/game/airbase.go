@@ -17,7 +17,7 @@ type Airbase struct {
 	BelongsTo           CountryName
 	AcceptAllies        bool
 	AllAircrafts        []AircraftId // Alle Aircrafts, die zu dieser Basis gehören
-	AllPilots           []PilotId    // Alle Piloten, die zu dieser Basis gehören
+	AllPilots           []int64      // Alle Piloten, die zu dieser Basis gehören
 	ParkingArea         []AircraftId
 	MaxParkingSlots     int
 	MaintenanceArea     []AircraftId
@@ -45,7 +45,7 @@ func NewAirbase(name string, country CountryName, pos hexagon.HexPosition) *Airb
 	ab.HexPosition = pos
 	ab.ParkingArea = []AircraftId{}
 	ab.MaintenanceArea = []AircraftId{}
-	ab.AllPilots = []PilotId{}
+	ab.AllPilots = []int64{}
 	ab.AllAircrafts = []AircraftId{}
 	Globals.World.AddAirbase(ab.AirbaseId)
 	Globals.AllAirbases[ab.AirbaseId] = &ab
