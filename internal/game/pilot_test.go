@@ -65,10 +65,10 @@ func TestNumberOfPilots(t *testing.T) {
 func TestGetPilotsOfCountry(t *testing.T) {
 	assert.Nil(t, InitGame(0))
 	assert.Nil(t, RemoveAllPilots())
-	p_usa := NewPilot("usa", OF5)
+	pUsa := NewPilot("usa", OF5)
 	NewPilot("uk", OF5)
 	pilots, err := GetPilotsOfCountry("usa")
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(pilots))
-	assert.Equal(t, p_usa.Name, pilots[0].Name)
+	assert.Equal(t, pUsa.Name, pilots[0].Name)
 }
