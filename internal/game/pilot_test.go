@@ -72,3 +72,14 @@ func TestGetPilotsOfCountry(t *testing.T) {
 	assert.Equal(t, 1, len(pilots))
 	assert.Equal(t, pUsa.Name, pilots[0].Name)
 }
+
+func TestUpdatePilot(t *testing.T) {
+	assert.Nil(t, InitGame(0))
+	assert.Nil(t, RemoveAllPilots())
+	pUsa := NewPilot("usa", OF5)
+	pUsa.XP = 100
+	assert.Nil(t, pUsa.Update())
+	pUsa2, errp2 := LoadPilot(pUsa.PilotId)
+	assert.Nil(t, errp2)
+	assert.Equal(t, 100, pUsa2.XP)
+}
