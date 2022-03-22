@@ -121,7 +121,7 @@ func CreatePilotTable() error {
     xp            integer not null,
     reflexes      integer,
     endurance     integer,
-    pilot_id      integer not null PRIMARY KEY 
+    pilot_id      integer PRIMARY KEY AUTOINCREMENT 
 );
 insert into table_pilots(pilot_name, country_name, gender, flight_rank, age, born, home_air_base, sorties,
                                 hits, kills, kia, mia, xp, reflexes, endurance, pilot_id)
